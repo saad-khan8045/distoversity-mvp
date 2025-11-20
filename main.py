@@ -57,27 +57,33 @@ st.markdown("""
         border-color: var(--accent);
     }
 
-    /* COMPONENT: AI REPORT CARD */
+    /* COMPONENT: AI REPORT CARD (HTML VERSION) */
     .ai-report-box {
         background: #F8FAFC;
         border-left: 5px solid #0EA5E9;
-        padding: 20px;
+        padding: 25px;
         margin-bottom: 20px;
         font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 0.95rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
+    .ai-title { color: #023E8A; font-weight: 800; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .ai-section { margin-bottom: 20px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #E2E8F0; }
+    .ai-label { font-size: 0.8rem; text-transform: uppercase; color: #64748B; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 5px; display: block; }
+    .ai-text { font-size: 1rem; color: #1E293B; line-height: 1.6; }
+    .ai-highlight { color: #D97706; font-weight: 600; }
     
     /* COMPONENT: CTA BOX */
     .cta-box {
         background: linear-gradient(135deg, #0077B6 0%, #023E8A 100%);
         color: white;
-        padding: 20px;
-        border-radius: 12px;
+        padding: 25px;
+        border-radius: 16px;
         text-align: center;
         margin-top: 20px;
-        box-shadow: 0 10px 25px rgba(0, 119, 182, 0.3);
+        box-shadow: 0 20px 25px -5px rgba(0, 119, 182, 0.25);
     }
-    .cta-box h3 { color: white !important; margin-bottom: 10px; }
+    .cta-box h3 { color: white !important; margin-bottom: 10px; font-size: 1.5rem; }
 
     /* COMPONENT: TAGS */
     .feature-tag {
@@ -214,16 +220,18 @@ if "ev_hooks" not in st.session_state: st.session_state.ev_hooks = ["💰 Check 
 
 # --- 5. CORE FUNCTIONS ---
 
-# 5a. SITE: AI REPORT POPUP (Llama Logic)
-def generate_report_text(profile, scores):
+# 5a. SITE: AI REPORT POPUP (HTML Generation)
+def get_report_content(profile, scores):
+    """Returns structured data for the HTML report to avoid formatting errors."""
     core_type = profile.replace("Distoversity ", "")
+    
     if core_type == "Creator":
-        pain_point = "You despise routine. Ambiguity is your playground, but execution is your prison."
-        achilles_heel = "The 'Idea Junkie' Syndrome. You start 50 projects and finish zero."
+        pain_point = "You despise routine. Ambiguity is your playground, but execution can feel like a prison."
+        achilles_heel = "The 'Idea Junkie' Syndrome. You risk starting 50 projects and finishing zero."
         skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
     elif core_type == "Influencer":
         pain_point = "You hate isolation. You thrive on energy, but feel drained in silos."
-        achilles_heel = "The 'Surface Level' Trap. All talk, no action."
+        achilles_heel = "The 'Surface Level' Trap. Being seen as all talk, no action."
         skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
     elif core_type == "Catalyst":
         pain_point = "You hate chaos. You want clear targets, but feel undervalued."
@@ -231,39 +239,66 @@ def generate_report_text(profile, scores):
         skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
     else: # Analyst
         pain_point = "You hate hype. You want data, but feel frustrated by emotional decisions."
-        achilles_heel = "Analysis Paralysis. Waiting for 100% certainty."
+        achilles_heel = "Analysis Paralysis. Waiting for 100% certainty before moving."
         skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
+        
+    return {
+        "profile": profile,
+        "match": int(scores.get(profile, 0)),
+        "pain_point": pain_point,
+        "achilles_heel": achilles_heel,
+        "skills": skills
+    }
 
-    report = f"""
-    ### SECTION 1: YOUR CORE GENIUS REVEAL
-    **Archetype: {profile} ({int(scores.get(profile, 0))}% Match)**
-    Listen closely: Your brain is wired differently. {pain_point}
-    ---
-    ### SECTION 2: YOUR CRITICAL WEAK POINT
-    **The Danger Zone: {achilles_heel}**
-    Talent without leverage is just a hobby. Don't let your greatest strength become your failure.
-    ---
-    ### SECTION 3: STRATEGIC ROADMAP
-    **The Solution: Your Next Move**
-    Master these high-impact skills immediately:
-    1. **{skills[0]}**
-    2. **{skills[1]}**
-    3. **{skills[2]}**
-    """
-    return report
-
-@st.dialog("⚡ CHIEF GENIUS OFFICER REPORT")
+@st.dialog("🤖 EDUVEER AI COUNSELLOR REPORT")
 def show_popup_report(profile, scores):
-    report_content = generate_report_text(profile, scores)
-    st.markdown(f"""<div class="ai-report-box">{report_content}</div>""", unsafe_allow_html=True)
+    data = get_report_content(profile, scores)
+    
+    # Pure HTML Structure for Perfect Rendering
+    html_structure = f"""
+    <div class="ai-report-box">
+        <div class="ai-title">⚡ YOUR EDUVEER ANALYSIS</div>
+        <div class="ai-section" style="border-left: 4px solid #0EA5E9;">
+            <span class="ai-label">Archetype</span>
+            <div class="ai-text" style="font-size: 1.2rem; font-weight: 700; color: #023E8A;">
+                {data['profile']} <span style="font-weight:400; font-size:0.9rem; color:#64748B;">({data['match']}% Match)</span>
+            </div>
+            <p style="margin-top:10px; font-style: italic;">"{data['pain_point']}"</p>
+        </div>
+        
+        <div class="ai-section" style="border-left: 4px solid #F59E0B;">
+            <span class="ai-label">⚠️ CRITICAL WEAK POINT</span>
+            <div class="ai-text">
+                <span class="ai-highlight">{data['achilles_heel']}</span><br>
+                Talent without leverage is just a hobby. Don't let your greatest strength become your failure.
+            </div>
+        </div>
+        
+        <div class="ai-section" style="border-left: 4px solid #10B981;">
+            <span class="ai-label">🚀 STRATEGIC ROADMAP</span>
+            <div class="ai-text">
+                Master these 3 high-impact skills immediately:
+                <ul style="margin-top:5px; padding-left:20px;">
+                    <li><b>{data['skills'][0]}</b></li>
+                    <li><b>{data['skills'][1]}</b></li>
+                    <li><b>{data['skills'][2]}</b></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    """
+    
+    st.markdown(html_structure, unsafe_allow_html=True)
+    
     st.markdown("""
     <div class="cta-box">
         <h3>🚀 The Final Decision</h3>
-        <p>Step into clarity. We have curated a roadmap for you.</p>
+        <p style="opacity:0.9">Step into clarity. We have curated a roadmap specifically for you.</p>
     </div>
     """, unsafe_allow_html=True)
+    
     if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
-        st.success("Request Received! Our Chief Genius Officer will contact you shortly.")
+        st.success("Request Received! Eduveer will contact you within 2 hours.")
         time.sleep(2)
         st.rerun()
 
@@ -396,16 +431,9 @@ def navbar():
         if c6.button("Partners", use_container_width=True): st.session_state.page = 'Institutions'; st.rerun()
         if c7.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
 
-# --- 8. PAGE ROUTING ---
+# --- 8. PAGE FUNCTIONS (DEFINED BEFORE USE) ---
 
-# 1. Render Eduveer Sidebar (Global)
-render_eduveer()
-
-# 2. Render Navbar (Global)
-navbar()
-
-# 3. Render Pages
-if st.session_state.page == 'Home':
+def render_home():
     st.markdown("""
     <div class="hero-section">
         <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
@@ -437,7 +465,7 @@ if st.session_state.page == 'Home':
     with c3:
         st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Career Roadmap</h3><p style="text-align:center; color:#64748B;">Integrate your degree with <b>ALISON</b> certifications.</p></div>""", unsafe_allow_html=True)
 
-elif st.session_state.page == 'Explorer':
+def render_explorer():
     st.markdown("## 🏫 University Power Explorer")
     st.markdown("Compare top online universities. **All listed are UGC/AICTE Approved.**")
     
@@ -509,7 +537,7 @@ elif st.session_state.page == 'Explorer':
             with c_btn1: st.button(f"View Brochure", key=f"broch_{idx}")
             with c_btn2: st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
 
-elif st.session_state.page == 'Assessment':
+def render_assessment():
     st.markdown("""
     <div style="text-align:center; margin-bottom:40px;">
         <h2 style="font-size:2.5rem; color:#0077B6; margin-bottom:10px;">Discover Your Spark</h2>
@@ -557,7 +585,7 @@ elif st.session_state.page == 'Assessment':
                 st.session_state.page = 'Result'
                 st.rerun()
 
-elif st.session_state.page == 'Result':
+def render_result():
     profile = st.session_state.user_profile
     scores = st.session_state.user_scores
     if not profile: st.warning("Take assessment first!"); st.stop()
@@ -620,11 +648,6 @@ elif st.session_state.page == 'Result':
             else:
                 st.error("Please enter a valid email.")
 
-elif st.session_state.page == 'About': render_about()
-elif st.session_state.page == 'FAQ': render_faq()
-elif st.session_state.page == 'Institutions': render_institutions()
-
-# PLACEHOLDERS for secondary pages (reused from before)
 def render_about():
     c1, c2 = st.columns(2)
     with c1: st.markdown("## The Distoversity Story\nWe combine Wealth Dynamics + AI to fix Career Misalignment."); 
@@ -636,3 +659,27 @@ def render_faq():
 
 def render_institutions():
     st.markdown("## Partner with Us"); st.button("Request Partnership Demo")
+
+# --- 9. MAIN EXECUTION ROUTER (MUST BE LAST) ---
+
+# 1. Render Eduveer Sidebar (Global)
+render_eduveer()
+
+# 2. Render Navbar (Global)
+navbar()
+
+# 3. Render Pages (Using the functions defined above)
+if st.session_state.page == 'Home': 
+    render_home()
+elif st.session_state.page == 'Explorer': 
+    render_explorer()
+elif st.session_state.page == 'Assessment': 
+    render_assessment()
+elif st.session_state.page == 'Result': 
+    render_result()
+elif st.session_state.page == 'About': 
+    render_about()
+elif st.session_state.page == 'FAQ': 
+    render_faq()
+elif st.session_state.page == 'Institutions': 
+    render_institutions()
