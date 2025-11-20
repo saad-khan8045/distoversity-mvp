@@ -1,300 +1,418 @@
 import streamlit as st
 import time
+import random
 
-# --- PAGE CONFIGURATION (Must be first) ---
+# --- 1. WORLD-CLASS CONFIGURATION ---
 st.set_page_config(
-    page_title="Distoversity | Premium Career Architecture",
-    page_icon="🚀",
+    page_title="Distoversity | Identity-First Career Architecture",
+    page_icon="🧬",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- PREMIUM CSS OVERHAUL ---
+# --- 2. VETERAN UI SYSTEM (Custom CSS) ---
 st.markdown("""
     <style>
-    /* 1. IMPORT GOOGLE FONTS (Poppins for Headings, Inter for Body) */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
+    /* IMPORT PREMIUM FONTS */
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
 
-    /* 2. GLOBAL RESET */
+    /* RESET & VARIABLES */
+    :root {
+        --primary: #0F172A;      /* Navy Black */
+        --accent: #2563EB;       /* Electric Blue */
+        --success: #10B981;      /* Emerald */
+        --bg: #F8FAFC;           /* Slate 50 */
+        --card-bg: #FFFFFF;
+        --text-main: #1E293B;
+        --text-sub: #64748B;
+    }
+
     html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif;
-        color: #1E293B; /* Slate 800 */
-    }
-    
-    /* 3. HEADINGS */
-    h1, h2, h3 {
-        font-family: 'Poppins', sans-serif;
-        font-weight: 700;
-        color: #0F172A; /* Slate 900 */
-    }
-    h1 { font-size: 3rem !important; line-height: 1.2 !important; }
-    h2 { font-size: 2rem !important; }
-    h3 { color: #0077B6 !important; } /* Distoversity Blue */
-
-    /* 4. CUSTOM CARDS (Glassmorphism) */
-    .premium-card {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-        border: 1px solid #F1F5F9;
-        transition: transform 0.3s ease;
-    }
-    .premium-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 40px rgba(0,71,255,0.1);
-        border-color: #0077B6;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: var(--text-main);
+        background-color: var(--bg);
     }
 
-    /* 5. BUTTON STYLING */
-    .stButton>button {
-        background: linear-gradient(135deg, #0077B6 0%, #0056b3 100%);
-        color: white;
-        border-radius: 50px; /* Pill shape */
-        padding: 12px 35px;
-        font-weight: 600;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
-        font-family: 'Poppins', sans-serif;
-    }
-    .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
-    }
-
-    /* 6. HERO SECTION GRADIENT */
-    .hero-bg {
-        background: linear-gradient(180deg, #F0F9FF 0%, #FFFFFF 100%);
-        padding: 4rem 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-    
-    /* 7. HIDE STREAMLIT DEFAULT ELEMENTS */
+    /* HIDE STREAMLIT CHROME */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    
-    /* 8. BLUR EFFECT FOR UPSELL */
-    .blur-text {
-        color: transparent;
-        text-shadow: 0 0 8px rgba(0,0,0,0.5);
-        user-select: none;
+
+    /* TYPOGRAPHY SYSTEM */
+    h1 {
+        font-weight: 800 !important;
+        letter-spacing: -0.03em !important;
+        font-size: 3.5rem !important;
+        background: linear-gradient(135deg, #0F172A 0%, #3B82F6 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.1 !important;
     }
+    
+    h2 {
+        font-weight: 700 !important;
+        letter-spacing: -0.02em !important;
+        font-size: 2.2rem !important;
+        color: var(--primary);
+    }
+
+    .subtitle {
+        font-size: 1.25rem;
+        color: var(--text-sub);
+        line-height: 1.6;
+        max-width: 600px;
+    }
+
+    /* COMPONENT: PREMIUM CARD */
+    .d-card {
+        background: var(--card-bg);
+        border: 1px solid #E2E8F0;
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .d-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.01);
+        border-color: var(--accent);
+    }
+
+    /* COMPONENT: ACTION BUTTON */
+    .d-btn-primary {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 100px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+    .d-btn-primary:hover {
+        background: #1D4ED8;
+        transform: scale(1.02);
+    }
+    
+    /* COMPONENT: LOCKED CONTENT BLUR */
+    .locked-overlay {
+        position: relative;
+        overflow: hidden;
+    }
+    .blur-layer {
+        filter: blur(12px);
+        opacity: 0.4;
+        user-select: none;
+        pointer-events: none;
+    }
+    .lock-badge {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 20px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        z-index: 10;
+        width: 80%;
+    }
+
+    /* CUSTOM NAV BAR */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 0;
+        margin-bottom: 3rem;
+        border-bottom: 1px solid #F1F5F9;
+    }
+    .brand-logo {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--primary);
+        letter-spacing: -0.05em;
+    }
+    .brand-logo span { color: var(--accent); }
+
+    /* FORM STYLING */
+    .stRadio > div { gap: 1rem; }
+    .stRadio label {
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid #E2E8F0;
+        width: 100%;
+        transition: 0.2s;
+    }
+    .stRadio label:hover { border-color: var(--accent); background: #F8FAFC; }
+    
     </style>
 """, unsafe_allow_html=True)
 
-# --- SESSION STATE ---
-if 'step' not in st.session_state:
-    st.session_state['step'] = 'landing'
+# --- 3. SESSION STATE MANAGEMENT ---
+if 'page' not in st.session_state:
+    st.session_state['page'] = 'home'
 
-# --- ASSETS (Use Unsplash URLs so it works on cloud) ---
-IMG_HERO = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1171&q=80"
-IMG_DYNAMO = "https://cdn-icons-png.flaticon.com/512/2921/2921222.png" # Lightbulb
-IMG_STEEL = "https://cdn-icons-png.flaticon.com/512/2103/2103650.png" # Chart
+# --- 4. UI COMPONENTS ---
 
-# --- PAGES ---
+def navbar():
+    st.markdown("""
+    <div class="nav-container">
+        <div class="brand-logo">Distover<span>sity</span>.</div>
+        <div style="color: #64748B; font-size: 0.9rem; font-weight: 500;">
+            Science over Sales.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-def render_navbar():
-    # A custom simple navbar using columns
-    c1, c2, c3 = st.columns([1, 3, 1])
-    with c1:
-        st.markdown("### 🔹 Distoversity")
-    with c3:
-        if st.button("Login / Sign Up"):
-            st.toast("Portal coming soon!")
+def footer():
+    st.markdown("""
+    <div style="margin-top: 5rem; padding-top: 2rem; border-top: 1px solid #E2E8F0; text-align: center; color: #94A3B8; font-size: 0.85rem;">
+        <p>© 2025 Distoversity Inc. | Empowering India.</p>
+        <p>Proprietary Framework adapted for Indian Education Context. Not a clinical diagnostic tool.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-def render_hero():
-    st.markdown('<div class="hero-bg">', unsafe_allow_html=True)
+# --- 5. PAGE LOGIC ---
+
+def page_home():
+    navbar()
     
-    col1, col2 = st.columns([1, 1])
+    # HERO SECTION
+    col1, col2 = st.columns([1.4, 1])
     
     with col1:
         st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("# Stop Guessing.\n# Start Engineering.")
         st.markdown("""
-        <p style='font-size: 1.2rem; color: #475569; margin-top: 1rem;'>
-        The Indian education system sells you degrees. We give you an <b>Identity</b>.
-        Join 50,000+ students using AI to match their psychological DNA to the perfect university.
-        </p>
+        <div style="background: #EFF6FF; color: #2563EB; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; padding: 0.5rem 1rem; border-radius: 100px; margin-bottom: 1rem;">
+            🚀 90% of Degrees are Mismatched
+        </div>
         """, unsafe_allow_html=True)
         
-        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("<h1>Stop Guessing Your Future.<br>Start Engineering It.</h1>", unsafe_allow_html=True)
         
-        if st.button("🚀 Discover Your Spark (Free Analysis)"):
-            st.session_state['step'] = 'assessment'
+        st.markdown("""
+        <p class="subtitle">
+            The era of subjective career advice is obsolete. We use <b>Computational Rigor</b> to match your psychological DNA to the top 1% of University Programs (Amity, Manipal, LPU).
+        </p>
+        <br>
+        """, unsafe_allow_html=True)
+        
+        if st.button("Discover Your Core Genius (Free) ➤", type="primary"):
+            st.session_state['page'] = 'assessment'
             st.rerun()
             
-        st.markdown("<small>✨ Backed by Wealth Dynamics | 🏆 Partnered with Amity & Manipal</small>", unsafe_allow_html=True)
+        st.markdown("""
+        <div style="margin-top: 2rem; display: flex; gap: 2rem; opacity: 0.6; filter: grayscale(100%);">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/f/fd/Indian_Institute_of_Technology_Delhi_Logo.svg/1200px-Indian_Institute_of_Technology_Delhi_Logo.svg.png" height="40">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png" height="40">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png" height="40">
+        </div>
+        """, unsafe_allow_html=True)
 
     with col2:
-        st.image(IMG_HERO, use_column_width=True, output_format="PNG")
-        
-    st.markdown('</div>', unsafe_allow_html=True)
+        # Abstract 3D Illustration
+        st.image("https://cdni.iconscout.com/illustration/premium/thumb/business-decision-making-illustration-download-in-svg-png-gif-file-formats--strategy-choice-direction-path-startup-pack-people-illustrations-3972826.png?f=webp", use_column_width=True)
 
-def render_features():
-    st.markdown("<h2 style='text-align: center;'>How Distoversity Works</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #64748B;'>Three steps to absolute career certainty.</p><br>", unsafe_allow_html=True)
+    # VALUE PROP SECTION
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Scientific Certainty. No Opinions.</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #64748B; margin-bottom: 3rem;'>We moved beyond 'Interest' to 'Energy'. See the difference.</p>", unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
-    
     with c1:
         st.markdown("""
-        <div class="premium-card">
-            <h3>1. The Spark Test</h3>
-            <p>Forget long exams. Our 2-minute AI assessment identifies your core energy frequency (Dynamo, Blaze, Tempo, Steel).</p>
+        <div class="d-card">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🧠</div>
+            <h3>Your Genius</h3>
+            <p style="color: #64748B;">Identify if you are a Creator, Influencer, Catalyst, or Analyst using our AI Engine.</p>
         </div>
         """, unsafe_allow_html=True)
-        
     with c2:
         st.markdown("""
-        <div class="premium-card">
-            <h3>2. The Alignment</h3>
-            <p>We don't just suggest jobs. We match you to specific University Programs (BCA/MBA) that fit your psychological makeup.</p>
+        <div class="d-card">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🏫</div>
+            <h3>University Match</h3>
+            <p style="color: #64748B;">We filter 500+ universities to find the curriculum that fits your cognitive style.</p>
         </div>
         """, unsafe_allow_html=True)
-        
     with c3:
         st.markdown("""
-        <div class="premium-card">
-            <h3>3. The Roadmap</h3>
-            <p>Get a 4-Year Strategic Plan, including internships and skills, not just a degree certificate.</p>
+        <div class="d-card">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">🗺️</div>
+            <h3>Strategic Roadmap</h3>
+            <p style="color: #64748B;">Don't just study. Build a 4-year portfolio that makes you unemployable-proof.</p>
         </div>
         """, unsafe_allow_html=True)
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
-
-def render_assessment():
-    st.markdown("<br>", unsafe_allow_html=True)
-    # Using a container to center the form and make it look like a paper
-    with st.container():
-        c1, c2, c3 = st.columns([1, 2, 1])
-        with c2:
-            st.markdown("""
-            <div class="premium-card" style="border-top: 5px solid #0077B6;">
-                <h2 style="text-align:center;">⚡ Energy Profile Assessment</h2>
-                <p style="text-align:center; color:#64748B;">Answer honestly to unlock your University Matches.</p>
-            </div>
-            <br>
-            """, unsafe_allow_html=True)
-            
-            with st.form("assessment_form"):
-                st.markdown("#### Q1. In a team, what is your superpower?")
-                q1 = st.radio("Select one:", [
-                    "Creating the Vision (I hate details)",
-                    "Leading the People (I love talking)",
-                    "Managing the Timeline (I love stability)",
-                    "Analyzing the Data (I love facts)"
-                ])
-                
-                st.markdown("<br>#### Q2. What is your biggest fear?", unsafe_allow_html=True)
-                q2 = st.radio("Select one:", [
-                    "Boredom & Routine",
-                    "Being Ignored / Isolation",
-                    "Sudden Changes / Chaos",
-                    "Being Wrong / Criticism"
-                ])
-                
-                st.markdown("<br>", unsafe_allow_html=True)
-                submit = st.form_submit_button("Analyze My DNA 🧬")
-                
-                if submit:
-                    with st.spinner("Connecting to Neural Engine..."):
-                        time.sleep(1.5)
-                    
-                    # Simple Logic
-                    if "Creating" in q1: st.session_state['result'] = "DYNAMO (Creator)"
-                    elif "Leading" in q1: st.session_state['result'] = "BLAZE (Influencer)"
-                    elif "Managing" in q1: st.session_state['result'] = "TEMPO (Catalyst)"
-                    else: st.session_state['result'] = "STEEL (Analyst)"
-                    
-                    st.session_state['step'] = 'result'
-                    st.rerun()
-
-def render_result():
-    profile = st.session_state.get('result', 'DYNAMO')
     
-    st.balloons()
-    st.markdown(f"""
-    <div class="hero-bg" style="background: #F0FDF4; border: 1px solid #22C55E;">
-        <h2 style="color: #15803D;">🎉 Analysis Complete</h2>
-        <h1>You are a {profile}</h1>
-        <p>You possess the rare ability to see what others cannot.</p>
+    footer()
+
+def page_assessment():
+    st.markdown("""
+    <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto;">
+        <div style="color: #2563EB; font-weight: 700; margin-bottom: 1rem;">STEP 1 OF 3</div>
+        <h2>Decode Your Professional Identity</h2>
+        <p style="color: #64748B;">This is not a test. It is a diagnosis. Answer based on who you <i>are</i>, not who you want to be.</p>
     </div>
     """, unsafe_allow_html=True)
     
-    c1, c2 = st.columns(2)
+    # ASSESSMENT CONTAINER
+    with st.container():
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            with st.form("distoversity_engine"):
+                st.markdown("### 1. The Group Dynamic Protocol")
+                st.markdown("In a high-pressure team project, which role do you naturally default to?")
+                q1 = st.radio("Select one:", [
+                    "💡 The Spark: I generate the core idea but hate the logistics. (Creator)",
+                    "🗣️ The Voice: I pitch the idea and keep the team morale high. (Influencer)",
+                    "⚡ The Engine: I ensure we hit the deadline and coordinate everyone. (Catalyst)",
+                    "📊 The Anchor: I research the data and ensure accuracy. (Analyst)"
+                ], label_visibility="collapsed")
+                
+                st.markdown("<br>", unsafe_allow_html=True)
+                
+                st.markdown("### 2. The 'Ambiguity' Stress Test")
+                st.markdown("What drains your energy the fastest?")
+                q2 = st.radio("Select one:", [
+                    "Routine, repetition, and details.",
+                    "Working alone in a room for hours.",
+                    "Chaos, lack of instructions, and changing plans.",
+                    "High-pressure sales and emotional conflict."
+                ], label_visibility="collapsed")
+                
+                st.markdown("<br>", unsafe_allow_html=True)
+                
+                submitted = st.form_submit_button("Reveal My Core Genius ➤", type="primary")
+                
+                if submitted:
+                    with st.spinner("Running Multidimensional Regression..."):
+                        time.sleep(1.5)
+                    with st.spinner("Mapping to Latent Career Space..."):
+                        time.sleep(1.0)
+                    
+                    # LOGIC MAPPING
+                    if "Spark" in q1: st.session_state['profile'] = "CREATOR"
+                    elif "Voice" in q1: st.session_state['profile'] = "INFLUENCER"
+                    elif "Engine" in q1: st.session_state['profile'] = "CATALYST"
+                    else: st.session_state['profile'] = "ANALYST"
+                    
+                    st.session_state['page'] = 'result'
+                    st.rerun()
+
+def page_result():
+    profile = st.session_state.get('profile', 'CATALYST')
     
-    with c1:
-        st.markdown("### 🔓 Your University Matches")
+    # DYNAMIC CONTENT (Based on your 'Rhythm Master' input)
+    if profile == "CATALYST" or profile == "ANALYST":
+        archetype = "THE RHYTHM MASTER"
+        tagline = "The Operational Architect"
+        pain_point = "Ambiguity & Inefficiency"
+        solution = "Lead Through Data"
+    else:
+        archetype = "THE VISIONARY BUILDER"
+        tagline = "The Innovation Architect"
+        pain_point = "Stagnation & Routine"
+        solution = "Rapid Prototyping"
+
+    st.balloons()
+    
+    # RESULT HERO
+    st.markdown(f"""
+    <div class="d-card" style="background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%); border-color: #BFDBFE; text-align: center; margin-bottom: 2rem;">
+        <div style="color: #2563EB; font-weight: 800; letter-spacing: 0.1em; margin-bottom: 1rem;">CORE GENIUS REVEALED</div>
+        <h1 style="font-size: 4rem !important; margin-bottom: 0.5rem;">{profile}</h1>
+        <h3 style="color: #1E40AF !important;">Archetype: {archetype}</h3>
+        <p style="max-width: 600px; margin: 1rem auto; color: #475569;">
+            You are the {tagline}. Your biggest professional pain point is <b>{pain_point}</b>. 
+            You need certainty, process, and measurable finish lines.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
+    
+    # 1. THE UNIVERSITY MATCH (VISIBLE TEASER)
+    with col1:
+        st.markdown("### 🎯 Your University Matches")
         st.markdown("""
-        <div class="premium-card">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png" width="50">
-                <h4>Amity University Online</h4>
+        <div class="d-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <div style="font-weight:700; font-size:1.1rem;">Manipal University Jaipur</div>
+                <div style="background:#DCFCE7; color:#15803D; padding:4px 8px; border-radius:4px; font-size:0.8rem; font-weight:700;">96% MATCH</div>
             </div>
-            <p><b>Match Score: 98%</b></p>
-            <p style="color:green; font-size:0.9rem;">Recommended for your profile</p>
+            <p style="font-size:0.9rem; color:#64748B; margin-bottom:0.5rem;"><b>Recommended Program:</b> B.Tech (Data Science) or BBA (Analytics)</p>
+            <p style="font-size:0.9rem;">✅ <b>Why:</b> Matches your need for {solution}. Their curriculum is structured, not chaotic.</p>
         </div>
-        <br>
-        <div class="premium-card">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png" width="50">
-                <h4>Manipal University Jaipur</h4>
+        <div class="d-card" style="margin-top: 1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                <div style="font-weight:700; font-size:1.1rem;">Amity University Online</div>
+                <div style="background:#DCFCE7; color:#15803D; padding:4px 8px; border-radius:4px; font-size:0.8rem; font-weight:700;">92% MATCH</div>
             </div>
-            <p><b>Match Score: 92%</b></p>
-            <p style="color:green; font-size:0.9rem;">High Alignment</p>
+            <p style="font-size:0.9rem; color:#64748B; margin-bottom:0.5rem;"><b>Recommended Program:</b> BCA (Cloud Security)</p>
+            <p style="font-size:0.9rem;">✅ <b>Why:</b> Offers the verifiable precision you crave.</p>
         </div>
         """, unsafe_allow_html=True)
+
+    # 2. THE "LOCKED" STRATEGIC DEEP DIVE (LEAD MAGNET)
+    with col2:
+        st.markdown("### 🗺️ Your Strategic Roadmap")
         
-    with c2:
-        st.markdown("### 🔒 The Why & The Roadmap")
-        st.markdown("""
-        <div class="premium-card" style="position:relative; overflow:hidden;">
-            <h4>Why Amity Fits You:</h4>
-            <p class="blur-text">Based on your profile, the curriculum structure allows for maximum creativity...</p>
-            <br>
-            <h4>Your 4-Year Plan:</h4>
-            <p class="blur-text">Year 1: Focus on Ideation. Year 2: Intern at...</p>
+        st.markdown(f"""
+        <div class="locked-overlay">
+            <div class="blur-layer">
+                <div class="d-card">
+                    <h4>🚨 Critical Weak Point: The Efficiency Trap</h4>
+                    <p>Your drive for analysis risks paralyzing your speed. If you fail to inject Creator energy, you will just be an Auditor...</p>
+                    <br>
+                    <h4>⚡ Phase 1: Rapid Prototyping</h4>
+                    <p>Master structured experimentation. Launch, test, and discard concepts using Agile...</p>
+                    <br>
+                    <h4>🗣️ Phase 2: High-Leverage Articulation</h4>
+                    <p>Move beyond data to selling the vision. Convert complex insights into narratives...</p>
+                    <br>
+                    <h4>💰 Salary Projection 2029</h4>
+                    <p>Based on this trajectory, your estimated market value will be...</p>
+                </div>
+            </div>
             
-            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                <h3>🔒 LOCKED</h3>
-                <p>Enter email to unlock full report</p>
+            <div class="lock-badge">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">🔒</div>
+                <h3>Unlock Your Full Strategy</h3>
+                <p style="color: #64748B; font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    Get the full <b>"Rhythm Master" Report</b>, the "Efficiency Trap" warning, and the 4-Year Execution Plan.
+                </p>
+                
+                <div style="text-align: left;">
+                </div>
             </div>
         </div>
         """, unsafe_allow_html=True)
         
+        # ACTUAL STREAMLIT FORM FOR INTERACTION
         with st.form("lead_gen"):
-            email = st.text_input("Email Address", placeholder="name@gmail.com")
-            btn = st.form_submit_button("Unlock Full Report")
-            if btn and email:
-                st.success(f"Report sent to {email}!")
+            email = st.text_input("Enter your email to unlock the full PDF:", placeholder="student@gmail.com")
+            st.caption("🔒 We respect your data privacy. No spam.")
+            unlock_btn = st.form_submit_button("Send My Full Report & Roadmap ➤", type="primary")
+            
+            if unlock_btn and email:
+                st.success(f"Success! The 'Rhythm Master' Protocol has been sent to {email}.")
+                st.info("Please check your inbox in 3 minutes.")
 
-# --- MAIN ROUTING ---
+# --- 6. MAIN ROUTING ---
 
-render_navbar()
-
-if st.session_state['step'] == 'landing':
-    render_hero()
-    render_features()
-    
-    # Footer / Social Proof
-    st.markdown("---")
-    c1, c2, c3, c4 = st.columns(4)
-    c1.markdown("**Trusted by:**")
-    c2.markdown("**IIT Delhi Alumni**")
-    c3.markdown("**NID Design Heads**")
-    c4.markdown("**500+ Schools**")
-
-elif st.session_state['step'] == 'assessment':
-    if st.button("← Back to Home"):
-        st.session_state['step'] = 'landing'
-        st.rerun()
-    render_assessment()
-
-elif st.session_state['step'] == 'result':
-    if st.button("← Start Over"):
-        st.session_state['step'] = 'landing'
-        st.rerun()
-    render_result()
+if st.session_state['page'] == 'home':
+    page_home()
+elif st.session_state['page'] == 'assessment':
+    page_assessment()
+elif st.session_state['page'] == 'result':
+    page_result()
