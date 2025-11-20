@@ -39,10 +39,14 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
     h1 { font-size: 4rem !important; letter-spacing: -2px; line-height: 1.1; }
     
-    /* MOBILE ADJUSTMENT FOR HEADERS */
+    /* MOBILE ADJUSTMENT */
     @media (max-width: 768px) {
         h1 { font-size: 2.5rem !important; }
         .nav-logo { font-size: 1.5rem !important; }
+        .hero-section { padding: 2rem 1rem !important; }
+        
+        /* Sticky Button Visibility */
+        .sticky-cta { display: block !important; }
     }
 
     /* COMPONENT: PREMIUM GLASS CARD */
@@ -62,22 +66,14 @@ st.markdown("""
         box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
     }
-    
-    /* CUSTOM SCROLLABLE CHAT CONTAINER STYLE */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background: #FFFFFF;
-        border-radius: 24px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-    }
 
-    /* COMPONENT: AI REPORT CARD (Inside Modal) */
+    /* COMPONENT: AI REPORT CARD */
     .ai-report-box {
         background: #F8FAFC;
         border-left: 5px solid #0EA5E9;
         padding: 20px;
         margin-bottom: 20px;
-        font-family: 'Courier New', monospace; /* Tech/AI feel */
+        font-family: 'Courier New', monospace;
         font-size: 0.95rem;
     }
     
@@ -136,9 +132,9 @@ st.markdown("""
     }
 
     /* --- ASSESSMENT FORM FIX (VERTICAL ALIGNMENT) --- */
-    /* This explicitly resets the above Horizontal style ONLY for the Assessment Form */
+    /* Overrides horizontal nav style ONLY inside the form */
     [data-testid="stForm"] div[role="radiogroup"] {
-        flex-direction: column !important; /* Force Vertical */
+        flex-direction: column !important; 
         background-color: transparent !important;
         padding: 0 !important;
         justify-content: flex-start !important;
@@ -148,7 +144,7 @@ st.markdown("""
         background-color: #FFFFFF !important;
         border: 1px solid #E2E8F0 !important;
         margin-bottom: 10px !important;
-        width: 100% !important; /* Full width options */
+        width: 100% !important;
         border-radius: 12px !important;
         padding: 15px !important;
     }
@@ -156,7 +152,6 @@ st.markdown("""
         border-color: #0077B6 !important;
         background-color: #F0F9FF !important;
     }
-    /* ------------------------------------------------ */
 
     .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
     
@@ -195,6 +190,28 @@ st.markdown("""
         border-radius: 20px;
     }
 
+    /* STICKY MOBILE BUTTON (Hidden on Desktop) */
+    .sticky-cta {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+        width: 90%;
+    }
+    .sticky-btn {
+        background: linear-gradient(90deg, #0077B6 0%, #00B4D8 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 50px;
+        text-align: center;
+        font-weight: bold;
+        box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
+        display: block;
+        text-decoration: none;
+    }
+
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
@@ -219,58 +236,74 @@ if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
 if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
 
-# --- 5. AI GENERATION LOGIC ---
+# --- 5. AI GENERATION LOGIC & POPUP (INCLUDES ALISON) ---
 def generate_report_text(profile, scores):
     core_type = profile.replace("Distoversity ", "")
     pain_point = ""
     achilles_heel = ""
     skills = []
+    alison_courses = []
     
     if core_type == "Creator":
         pain_point = "You despise routine. Ambiguity is your playground."
         achilles_heel = "The 'Idea Junkie' Syndrome."
         skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
+        alison_courses = ["Diploma in Innovation Management", "Design Thinking - A Primer"]
     elif core_type == "Influencer":
         pain_point = "You hate isolation and spreadsheets."
         achilles_heel = "The 'Surface Level' Trap."
         skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
+        alison_courses = ["Diploma in Social Media Marketing", "Public Speaking & Communication"]
     elif core_type == "Catalyst":
         pain_point = "You hate chaos and vague instructions."
         achilles_heel = "The 'Cog in the Wheel' Risk."
         skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
+        alison_courses = ["Diploma in Project Management", "Operations Management Supervision"]
     elif core_type == "Analyst":
         pain_point = "You hate hype and emotional decision making."
         achilles_heel = "Analysis Paralysis."
         skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
+        alison_courses = ["Data Science Fundamentals", "Advanced Excel Training"]
 
     return f"""
-    ### 🚨 THE URGENT TRUTH ABOUT YOUR CAREER
-    **Your Profile: {profile}**
-    
-    Most people guess their career path. You don't have to. 
-    You are a **{core_type}**, which means you are wired for specific high-value roles, not generic jobs.
-    
-    **Why you feel stuck:**
-    {pain_point}
-    
-    ---
-    ### ⚠️ THE RISK OF IGNORING THIS
-    **Your Achilles Heel: {achilles_heel}**
-    If you don't align your degree with your energy, you risk burning out in a job you hate within 3 years.
-    
-    ---
-    ### 🚀 YOUR MILLION-RUPEE ROADMAP
-    To dominate your industry, you need these exact skills:
-    1. **{skills[0]}** 2. **{skills[1]}**
-    3. **{skills[2]}**
-    
-    **Don't just get a degree. Build an unfair advantage.**
-    """
+### 🚨 THE URGENT TRUTH ABOUT YOUR CAREER
+**Your Profile: {profile}**
+
+Most people guess their career path. You don't have to. 
+You are a **{core_type}**, which means you are wired for specific high-value roles, not generic jobs.
+
+**Why you feel stuck:**
+{pain_point}
+
+---
+### ⚠️ THE RISK OF IGNORING THIS
+**Your Achilles Heel: {achilles_heel}**
+If you don't align your degree with your energy, you risk burning out in a job you hate within 3 years.
+
+---
+### 🚀 YOUR MILLION-RUPEE ROADMAP
+To dominate your industry, you need these exact skills:
+1. **{skills[0]}**
+2. **{skills[1]}**
+3. **{skills[2]}**
+
+---
+### 🎓 FREE UPSKILLING (Powered by Alison)
+As a Distoversity member, we recommend these **FREE** courses to bridge your gap immediately:
+* **{alison_courses[0]}**
+* **{alison_courses[1]}**
+
+**Don't just get a degree. Build an unfair advantage.**
+"""
 
 @st.dialog("⚡ CHIEF GENIUS OFFICER REPORT")
 def show_popup_report(profile, scores):
     report_content = generate_report_text(profile, scores)
-    st.markdown(f"""<div class="ai-report-box">{report_content}</div>""", unsafe_allow_html=True)
+    
+    # Using st.container to prevent HTML formatting issues
+    with st.container(border=True):
+        st.markdown(report_content)
+        
     st.markdown("""<div class="cta-box"><h3>🚀 STOP GUESSING. START WINNING.</h3><p>Expert Career Strategy Call (Usually ₹1999, FREE for you today).</p></div>""", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("📞 Claim My Free Career Strategy Call", type="primary", use_container_width=True):
@@ -285,6 +318,7 @@ def navbar():
         with c1:
             st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
         
+        # Horizontal menu logic logic
         if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
         if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
         if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
@@ -318,11 +352,14 @@ def render_home():
     for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS CDOL", "LPU ONLINE"]):
         cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; opacity:0.8; font-size:1.1rem;'>{p}</h3>", unsafe_allow_html=True)
 
-    st.markdown("<br><br><h2 style='text-align:center;'>The Competitor Gap: Beyond Surface Data</h2>", unsafe_allow_html=True)
+    # "Why Distoversity" Section
+    st.markdown("<br><br><h2 style='text-align:center;'>Why Distoversity?</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#64748B; max-width:600px; margin:0 auto 30px auto;'>We don't just match you to a university. We match you to a future where you win.</p>", unsafe_allow_html=True)
+    
     c1, c2, c3 = st.columns(3)
-    with c1: st.markdown("""<div class="d-card"><div class="icon-circle">🧠</div><h3 style="text-align:center; font-size:1.5rem;">Multidimensional</h3><p style="text-align:center; color:#64748B;">Traditional tests fail to quantify energy. We map your full psychological infrastructure.</p></div>""", unsafe_allow_html=True)
-    with c2: st.markdown("""<div class="d-card"><div class="icon-circle">🏫</div><h3 style="text-align:center; font-size:1.5rem;">Risk Mitigation</h3><p style="text-align:center; color:#64748B;">We don't predict; we validate alignment to ensure high-reward performance.</p></div>""", unsafe_allow_html=True)
-    with c3: st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Role Clarity</h3><p style="text-align:center; color:#64748B;">Defining specific roles where your energy distribution delivers maximum commercial value.</p></div>""", unsafe_allow_html=True)
+    with c1: st.markdown("""<div class="d-card"><div class="icon-circle">🧠</div><h3 style="text-align:center; font-size:1.5rem;">Scientific Alignment</h3><p style="text-align:center; color:#64748B;">Traditional tests fail to quantify energy. We map your full psychological infrastructure using Wealth Dynamics.</p></div>""", unsafe_allow_html=True)
+    with c2: st.markdown("""<div class="d-card"><div class="icon-circle">🤖</div><h3 style="text-align:center; font-size:1.5rem;">AI Powered</h3><p style="text-align:center; color:#64748B;">Eduveer doesn't sleep. Get unbiased, data-driven advice on fees, placements, and syllabus 24/7.</p></div>""", unsafe_allow_html=True)
+    with c3: st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Career Architecture</h3><p style="text-align:center; color:#64748B;">Defining specific roles where your energy distribution delivers maximum commercial value.</p></div>""", unsafe_allow_html=True)
 
 def render_explorer():
     st.markdown("## 🏫 University Power Explorer")
@@ -534,6 +571,9 @@ def render_eduveer():
             response_text = "I recommend looking at our Explorer tab for detailed fees."
             st.session_state.messages.append({"role": "assistant", "content": response_text})
             with st.chat_message("assistant"): st.markdown(response_text)
+
+# --- STICKY BUTTON (Shows only on Mobile) ---
+st.markdown("""<div class="sticky-cta"><a href="#" class="sticky-btn">🚀 Book Career Advice</a></div>""", unsafe_allow_html=True)
 
 # --- 12. MAIN ROUTER ---
 navbar()
