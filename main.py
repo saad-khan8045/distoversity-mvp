@@ -55,6 +55,30 @@ st.markdown("""
         border-color: var(--accent);
     }
 
+    /* COMPONENT: FEATURE CARD (Why Us) */
+    .feature-card {
+        background: linear-gradient(145deg, #ffffff, #f0f9ff);
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 10px 30px -10px rgba(0, 119, 182, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px -10px rgba(0, 119, 182, 0.2);
+    }
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+        padding: 15px;
+        background: var(--primary-light);
+        border-radius: 50%;
+        color: var(--primary);
+    }
+
     /* COMPONENT: ALISON CARD (Special) */
     .alison-card {
         background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
@@ -101,16 +125,16 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. PARTNER DATA ENGINE (ONLY PRIVATE UNIVERSITIES) ---
+# --- 3. PARTNER DATA ENGINE (ENHANCED) ---
 UNIVERSITY_DATA = [
-    {"name": "Jain University Online", "location": "Bangalore", "naac": "A++", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-    {"name": "Manipal University Jaipur", "location": "Online", "naac": "A+", "fees": 175000, "program": "MCA Data Science", "energy": "Analyst", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
-    {"name": "Amity University Online", "location": "Global", "naac": "A+", "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
-    {"name": "LPU Online", "location": "Global", "naac": "A++", "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
-    {"name": "Chandigarh University", "location": "Online", "naac": "A+", "fees": 180000, "program": "MBA General", "energy": "Influencer", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
-    {"name": "UPES Online", "location": "Global", "naac": "A", "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online Degree", "img": "https://www.upes.ac.in/media/1003/upes-logo.png"},
-    {"name": "NMIMS Global", "location": "Online", "naac": "A+", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
-    {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online Degree", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
+    {"name": "Jain University Online", "location": "Bangalore", "naac": "A++", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
+    {"name": "Manipal University Jaipur", "location": "Online", "naac": "A+", "fees": 175000, "program": "MCA Data Science", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
+    {"name": "Amity University Online", "location": "Global", "naac": "A+", "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
+    {"name": "LPU Online", "location": "Global", "naac": "A++", "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
+    {"name": "Chandigarh University", "location": "Online", "naac": "A+", "fees": 180000, "program": "MBA General", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
+    {"name": "UPES Online", "location": "Global", "naac": "A", "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://www.upes.ac.in/media/1003/upes-logo.png"},
+    {"name": "NMIMS Global", "location": "Online", "naac": "A+", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
+    {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
 
@@ -145,46 +169,68 @@ def render_home():
     </div>
     """, unsafe_allow_html=True)
     
-    c1, c2, c3 = st.columns([1, 1, 1])
+    # Centered CTA Button
+    c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        if st.button("🚀 Discover Your Career Energy (Free)", key="home_cta"):
+        # Using a custom markdown button for perfect centering if needed, but Streamlit columns work well
+        if st.button("🚀 Discover Your Career Energy (Free)", key="home_cta", use_container_width=True):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    # Partners (Private Universities Only)
-    st.markdown("<br><p style='text-align:center; font-weight:600; color:#94A3B8;'>OFFICIAL PARTNERS</p>", unsafe_allow_html=True)
+    # Partners (Refined Messaging)
+    st.markdown("<br><p style='text-align:center; font-weight:600; color:#94A3B8; letter-spacing: 1px;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
     cols = st.columns(5)
     for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS", "LPU ONLINE"]):
         cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.4rem;'>{p}</h3>", unsafe_allow_html=True)
 
-    # ALISON Integration (New!)
+    # Value Prop (Enhanced Graphics)
+    st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#64748B; margin-bottom:3rem;'>A holistic approach to career growth.</p>", unsafe_allow_html=True)
+    
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3>Identity Analysis</h3>
+            <p style="color:#475569;">Stop forcing yourself into roles you hate. Find your natural flow with our AI assessment.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c2:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🏫</div>
+            <h3>Online Degrees</h3>
+            <p style="color:#475569;">Work while you learn. Valid degrees from UGC-approved universities like Amity & Manipal.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c3:
+        st.markdown("""
+        <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3>Career Roadmap</h3>
+            <p style="color:#475569;">Integrate your degree with <b>ALISON</b> certifications for maximum professional impact.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ALISON Integration
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown("""
     <div style="background:#FFF7ED; border:1px solid #FED7AA; border-radius:16px; padding:40px; text-align:center;">
         <h3 style="color:#D97706;">🎓 Upskill with ALISON</h3>
         <p style="color:#92400E;">We have partnered with <b>ALISON</b> to provide free certification courses that complement your degree.</p>
-        <div style="display:flex; gap:20px; justify-content:center; margin-top:20px;">
-            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA;">📜 Project Management</span>
-            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA;">💻 IT Support</span>
-            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA;">🗣️ Communication</span>
+        <div style="display:flex; gap:20px; justify-content:center; margin-top:20px; flex-wrap: wrap;">
+            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">📜 Project Management</span>
+            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">💻 IT Support</span>
+            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">🗣️ Communication</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Value Prop
-    st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown("""<div class="d-card"><h3>🧠 Identity Analysis</h3><p>Stop forcing yourself into roles you hate. Find your natural flow.</p></div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown("""<div class="d-card"><h3>🏫 Online Degrees</h3><p>Work while you learn. Valid degrees from UGC-approved universities.</p></div>""", unsafe_allow_html=True)
-    with c3:
-        st.markdown("""<div class="d-card"><h3>🚀 Career Roadmap</h3><p>Integrate your degree with ALISON certifications for maximum impact.</p></div>""", unsafe_allow_html=True)
-
 # --- 7. PAGE: UNIVERSITY EXPLORER ---
 def render_explorer():
     st.markdown("## 🏫 University Explorer")
-    st.write("Compare top private online universities matched to your Genius Profile.")
+    st.markdown("Compare top private online universities matched to your Genius Profile. **All universities listed are UGC/AICTE Approved.**")
     
     # Filters
     col1, col2, col3 = st.columns(3)
@@ -207,22 +253,33 @@ def render_explorer():
     for idx, row in filtered_df.iterrows():
         with st.container():
             st.markdown(f"""
-            <div class="d-card" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
-                <div style="display:flex; align-items:center; gap:20px;">
-                    <img src="{row['img']}" height="60" style="object-fit:contain;">
-                    <div>
-                        <h3 style="margin:0; font-size:1.4rem;">{row['name']}</h3>
-                        <p style="margin:0; font-size:0.9rem; color:#64748B;">📍 {row['location']} | 🏆 {row['naac']} | 🎓 {row['type']}</p>
+            <div class="d-card" style="margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display:flex; align-items:center; gap:20px;">
+                        <img src="{row['img']}" height="60" style="object-fit:contain; max-width: 100px;">
+                        <div>
+                            <h3 style="margin:0; font-size:1.4rem;">{row['name']}</h3>
+                            <p style="margin:0; font-size:0.9rem; color:#64748B;">📍 {row['location']} | 🏆 {row['naac']} | 🎓 {row['type']}</p>
+                            <p style="margin:0; font-size:0.8rem; color:#0EA5E9;">✅ Approvals: {row['approvals']}</p>
+                        </div>
                     </div>
-                </div>
-                <div style="text-align:right;">
-                    <div style="font-weight:700; color:#0077B6; font-size:1.2rem;">₹{row['fees']:,}</div>
-                    <div style="font-size:0.8rem; background:#E0F2FE; padding:4px 8px; border-radius:4px; color:#0077B6; display:inline-block; margin-top:5px;">{row['energy']} Fit</div>
+                    <div style="text-align:right;">
+                        <div style="font-weight:700; color:#0077B6; font-size:1.2rem;">₹{row['fees']:,}</div>
+                        <div style="font-size:0.8rem; background:#E0F2FE; padding:4px 8px; border-radius:4px; color:#0077B6; display:inline-block; margin-top:5px;">{row['energy']} Fit</div>
+                    </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            if st.button(f"View Details for {row['name']}", key=f"btn_{idx}"):
-                st.toast("Redirecting to Detailed Profile...")
+            
+            # Adding columns for buttons inside the card container area (visually)
+            c_btn1, c_btn2, c_void = st.columns([1, 1, 3])
+            with c_btn1:
+                 if st.button(f"View Details", key=f"btn_view_{idx}"):
+                    st.toast(f"Viewing details for {row['name']}...")
+            with c_btn2:
+                 if st.button(f"Brochure", key=f"btn_brochure_{idx}"):
+                     st.toast("Downloading Brochure...")
+
 
 # --- 8. PAGE: ASSESSMENT ---
 def render_assessment():
