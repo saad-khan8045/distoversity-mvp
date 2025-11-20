@@ -39,6 +39,12 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
     h1 { font-size: 4rem !important; letter-spacing: -2px; line-height: 1.1; }
     
+    /* MOBILE ADJUSTMENT FOR HEADERS */
+    @media (max-width: 768px) {
+        h1 { font-size: 2.5rem !important; }
+        .nav-logo { font-size: 1.5rem !important; }
+    }
+
     /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
         background: #FFFFFF;
@@ -56,6 +62,14 @@ st.markdown("""
         box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
     }
+    
+    /* CUSTOM SCROLLABLE CHAT CONTAINER STYLE */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background: #FFFFFF;
+        border-radius: 24px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    }
 
     /* COMPONENT: AI REPORT CARD (Inside Modal) */
     .ai-report-box {
@@ -63,7 +77,7 @@ st.markdown("""
         border-left: 5px solid #0EA5E9;
         padding: 20px;
         margin-bottom: 20px;
-        font-family: 'Courier New', monospace; /* Tech/AI feel */
+        font-family: 'Courier New', monospace;
         font-size: 0.95rem;
     }
     
@@ -99,17 +113,28 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
 
-    /* COMPONENT: STICKY NAV */
-    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
-        position: sticky;
-        top: 0;
-        background-color: rgba(255, 255, 255, 0.98);
-        z-index: 999;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #F1F5F9;
+    /* NAVIGATION STYLING (HORIZONTAL SCROLL) */
+    div[role="radiogroup"] {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        justify-content: center;
     }
-    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
+    div[role="radiogroup"] label {
+        background-color: #F8FAFC;
+        padding: 10px 20px;
+        border-radius: 30px;
+        margin: 0 5px;
+        border: 1px solid #E2E8F0;
+        transition: all 0.3s;
+    }
+    div[role="radiogroup"] label:hover {
+        border-color: #0077B6;
+        color: #0077B6;
+    }
+    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 2rem; color: var(--primary-dark); margin-bottom: 10px; text-align: center;}
     
     /* COMPONENT: BUTTONS */
     .stButton>button {
@@ -141,11 +166,6 @@ st.markdown("""
         font-size: 1.8rem; margin: 0 auto 1rem auto; color: var(--primary);
     }
 
-    /* SCROLLABLE CHAT CONTAINER */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        border-radius: 20px;
-    }
-
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
@@ -156,6 +176,7 @@ UNIVERSITY_DATA = [
     {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
     {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
     {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
+    {"name": "Chandigarh University", "location": "Online", "naac": "A+", "nirf": "Rank 29", "fees": 180000, "program": "MBA General", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "placement": "89%", "avg_pkg": "5.2 LPA", "highest_pkg": "28 LPA", "highlights": "Flexible Exams, Case Studies", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
     {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
     {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
 ]
@@ -165,59 +186,89 @@ df = pd.DataFrame(UNIVERSITY_DATA)
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
-if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile."}]
+if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
 
 # --- 5. AI GENERATION LOGIC & POPUP ---
 def generate_report_text(profile, scores):
     core_type = profile.replace("Distoversity ", "")
-    pain_point = ""
-    achilles_heel = ""
-    skills = []
     
-    if core_type == "Creator":
-        pain_point = "You despise routine. Ambiguity is your playground."
-        achilles_heel = "The 'Idea Junkie' Syndrome."
-        skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
-    elif core_type == "Influencer":
-        pain_point = "You hate isolation and spreadsheets."
-        achilles_heel = "The 'Surface Level' Trap."
-        skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
-    elif core_type == "Catalyst":
-        pain_point = "You hate chaos and vague instructions."
-        achilles_heel = "The 'Cog in the Wheel' Risk."
-        skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
-    elif core_type == "Analyst":
-        pain_point = "You hate hype and emotional decision making."
-        achilles_heel = "Analysis Paralysis."
-        skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
+    # Define dynamic content based on profile using your "Rhythm Master" style language
+    if "Creator" in profile:
+        archetype = "THE INNOVATION ARCHITECT"
+        pain = "Your biggest pain point is ROUTINE and BUREAUCRACY. You despise systems that stifle your ability to create."
+        weakness = "The 'Idea Junkie' Syndrome: Starting 50 projects and finishing zero."
+        roadmap = ["Structured Agile Methodologies", "Strategic Delegation", "Product Launch Systems"]
+    elif "Influencer" in profile:
+        archetype = "THE NETWORK COMMANDER"
+        pain = "Your biggest pain point is ISOLATION and SILOS. You wither in environments that lack human connection."
+        weakness = "The 'Surface Level' Trap: Being seen as all talk, no action."
+        roadmap = ["Executive Storytelling", "High-Ticket Negotiation", "Organizational Advocacy"]
+    elif "Catalyst" in profile:
+        archetype = "THE RHYTHM MASTER"
+        pain = "Your biggest pain point is AMBIGUITY and WASTED TIME. You despise chaotic inputs and unscheduled stops."
+        weakness = "The Efficiency Trap: Paralyzing your speed with over-analysis."
+        roadmap = ["Rapid Prototyping", "Dynamic Resource Optimization", "High-Velocity Implementation"]
+    elif "Analyst" in profile:
+        archetype = "THE DATA SOVEREIGN"
+        pain = "Your biggest pain point is HYPE and EMOTIONAL DECISION MAKING. You need verifiable precision."
+        weakness = "Analysis Paralysis: Waiting for 100% certainty before moving."
+        roadmap = ["Predictive Analytics", "Risk Quantification", "Systems Architecture"]
+    else:
+        # Fallback
+        archetype = "THE UNTAPPED GENIUS"
+        pain = "Lack of clarity."
+        weakness = "Misalignment."
+        roadmap = ["Self Discovery", "Market Analysis", "Skill Acquisition"]
 
     return f"""
-    ### SECTION 1: YOUR CORE GENIUS REVEAL
-    **Archetype: {profile} ({int(scores.get(profile, 0))}% Match)**
-    Listen closely: Your brain is wired differently. {pain_point}
+    ### 1. 🎯 YOUR CORE GENIUS REVEAL (The Instant Validation)
+    **The Archetype: {archetype}**
+    
+    Your psychological energy is driven by **{core_type}**.
+    
+    **Emotional Hook:** {pain}
+    
     ---
-    ### SECTION 2: STRATEGIC ROADMAP
-    **The Solution: Your Next Move**
-    1. **{skills[0]}**
-    2. **{skills[1]}**
-    3. **{skills[2]}**
+    
+    ### 2. 🚨 YOUR CRITICAL WEAK POINT (The Urgency)
+    **Achilles' Heel: {weakness}**
+    
+    If you fail to consciously develop your missing energies, your expertise will devolve into STAGNATION. You will be seen as a participant rather than a leader.
+    
+    **Immediate Risk:** Without mastering these skills, you risk hitting a professional ceiling where you are paid to follow orders, not create strategy.
+    
+    ---
+
+    ### 3. 🗺️ YOUR STRATEGIC ROADMAP (The High Value Path)
+    **The Solution: Lead Through Your Genius**
+    
+    To transcend the gap, you must master these high-impact skills:
+    
+    1. **{roadmap[0]}**
+    2. **{roadmap[1]}**
+    3. **{roadmap[2]}**
+    
+    ---
+    
+    ### 4. 🔑 THE FINAL DECISION
+    **Stop guessing your future. Start engineering it.**
+    Your Expertise + Missing Skills = Unstoppable Executive.
     """
 
 @st.dialog("⚡ CHIEF GENIUS OFFICER REPORT")
 def show_popup_report(profile, scores):
     report_content = generate_report_text(profile, scores)
     st.markdown(f"""<div class="ai-report-box">{report_content}</div>""", unsafe_allow_html=True)
-    st.markdown("""<div class="cta-box"><h3>🚀 The Final Decision</h3><p>Step into clarity.</p></div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="cta-box"><h3>🚀 ACCELERATE YOUR AUTHORITY</h3><p>Join the Distoversity Community & Get Your 4-Year Roadmap.</p></div>""", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
-        st.success("Request Received!")
+    if st.button("📞 Book My Strategic Power Session (₹499)", type="primary", use_container_width=True):
+        st.success("Request Received! Redirecting to secure payment gateway...")
         time.sleep(2)
         st.rerun()
 
 # --- 6. NAVIGATION SYSTEM ---
 def navbar():
     with st.container():
-        # Added extra column for Eduveer to match screenshot and fix access
         c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.5, 0.8, 0.8, 0.8, 0.8, 0.8, 1, 1.5])
         with c1:
             st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
@@ -227,7 +278,6 @@ def navbar():
         if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
         if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
         if c6.button("Partners", use_container_width=True): st.session_state.page = 'Institutions'; st.rerun()
-        # ADDED: Button to access the Chatbot
         if c7.button("🤖 Eduveer", use_container_width=True): st.session_state.page = 'Eduveer'; st.rerun()
         if c8.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
 
@@ -236,31 +286,31 @@ def navbar():
 def render_home():
     st.markdown("""
     <div class="hero-section">
-        <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
+        <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">SCIENTIFIC CAREER CERTAINTY</div>
+        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">STOP GUESSING YOUR FUTURE.<br>START ENGINEERING IT.</h1>
         <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
-            Whether you are a student or a working professional, alignment is everything.<br>
-            We match your <b>Core Professional Identity</b> to India's Top Online Universities.
+            The Era of Subjective Career Advice is Obsolete.<br>
+            We provide <b>Strategic Clarity</b> via <b>Computational Rigor</b> using our proprietary 4D Energy Model.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        if st.button("🚀 Discover Your Spark (Free)", key="home_cta", use_container_width=True):
+        if st.button("🚀 Start Strategic Profile Assessment", key="home_cta", use_container_width=True):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    st.markdown("<br><p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing:1px;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
+    st.markdown("<br><p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing:1px;'>TRUSTED BY INDIA'S TOP GRADE 'A' UNIVERSITIES</p>", unsafe_allow_html=True)
     cols = st.columns(5)
     for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS CDOL", "LPU ONLINE"]):
         cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; opacity:0.8; font-size:1.1rem;'>{p}</h3>", unsafe_allow_html=True)
 
-    st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
+    st.markdown("<br><br><h2 style='text-align:center;'>The Competitor Gap: Beyond Surface Data</h2>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
-    with c1: st.markdown("""<div class="d-card"><div class="icon-circle">🧠</div><h3 style="text-align:center; font-size:1.5rem;">Identity Analysis</h3><p style="text-align:center; color:#64748B;">Stop forcing yourself into roles you hate.</p></div>""", unsafe_allow_html=True)
-    with c2: st.markdown("""<div class="d-card"><div class="icon-circle">🏫</div><h3 style="text-align:center; font-size:1.5rem;">Online Degrees</h3><p style="text-align:center; color:#64748B;">Valid degrees from UGC-approved universities.</p></div>""", unsafe_allow_html=True)
-    with c3: st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Career Roadmap</h3><p style="text-align:center; color:#64748B;">Integrate your degree with <b>ALISON</b> certifications.</p></div>""", unsafe_allow_html=True)
+    with c1: st.markdown("""<div class="d-card"><div class="icon-circle">🧠</div><h3 style="text-align:center; font-size:1.5rem;">Multidimensional</h3><p style="text-align:center; color:#64748B;">Traditional tests fail to quantify energy. We map your full psychological infrastructure.</p></div>""", unsafe_allow_html=True)
+    with c2: st.markdown("""<div class="d-card"><div class="icon-circle">🏫</div><h3 style="text-align:center; font-size:1.5rem;">Risk Mitigation</h3><p style="text-align:center; color:#64748B;">We don't predict; we validate alignment to ensure high-reward performance.</p></div>""", unsafe_allow_html=True)
+    with c3: st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Role Clarity</h3><p style="text-align:center; color:#64748B;">Defining specific roles where your energy distribution delivers maximum commercial value.</p></div>""", unsafe_allow_html=True)
 
 def render_explorer():
     st.markdown("## 🏫 University Power Explorer")
@@ -325,44 +375,51 @@ def render_explorer():
             with c_btn2: st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
 
 def render_assessment():
-    st.markdown("""<div style="text-align:center; margin-bottom:40px;"><h2 style="font-size:2.5rem; color:#0077B6;">Discover Your Spark</h2><p style="color:#64748B;">Answer these 5 questions to find your core energy type.</p></div>""", unsafe_allow_html=True)
+    st.markdown("""<div style="text-align:center; margin-bottom:40px;"><h2 style="font-size:2.5rem; color:#0077B6;">Discover Your Core Genius</h2><p style="color:#64748B;">We map your success trajectory by answering 5 high-level questions.</p></div>""", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         with st.form("assessment_form"):
-            # FIX: Added index=None to all radio buttons so they start unchecked
+            # Define questions and options precisely in 1-2-3-4 order
+            
+            q1_options = ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"]
             st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
-            q1 = st.radio("q1_select", ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"], label_visibility="collapsed", index=None)
+            q1 = st.radio("q1_select", q1_options, label_visibility="collapsed", index=None)
             
+            q2_options = ["Freedom to experiment and innovate", "Collaborative team settings", "Structured processes and clear timelines", "Quiet space for deep analytical work"]
             st.markdown('<p class="question-text">2. Your ideal work environment involves:</p>', unsafe_allow_html=True)
-            q2 = st.radio("q2_select", ["Freedom to experiment and innovate", "Collaborative team settings", "Structured processes and clear timelines", "Quiet space for deep analytical work"], label_visibility="collapsed", index=None)
+            q2 = st.radio("q2_select", q2_options, label_visibility="collapsed", index=None)
             
+            q3_options = ["Creating something new from scratch", "Presenting ideas and influencing outcomes", "Completing tasks on schedule", "Perfecting systems and solving puzzles"]
             st.markdown('<p class="question-text">3. You feel most energized when:</p>', unsafe_allow_html=True)
-            q3 = st.radio("q3_select", ["Creating something new from scratch", "Presenting ideas and influencing outcomes", "Completing tasks on schedule", "Perfecting systems and solving puzzles"], label_visibility="collapsed", index=None)
+            q3 = st.radio("q3_select", q3_options, label_visibility="collapsed", index=None)
             
+            q4_options = ["Intuitive and pattern-based", "People-focused and consensus-driven", "Experience-based and practical", "Data-driven and logical"]
             st.markdown('<p class="question-text">4. Your decision-making style is:</p>', unsafe_allow_html=True)
-            q4 = st.radio("q4_select", ["Intuitive and pattern-based", "People-focused and consensus-driven", "Experience-based and practical", "Data-driven and logical"], label_visibility="collapsed", index=None)
+            q4 = st.radio("q4_select", q4_options, label_visibility="collapsed", index=None)
             
+            q5_options = ["Share innovative concepts and possibilities", "Build relationships and network actively", "Organize action items and ensure follow-through", "Provide data-backed insights and analysis"]
             st.markdown('<p class="question-text">5. In group settings, you naturally:</p>', unsafe_allow_html=True)
-            q5 = st.radio("q5_select", ["Share innovative concepts and possibilities", "Build relationships and network actively", "Organize action items and ensure follow-through", "Provide data-backed insights and analysis"], label_visibility="collapsed", index=None)
+            q5 = st.radio("q5_select", q5_options, label_visibility="collapsed", index=None)
             
             st.markdown("<br>", unsafe_allow_html=True)
             if st.form_submit_button("Reveal My Spark ➤", type="primary", use_container_width=True):
-                # Validating that all questions are answered
                 if None in [q1, q2, q3, q4, q5]:
                     st.warning("Please answer all questions to reveal your profile.")
                 else:
-                    with st.spinner("Analyzing your Energy Profile..."):
+                    with st.spinner("Analyzing your Energy Profile with Multidimensional Regression..."):
                         time.sleep(1.5)
-                        answers = [q1, q2, q3, q4, q5]
-                        counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
-                        for a in answers:
-                            if "Creator" in a or "innovate" in a: counts["Distoversity Creator"] += 1
-                            elif "Influencer" in a or "Collaborative" in a: counts["Distoversity Influencer"] += 1
-                            elif "Catalyst" in a or "Structured" in a: counts["Distoversity Catalyst"] += 1
-                            else: counts["Distoversity Analyst"] += 1
-                        scores = {k: (v/5)*100 for k,v in counts.items()}
-                        st.session_state.user_profile = max(counts, key=counts.get)
-                        st.session_state.user_scores = scores
+                        
+                        scores = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
+                        profile_map = ["Distoversity Creator", "Distoversity Influencer", "Distoversity Catalyst", "Distoversity Analyst"]
+                        
+                        answers_indices = [q1_options.index(q1), q2_options.index(q2), q3_options.index(q3), q4_options.index(q4), q5_options.index(q5)]
+                        
+                        for idx in answers_indices:
+                            scores[profile_map[idx]] += 1
+                            
+                        final_scores = {k: (v/5)*100 for k,v in scores.items()}
+                        st.session_state.user_profile = max(scores, key=scores.get)
+                        st.session_state.user_scores = final_scores
                         st.session_state.page = 'Result'
                         st.rerun()
 
@@ -371,7 +428,16 @@ def render_result():
     scores = st.session_state.user_scores
     if not profile: st.warning("Take assessment first!"); st.stop()
     st.balloons()
-    st.markdown(f"""<div style="text-align:center; padding:3rem; background:#F0F9FF; border-radius:20px; border:1px solid #BAE6FD; margin-bottom:3rem;"><div style="color:#0077B6; font-weight:700;">YOUR CORE ENERGY IS</div><h1 style="color:#0077B6;">{profile}</h1></div>""", unsafe_allow_html=True)
+    st.markdown(f"""<div style="text-align:center; padding:3rem; background:#F0F9FF; border-radius:20px; border:1px solid #BAE6FD; margin-bottom:3rem;"><div style="color:#0077B6; font-weight:700;">YOUR CORE GENIUS IS</div><h1 style="color:#0077B6;">{profile}</h1></div>""", unsafe_allow_html=True)
+    
+    st.markdown("### 📊 Energy Breakdown")
+    c_stats = st.columns(4)
+    c_stats[0].metric("Creator", f"{int(scores['Distoversity Creator'])}%")
+    c_stats[1].metric("Influencer", f"{int(scores['Distoversity Influencer'])}%")
+    c_stats[2].metric("Catalyst", f"{int(scores['Distoversity Catalyst'])}%")
+    c_stats[3].metric("Analyst", f"{int(scores['Distoversity Analyst'])}%")
+    st.divider()
+
     c1, c2 = st.columns(2)
     with c1:
         st.markdown("### 🎯 Potential University Matches")
@@ -391,42 +457,80 @@ def render_about():
     c1, c2 = st.columns(2)
     with c1:
         st.markdown("## The Distoversity Story")
-        st.markdown("""<div class="timeline-item"><h4>2019: The Struggle</h4><p>Arrived in Delhi. Middle-class background. Zero guidance.</p></div><div class="timeline-item"><h4>The Factory Floor (Yazaki & Oppo)</h4><p>Worked in SMT/Electrical depts. Saw brilliant engineers failing because of misalignment.</p></div><div class="timeline-item"><h4>The Solution</h4><p>Founded Distoversity to combine Wealth Dynamics + AI to fix Career Misalignment.</p></div>""", unsafe_allow_html=True)
+        st.markdown("""<div class="timeline-item"><h4>2019: The Struggle</h4><p>Arrived in Delhi. Middle-class background. Zero guidance. I was the person from a middle-class family with no opportunity.</p></div><div class="timeline-item"><h4>The Realization</h4><p>Worked in SMT/Electrical departments at companies like Yazaki and Oppo. Recognized that 'Sales' drives education, not 'Need'.</p></div><div class="timeline-item"><h4>The Solution</h4><p>Founded Distoversity to combine Wealth Dynamics + AI. We believe Education is a Right. Our aim is Empowering India.</p></div>""", unsafe_allow_html=True)
     with c2:
         st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
 
+# --- FIX: POPULATED FAQ SECTION ---
 def render_faq():
     st.title("❓ Frequently Asked Questions")
-    with st.expander("❓ I'm confused about my career path."): st.write("We help you discover your 'Genius Profile' via AI.")
+    tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
+    with tab1:
+        st.header("General Education & Career")
+        with st.expander("❓ I'm confused about my career path after high school. How can Distoversity help?"):
+            st.write("We help you discover your 'Genius Profile' (natural strengths) via AI, guiding you to academic fields and careers that truly fit you.")
+        with st.expander("❓ Is the Distoversity 'Genius Profile' a psychological test?"):
+            st.write("No, it is a self-discovery and guidance tool based on Wealth Dynamics, not a psychological diagnostic test.")
+        with st.expander("❓ How accurate are the recommendations?"):
+            st.write("Our recommendations are based on data-driven matching of your profile with university strengths, leading to a 92% satisfaction rate.")
+        with st.expander("❓ What do Dynamo, Blaze, Tempo, and Steel mean?"):
+            st.write("Dynamo = Ideas (Creator), Blaze = People (Influencer), Tempo = Timing (Catalyst), Steel = Details (Analyst).")
 
+    with tab2:
+        st.header("Online Education & Learning Trends")
+        with st.expander("❓ Is online education a good option?"):
+            st.write("Yes! Your profile determines your online fit. We match you to programs that suit your learning style.")
+        with st.expander("❓ Will my online degree be recognized?"):
+            st.write("Absolutely. All our partner universities are UGC/NAAC accredited, making their degrees valid for jobs and higher education.")
+        with st.expander("❓ Is tech making education affordable?"):
+            st.write("Yes, technology reduces infrastructure costs, allowing top universities to offer degrees at a fraction of the campus cost.")
+
+    with tab3:
+        st.header("Universities & Admissions")
+        with st.expander("❓ Which universities partner with Distoversity?"):
+            st.write("We partner only with NAAC A+ and A++ accredited universities like Amity, Manipal, Jain, and NMIMS.")
+        with st.expander("❓ How do I apply?"):
+            st.write("Once you find your match, you can request a brochure or book a call. Our counselors will guide you through the application process.")
+
+# --- FIX: PARTNER SECTION CONTENT ---
 def render_institutions():
-    st.markdown("""<div class="hero-section"><h1>Recruit Students Aligned With Your Institutional DNA</h1></div>""", unsafe_allow_html=True)
+    st.markdown("""
+    <div class="hero-section">
+        <h1>Recruit Students Aligned With Your <span style="color:#00B4D8">Institutional DNA</span></h1>
+        <p style="max-width:700px; margin:20px auto; font-size:1.3rem; color:#475569;">
+            Stop sorting résumés; start welcoming students who fit. Distoversity uses proprietary AI to match students' Genius Profiles to institutions where they'll thrive.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     c1, c2 = st.columns(2)
-    with c1: st.image("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
-    with c2: st.markdown("### Why Partner With Us?"); st.button("Request Partnership Demo")
+    with c1:
+        st.image("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
+    with c2:
+        st.markdown("### Why Partner With Us?")
+        st.markdown("""
+        - **🎯 Targeted Recruitment:** We don't send you 'leads'; we send you matched candidates based on personality alignment.
+        - **📉 Lower Attrition:** Students matched by 'Energy Fit' are 40% less likely to drop out.
+        - **🧠 AI-Powered Screening:** Our pre-qualification process ensures you get serious, academic-intent students.
+        - **🤝 Exclusive Access:** Get access to our 'Genius Profile' database of pre-assessed students.
+        """)
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.button("Request Partnership Demo", type="primary")
 
-# --- FIX: SCROLLABLE CHAT CONTAINER ---
 def render_eduveer():
     st.markdown("""<div style="text-align:center; padding-bottom: 20px;"><h1>Chat with <span style="color:#00B4D8">Eduveer AI</span></h1></div>""", unsafe_allow_html=True)
     
-    # Used st.container with fixed height for scrollable area (Like WhatsApp Web)
     with st.container(height=600, border=True):
         for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
+            with st.chat_message(message["role"]): st.markdown(message["content"])
 
-        # Chat input inside the container context or just below
         if prompt := st.chat_input("Ask Eduveer about fees, syllabus..."):
             st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
-            
-            # Simulated Response
-            response_text = "I can help with that! Based on your request, I recommend looking at our Explorer tab for detailed fees."
+            with st.chat_message("user"): st.markdown(prompt)
+            response_text = "I recommend looking at our Explorer tab for detailed fees."
             st.session_state.messages.append({"role": "assistant", "content": response_text})
-            with st.chat_message("assistant"):
-                st.markdown(response_text)
-                
+            with st.chat_message("assistant"): st.markdown(response_text)
+
 # --- 12. MAIN ROUTER ---
 navbar()
 
