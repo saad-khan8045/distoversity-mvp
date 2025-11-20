@@ -14,18 +14,16 @@ st.set_page_config(
 # --- 2. ULTRA-PREMIUM DESIGN SYSTEM (CSS) ---
 st.markdown("""
     <style>
-    /* IMPORT FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     :root {
         --primary: #0077B6;       /* Deep Sky Blue */
-        --primary-dark: #023E8A;  /* Darker Blue for text */
-        --primary-light: #ADE8F4; /* Glow Color */
+        --primary-dark: #023E8A;
+        --primary-light: #ADE8F4;
         --accent: #00B4D8;        /* Bright Blue */
         --text-main: #0F172A;
         --text-sub: #475569;
         --white: #FFFFFF;
-        /* A subtle, professional gradient */
         --hero-gradient: linear-gradient(180deg, #E0F2FE 0%, #FFFFFF 100%); 
     }
 
@@ -38,77 +36,38 @@ st.markdown("""
 
     /* HEADERS */
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
+    h1 { font-size: 4.5rem !important; letter-spacing: -2px; line-height: 1.1; }
     
-    /* HERO HEADLINE */
-    .hero-title {
-        font-size: 4.5rem;
-        letter-spacing: -2px;
-        line-height: 1.1;
-        background: -webkit-linear-gradient(45deg, #0077B6, #0096C7);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-    
-    /* HERO BADGE */
-    .hero-badge {
-        background: rgba(0, 119, 182, 0.08);
-        color: #0077B6;
-        padding: 8px 24px;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 0.85rem;
-        letter-spacing: 1.5px;
-        display: inline-block;
-        margin-bottom: 1.5rem;
-        border: 1px solid rgba(0, 119, 182, 0.15);
-        text-transform: uppercase;
-    }
-
-    /* HERO SECTION CONTAINER */
-    .hero-section {
-        background: var(--hero-gradient);
-        padding: 6rem 2rem 5rem 2rem;
-        text-align: center;
-        border-radius: 0 0 60px 60px;
-        margin-bottom: 5rem;
-        margin-top: 0rem;
-        border-bottom: 1px solid #E0F2FE;
-        position: relative;
-        overflow: hidden;
-    }
-
     /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
         border-radius: 24px;
-        padding: 2.5rem;
+        padding: 2rem;
         box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
         height: 100%;
-        text-align: center; /* Center content for better visual flow */
+        position: relative;
+        overflow: hidden;
     }
     .d-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
         box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
     }
 
-    /* COMPONENT: FEATURE ICON CIRCLE */
-    .icon-circle {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #E0F2FE, #FFFFFF);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        margin: 0 auto 1.5rem auto; /* Center the icon */
-        box-shadow: 0 10px 20px -5px rgba(0, 119, 182, 0.1);
-        border: 1px solid #E0F2FE;
+    /* COMPONENT: COMPARISON TABLE */
+    .stDataFrame { border-radius: 16px; overflow: hidden; border: 1px solid #E2E8F0; }
+
+    /* COMPONENT: TAGS */
+    .feature-tag {
+        background: #F1F5F9; color: #475569; padding: 4px 12px; 
+        border-radius: 20px; font-size: 0.8rem; font-weight: 600; 
+        display: inline-block; margin-right: 5px; margin-bottom: 5px;
+    }
+    .match-tag {
+        background: #DCFCE7; color: #166534; padding: 4px 12px; 
+        border-radius: 20px; font-size: 0.8rem; font-weight: 700;
     }
 
     /* COMPONENT: STICKY NAV */
@@ -120,30 +79,33 @@ st.markdown("""
         padding-top: 1rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid #F1F5F9;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
     }
     .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
     
-    /* COMPONENT: MAIN CTA BUTTON (The "Attractive Force") */
-    div.stButton > button:first-child {
+    /* COMPONENT: BUTTONS */
+    .stButton>button {
         background: linear-gradient(90deg, #0077B6 0%, #0096C7 100%);
         color: white;
         border-radius: 50px;
-        padding: 0.8rem 3rem;
-        font-weight: 700;
-        font-size: 1.1rem;
+        padding: 0.6rem 2rem;
+        font-weight: 600;
         border: none;
-        box-shadow: 0 10px 25px rgba(0, 119, 182, 0.3);
-        transition: all 0.3s ease-in-out;
-        width: 100%; /* Ensure full width in column */
+        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.2);
+        transition: 0.2s;
     }
-    div.stButton > button:first-child:hover { 
-        transform: scale(1.03); 
-        box-shadow: 0 15px 35px rgba(0, 119, 182, 0.4);
-        background: linear-gradient(90deg, #005f8b 0%, #0077B6 100%);
-    }
+    .stButton>button:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0, 119, 182, 0.3); }
     
-    /* COMPONENT: ALISON PARTNER SECTION */
+    /* HERO */
+    .hero-section {
+        background: var(--hero-gradient);
+        padding: 6rem 2rem 5rem 2rem;
+        text-align: center;
+        border-radius: 0 0 60px 60px;
+        margin-bottom: 4rem;
+        border-bottom: 1px solid #E0F2FE;
+    }
+
+    /* ALISON */
     .alison-section {
         background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
         border: 1px solid #FFEDD5;
@@ -151,58 +113,126 @@ st.markdown("""
         padding: 3rem;
         text-align: center;
         margin-top: 5rem;
-        position: relative;
-        overflow: hidden;
-    }
-    /* Decorative background element for Alison */
-    .alison-section::before {
-        content: '';
-        position: absolute;
-        top: -50px;
-        right: -50px;
-        width: 150px;
-        height: 150px;
-        background: rgba(255, 237, 213, 0.5);
-        border-radius: 50%;
-        z-index: 0;
     }
     
-    .pill {
-        background: white;
-        padding: 8px 20px;
-        border-radius: 50px;
-        font-weight: 600;
-        color: #D97706;
-        border: 1px solid #FED7AA;
-        margin: 5px;
-        box-shadow: 0 4px 10px rgba(251, 146, 60, 0.1);
-        display: inline-block;
-        z-index: 1; position: relative;
+    /* UTILS */
+    .icon-circle {
+        width: 60px; height: 60px; background: #F0F9FF; border-radius: 50%; 
+        display: flex; align-items: center; justify-content: center; 
+        font-size: 1.8rem; margin: 0 auto 1rem auto; color: var(--primary);
     }
 
-    /* HIDE STREAMLIT UI */
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. PARTNER DATA ENGINE ---
+# --- 3. ENRICHED PARTNER DATA ---
 UNIVERSITY_DATA = [
-    {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-    {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "fees": 175000, "program": "MCA Data Science", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
-    {"name": "Amity University Online", "location": "Global", "naac": "A+", "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
-    {"name": "LPU Online", "location": "Global", "naac": "A++", "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
-    {"name": "Chandigarh University", "location": "Online", "naac": "A+", "fees": 180000, "program": "MBA General", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
-    {"name": "UPES Online", "location": "Global", "naac": "A", "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://www.upes.ac.in/media/1003/upes-logo.png"},
-    {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
-    {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
+    {
+        "name": "Jain Online", 
+        "location": "Bangalore", 
+        "naac": "A++", 
+        "nirf": "Top 100",
+        "fees": 210000, 
+        "program": "MBA Marketing", 
+        "energy": "Influencer", 
+        "type": "Online Degree", 
+        "approvals": "UGC-DEB, AICTE", 
+        "placement": "98%",
+        "avg_pkg": "6.2 LPA",
+        "highest_pkg": "32 LPA",
+        "highlights": "Strong Alumni, Live Classes",
+        "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"
+    },
+    {
+        "name": "Manipal University Online", 
+        "location": "Jaipur", 
+        "naac": "A+", 
+        "nirf": "Rank 76",
+        "fees": 175000, 
+        "program": "MCA Data Science", 
+        "energy": "Analyst", 
+        "type": "Online Degree", 
+        "approvals": "UGC, NAAC", 
+        "placement": "94%",
+        "avg_pkg": "5.5 LPA",
+        "highest_pkg": "18 LPA",
+        "highlights": "Global Access, Coursera Free",
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"
+    },
+    {
+        "name": "Amity University Online", 
+        "location": "Global", 
+        "naac": "A+", 
+        "nirf": "Top 50",
+        "fees": 345000, 
+        "program": "BCA Cloud Security", 
+        "energy": "Creator", 
+        "type": "Online Degree", 
+        "approvals": "UGC-DEB, WES", 
+        "placement": "92%",
+        "avg_pkg": "4.8 LPA",
+        "highest_pkg": "15 LPA",
+        "highlights": "Virtual Job Fairs, Portfolio Building",
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"
+    },
+    {
+        "name": "LPU Online", 
+        "location": "Global", 
+        "naac": "A++", 
+        "nirf": "Rank 47",
+        "fees": 160000, 
+        "program": "MBA Operations", 
+        "energy": "Catalyst", 
+        "type": "Online Degree", 
+        "approvals": "UGC, AICTE", 
+        "placement": "91%",
+        "avg_pkg": "5.0 LPA",
+        "highest_pkg": "21 LPA",
+        "highlights": "Affordable, Mentor Support",
+        "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"
+    },
+    {
+        "name": "Chandigarh University", 
+        "location": "Online", 
+        "naac": "A+", 
+        "nirf": "Rank 29",
+        "fees": 180000, 
+        "program": "MBA General", 
+        "energy": "Influencer", 
+        "type": "Online Degree", 
+        "approvals": "UGC-DEB", 
+        "placement": "89%",
+        "avg_pkg": "5.2 LPA",
+        "highest_pkg": "28 LPA",
+        "highlights": "Flexible Exams, Case Studies",
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"
+    },
+    {
+        "name": "NMIMS CDOL", 
+        "location": "Online", 
+        "naac": "A+", 
+        "nirf": "Top 20 B-School",
+        "fees": 400000, 
+        "program": "MBA Finance", 
+        "energy": "Analyst", 
+        "type": "Online Degree", 
+        "approvals": "UGC-DEB, AICTE", 
+        "placement": "93%",
+        "avg_pkg": "7.0 LPA",
+        "highest_pkg": "45 LPA",
+        "highlights": "Premium Brand, Leadership Focus",
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"
+    }
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
+if 'compare_list' not in st.session_state: st.session_state.compare_list = []
 
-# --- 5. NAVIGATION SYSTEM ---
+# --- 5. NAVIGATION ---
 def navbar():
     with st.container():
         c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1.5])
@@ -217,128 +247,136 @@ def navbar():
 
 # --- 6. PAGE: HOME ---
 def render_home():
-    # ULTRA-PREMIUM HERO
     st.markdown("""
     <div class="hero-section">
-        <div class="hero-badge">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 class="hero-title">Don't Just Upgrade Your Degree.<br>Upgrade Your <span style="color:#00B4D8">Identity.</span></h1>
-        <p style="max-width:800px; margin:25px auto; font-size:1.3rem; color:#475569; line-height:1.6;">
+        <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
+        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
+        <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
             Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Psychological DNA</b> to India's Top Online Universities.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # CENTERED CTA (PERFECTLY ALIGNED)
-    # Using 3 columns to center the button: [Spacer, Button, Spacer]
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         if st.button("🚀 Discover Your Career Energy (Free)", key="home_cta", use_container_width=True):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    # PARTNER LOGOS (Bold & Black)
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing: 1px; font-size:0.9rem; text-transform:uppercase;'>Trusted by Students of Top Universities</p>", unsafe_allow_html=True)
-    
-    partner_list = ["Amity University Online", "Manipal University Online", "Jain Online", "NMIMS CDOL", "LPU Online"]
+    st.markdown("<br><p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing:1px;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
     cols = st.columns(5)
-    for i, p in enumerate(partner_list):
-        cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; font-weight:800; font-size:1.2rem; opacity:0.9;'>{p}</h3>", unsafe_allow_html=True)
+    for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS CDOL", "LPU ONLINE"]):
+        cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; opacity:0.8; font-size:1.1rem;'>{p}</h3>", unsafe_allow_html=True)
 
-    # FEATURE CARDS (The "Attractive Force")
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center; font-size:2.5rem; color:#023E8A;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#64748B; margin-bottom:4rem; font-size:1.1rem;'>Scientific alignment for maximum career impact.</p>", unsafe_allow_html=True)
-    
+    # Features
+    st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown("""
-        <div class="d-card">
-            <div class="icon-circle">🧠</div>
-            <h3 style="font-size:1.5rem; margin-bottom:1rem;">Identity Analysis</h3>
-            <p style="color:#475569;">Stop forcing yourself into roles you hate. Find your natural flow with our AI assessment.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><div class="icon-circle">🧠</div><h3 style="text-align:center; font-size:1.5rem;">Identity Analysis</h3><p style="text-align:center; color:#64748B;">Stop forcing yourself into roles you hate. Find your natural flow.</p></div>""", unsafe_allow_html=True)
     with c2:
-        st.markdown("""
-        <div class="d-card">
-            <div class="icon-circle">🏫</div>
-            <h3 style="font-size:1.5rem; margin-bottom:1rem;">Online Degrees</h3>
-            <p style="color:#475569;">Work while you learn. Valid degrees from UGC-approved universities like Amity & Manipal.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><div class="icon-circle">🏫</div><h3 style="text-align:center; font-size:1.5rem;">Online Degrees</h3><p style="text-align:center; color:#64748B;">Valid degrees from UGC-approved universities like Amity & Manipal.</p></div>""", unsafe_allow_html=True)
     with c3:
-        st.markdown("""
-        <div class="d-card">
-            <div class="icon-circle">🚀</div>
-            <h3 style="font-size:1.5rem; margin-bottom:1rem;">Career Roadmap</h3>
-            <p style="color:#475569;">Integrate your degree with <b>ALISON</b> certifications for maximum professional impact.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Career Roadmap</h3><p style="text-align:center; color:#64748B;">Integrate your degree with <b>ALISON</b> certifications for maximum impact.</p></div>""", unsafe_allow_html=True)
 
-    # ALISON INTEGRATION (Visual & Attractive)
+    # ALISON
     st.markdown("""
     <div class="alison-section">
         <h3 style="color:#D97706; font-size:2rem; margin-bottom:1rem;">🎓 Upskill with ALISON</h3>
         <p style="color:#92400E; font-size:1.1rem; max-width:700px; margin:0 auto 2rem auto;">
-            We have partnered with <b>ALISON</b> to provide free certification courses that complement your degree.
+            We have partnered with <b>ALISON</b> to provide free certification courses.
         </p>
-        <div style="display:flex; gap:15px; justify-content:center; flex-wrap: wrap;">
-            <div class="pill">📜 Project Management</div>
-            <div class="pill">💻 IT Support</div>
-            <div class="pill">🗣️ Business Communication</div>
-            <div class="pill">📊 Data Analytics</div>
+        <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap;">
+            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">📜 Project Management</span>
+            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">💻 IT Support</span>
+            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">🗣️ Communication</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-# --- 7. PAGE: UNIVERSITY EXPLORER ---
+# --- 7. PAGE: POWER EXPLORER (NEW!) ---
 def render_explorer():
-    st.markdown("## 🏫 University Explorer")
-    st.markdown("Compare top private online universities matched to your Genius Profile. **All universities listed are UGC/AICTE Approved.**")
+    st.markdown("## 🏫 University Power Explorer")
+    st.markdown("Use our advanced data engine to compare top online universities. **All listed are UGC/AICTE Approved.**")
     
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        max_fee = st.slider("Max Budget (₹)", 50000, 500000, 250000, 50000)
-    with col2:
-        energy_filter = st.multiselect("Energy Fit", ["Creator", "Influencer", "Catalyst", "Analyst"], default=["Creator", "Analyst"])
-    with col3:
-        prog_type = st.multiselect("Program", ["MBA", "BCA", "BBA", "MCA"], default=["MBA", "BCA"])
+    # 1. COMPARISON WIDGET
+    st.markdown("### ⚖️ Compare Universities")
+    compare_list = st.multiselect("Select up to 3 universities to compare side-by-side:", df['name'].tolist(), max_selections=3)
+    
+    if compare_list:
+        st.markdown("<br>", unsafe_allow_html=True)
+        # Filter data for comparison
+        comp_df = df[df['name'].isin(compare_list)].set_index('name')
+        # Transpose for easy reading
+        display_cols = ['fees', 'placement', 'avg_pkg', 'highest_pkg', 'naac', 'approvals', 'highlights']
+        st.dataframe(comp_df[display_cols].style.format(thousands=","), use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True)
 
-    filtered_df = df[(df['fees'] <= max_fee) & (df['energy'].isin(energy_filter))]
+    # 2. ADVANCED FILTERS
+    st.markdown("### 🔍 Find Your Match")
+    c1, c2, c3, c4 = st.columns(4)
+    with c1:
+        max_fee = st.slider("Max Budget (₹)", 50000, 500000, 350000, 50000)
+    with c2:
+        energy_filter = st.multiselect("Energy Fit", ["Creator", "Influencer", "Catalyst", "Analyst"], default=["Creator", "Analyst", "Influencer", "Catalyst"])
+    with c3:
+        sort_by = st.selectbox("Sort By", ["Lowest Fees", "Highest Placement %", "Highest Avg Package"])
+    with c4:
+        min_placement = st.slider("Min Placement %", 50, 100, 80)
+
+    # 3. FILTERING LOGIC
+    filtered_df = df[
+        (df['fees'] <= max_fee) & 
+        (df['energy'].isin(energy_filter)) &
+        (df['placement'].str.replace('%','').astype(int) >= min_placement)
+    ]
     
-    st.write(f"Found **{len(filtered_df)}** matches for you:")
+    # Sorting
+    if sort_by == "Lowest Fees":
+        filtered_df = filtered_df.sort_values(by='fees')
+    elif sort_by == "Highest Placement %":
+        filtered_df = filtered_df.sort_values(by='placement', ascending=False)
     
+    st.write(f"Showing **{len(filtered_df)}** universities based on your filters:")
+    
+    # 4. DISPLAY CARDS
     for idx, row in filtered_df.iterrows():
         with st.container():
             st.markdown(f"""
-            <div class="d-card" style="margin-bottom:20px; border-left: 5px solid #0077B6; text-align: left;">
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
-                    <div style="display:flex; align-items:center; gap:25px;">
-                        <img src="{row['img']}" height="70" style="object-fit:contain; max-width: 120px;">
+            <div class="d-card" style="margin-bottom:20px; border-left: 5px solid #0077B6; padding: 1.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap: wrap; gap: 15px;">
+                    <div style="display:flex; align-items:center; gap:20px; flex: 2;">
+                        <img src="{row['img']}" height="70" style="object-fit:contain; max-width:100px;">
                         <div>
-                            <h3 style="margin:0; font-size:1.5rem; color:#023E8A;">{row['name']}</h3>
-                            <p style="margin:5px 0; font-size:1rem; color:#64748B;">📍 {row['location']} | 🏆 {row['naac']} | 🎓 {row['type']}</p>
-                            <p style="margin:0; font-size:0.9rem; color:#00B4D8; font-weight:600;">✅ Approvals: {row['approvals']}</p>
+                            <h3 style="margin:0; font-size:1.4rem; color:#023E8A;">{row['name']}</h3>
+                            <div style="margin-top:5px;">
+                                <span class="feature-tag">📍 {row['location']}</span>
+                                <span class="feature-tag">🏆 NAAC {row['naac']}</span>
+                                <span class="feature-tag">📜 {row['approvals']}</span>
+                            </div>
+                            <p style="margin-top:8px; font-size:0.9rem; color:#64748B;"><b>Highlights:</b> {row['highlights']}</p>
                         </div>
                     </div>
-                    <div style="text-align:right;">
-                        <div style="font-weight:800; color:#0077B6; font-size:1.4rem;">₹{row['fees']:,}</div>
-                        <div style="font-size:0.85rem; background:#E0F2FE; padding:6px 12px; border-radius:6px; color:#0077B6; display:inline-block; margin-top:8px; font-weight:600;">{row['energy']} Fit</div>
+                    <div style="text-align:right; flex: 1; border-left:1px solid #E2E8F0; padding-left:20px;">
+                        <div style="font-weight:800; color:#0077B6; font-size:1.5rem;">₹{row['fees']:,}</div>
+                        <p style="margin:0; font-size:0.9rem; color:#475569;">Total Fees</p>
+                        <div style="margin-top:10px;">
+                            <span style="color:#16A34A; font-weight:700;">{row['placement']} Placement</span><br>
+                            <span style="font-size:0.85rem; color:#64748B;">Avg Pkg: {row['avg_pkg']}</span>
+                        </div>
+                        <div style="margin-top:10px;">
+                            <span class="match-tag">⚡ {row['energy']} Fit</span>
+                        </div>
                     </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
-            c_btn1, c_btn2, c_void = st.columns([1, 1, 3])
+            c_btn1, c_btn2, c_space = st.columns([1, 1, 4])
             with c_btn1:
-                 if st.button(f"View Details", key=f"btn_view_{idx}"):
-                    st.toast(f"Viewing details for {row['name']}...")
+                 st.button(f"View Brochure", key=f"broch_{idx}")
             with c_btn2:
-                 if st.button(f"Brochure", key=f"btn_brochure_{idx}"):
-                     st.toast("Downloading Brochure...")
-
+                 st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
 
 # --- 8. PAGE: ASSESSMENT ---
 def render_assessment():
@@ -393,19 +431,22 @@ def render_result():
         matches = df[df['energy'] == profile]
         for idx, row in matches.iterrows():
              st.markdown(f"""
-            <div class="d-card" style="margin-bottom:1rem; padding:1.5rem; text-align: left;">
+            <div class="d-card" style="margin-bottom:1rem; padding:1.5rem;">
                 <div style="display:flex; justify-content:space-between;">
                     <h4 style="margin:0;">{row['name']}</h4>
-                    <span style="background:#E0F2FE; color:#0077B6; padding:4px 8px; border-radius:6px;">94% Match</span>
+                    <span class="match-tag">94% Match</span>
                 </div>
-                <p style="margin-top:10px;">✅ High Alignment with {profile} Energy</p>
+                <p style="margin-top:10px; color:#475569;">{row['program']}</p>
+                <div style="margin-top:10px; font-size:0.9rem;">
+                    <b>ROI Score:</b> 9/10 • <b>Placement:</b> {row['placement']}
+                </div>
             </div>
             """, unsafe_allow_html=True)
             
     with c2:
         st.markdown("### 🗺️ Your Strategic Roadmap")
         st.markdown("""
-        <div class="d-card alison-card" style="margin-bottom:1rem; text-align: left;">
+        <div class="d-card alison-card" style="margin-bottom:1rem;">
             <h4>Recommended ALISON Courses</h4>
             <p>To complement your degree, we recommend these free certifications:</p>
             <ul>
