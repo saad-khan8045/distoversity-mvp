@@ -1,321 +1,300 @@
 import streamlit as st
 import pandas as pd
 import time
-import plotly.express as px
 
-# --- 1. ENTERPRISE CONFIGURATION ---
+# --- 1. PREMIUM CONFIGURATION ---
 st.set_page_config(
-    page_title="Distoversity | Identity-First Career Guidance",
-    page_icon="🎓",
+    page_title="Distoversity | Identity-First Career Architecture",
+    page_icon="💎",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# --- 2. DESIGN SYSTEM (SKY BLUE PREMIUM) ---
+# --- 2. VETERAN DESIGN SYSTEM (CSS) ---
 st.markdown("""
     <style>
-    /* FONTS */
+    /* IMPORT FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     :root {
         --primary: #0077B6;       /* Deep Sky Blue */
-        --secondary: #90E0EF;     /* Soft Sky Blue */
-        --accent: #00B4D8;        /* Bright Blue */
-        --background: #F8FAFC;    /* Very Light Grey */
-        --text-main: #0F172A;     /* Navy Black */
-        --text-sub: #475569;      /* Slate Grey */
+        --primary-light: #E0F2FE; /* Very Light Blue */
+        --accent: #0EA5E9;        /* Bright Blue */
+        --text-dark: #0F172A;     /* Navy Black */
+        --text-gray: #475569;     /* Slate Grey */
+        --bg-white: #FFFFFF;
+        --shadow: 0 10px 30px -10px rgba(0, 119, 182, 0.15);
     }
 
-    /* GLOBAL OVERRIDES */
+    /* GLOBAL STYLES */
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        color: var(--text-main);
-        background-color: var(--background);
+        color: var(--text-dark);
+        background-color: #FFFFFF;
     }
 
     /* TYPOGRAPHY */
-    h1, h2, h3, h4 {
-        font-family: 'Outfit', sans-serif;
-        color: var(--primary);
-        font-weight: 700;
-    }
-    h1 { font-size: 3.5rem !important; line-height: 1.1; letter-spacing: -1px; }
-    h2 { font-size: 2.2rem !important; }
-    p { font-size: 1.1rem; line-height: 1.6; color: var(--text-sub); }
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary); font-weight: 700; }
+    h1 { font-size: 3.5rem !important; line-height: 1.1 !important; letter-spacing: -1px; }
+    h2 { font-size: 2.5rem !important; margin-bottom: 1.5rem !important; }
+    p { font-size: 1.15rem; line-height: 1.7; color: var(--text-gray); margin-bottom: 1.5rem; }
 
-    /* CARDS & CONTAINERS */
-    .glass-card {
-        background: white;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        border: 1px solid #E2E8F0;
-        transition: transform 0.2s;
+    /* COMPONENT: NAVIGATION BAR */
+    div[data-testid="stHorizontalBlock"] {
+        align-items: center;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #F1F5F9;
+        margin-bottom: 2rem;
     }
-    .glass-card:hover {
+
+    /* COMPONENT: INFO CARDS */
+    .veteran-card {
+        background: white;
+        border: 1px solid #E2E8F0;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s;
+        height: 100%;
+    }
+    .veteran-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 119, 182, 0.1);
         border-color: var(--accent);
+        box-shadow: 0 20px 40px -10px rgba(0, 119, 182, 0.2);
+    }
+
+    /* COMPONENT: TIMELINE CARD */
+    .timeline-card {
+        border-left: 4px solid var(--primary);
+        padding-left: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     /* BUTTONS */
     .stButton>button {
-        background: linear-gradient(90deg, #0077B6 0%, #0096C7 100%);
+        background: linear-gradient(135deg, #0077B6 0%, #0284C7 100%);
         color: white;
         border-radius: 50px;
-        padding: 0.75rem 2.5rem;
+        padding: 0.8rem 2.5rem;
         font-weight: 600;
         border: none;
-        box-shadow: 0 4px 12px rgba(0, 119, 182, 0.3);
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
         transition: all 0.3s;
+        font-size: 1rem;
     }
     .stButton>button:hover {
         transform: scale(1.02);
-        box-shadow: 0 8px 20px rgba(0, 119, 182, 0.4);
+        box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
         color: white;
     }
 
     /* HERO SECTION */
-    .hero-wrapper {
-        background: linear-gradient(180deg, #E0F2FE 0%, #FFFFFF 100%);
+    .hero-box {
+        background: linear-gradient(180deg, #F0F9FF 0%, #FFFFFF 100%);
         padding: 6rem 2rem 4rem 2rem;
         text-align: center;
         border-radius: 0 0 50px 50px;
-        margin-bottom: 3rem;
-        border-bottom: 1px solid #E2E8F0;
+        margin-bottom: 4rem;
+        margin-top: -2rem;
     }
-
-    /* LOCK & BLUR */
-    .blur-content { filter: blur(8px); opacity: 0.5; pointer-events: none; user-select: none; }
-    .lock-badge {
-        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        background: white; padding: 2rem; border-radius: 20px;
-        box-shadow: 0 20px 50px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 400px;
-        border: 1px solid #BAE6FD;
-    }
-
-    /* HIDE STREAMLIT BRANDING */
+    
+    /* HIDE STREAMLIT ELEMENTS */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    
+    /* BLUR MECHANIC */
+    .blur-container { position: relative; }
+    .blur-content { filter: blur(10px); opacity: 0.5; pointer-events: none; user-select: none; }
+    .lock-badge {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: white; padding: 2.5rem; border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.12); text-align: center; width: 90%; max-width: 450px;
+        border: 1px solid #BAE6FD;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATABASE (HARDCODED FROM YOUR IMAGES) ---
-# This replaces the CSV loading to ensure 100% uptime without file errors.
-UNIVERSITY_DATA = [
-    {
-        "name": "Manipal University Jaipur",
-        "location": "Jaipur",
-        "naac": "A+",
-        "program": "B.Tech Data Science",
-        "fees": "₹1.75 Lakh",
-        "energy": "Analyst",
-        "match": 96,
-        "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"
-    },
-    {
-        "name": "Amity University Online",
-        "location": "Noida (Online)",
-        "naac": "A+",
-        "program": "BCA (Cloud Security)",
-        "fees": "₹3.45 Lakh",
-        "energy": "Creator",
-        "match": 94,
-        "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"
-    },
-    {
-        "name": "LPU Online",
-        "location": "Punjab (Online)",
-        "naac": "A++",
-        "program": "MBA (Operations)",
-        "fees": "₹1.60 Lakh",
-        "energy": "Catalyst",
-        "match": 91,
-        "logo": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"
-    },
-    {
-        "name": "Jain University",
-        "location": "Bangalore",
-        "naac": "A++",
-        "program": "MBA (Marketing)",
-        "fees": "₹2.10 Lakh",
-        "energy": "Influencer",
-        "match": 93,
-        "logo": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"
-    },
-    {
-        "name": "Chandigarh University",
-        "location": "Punjab",
-        "naac": "A+",
-        "program": "B.Des (UX/UI)",
-        "fees": "₹1.80 Lakh",
-        "energy": "Creator",
-        "match": 89,
-        "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"
-    },
-    {
-        "name": "UPES Online",
-        "location": "Dehradun",
-        "naac": "A",
-        "program": "BBA (Analytics)",
-        "fees": "₹1.50 Lakh",
-        "energy": "Analyst",
-        "match": 95,
-        "logo": "https://www.upes.ac.in/media/1003/upes-logo.png"
-    }
+# --- 3. DATA ENGINE (Hardcoded for Stability) ---
+UNIVERSITY_DB = [
+    {"name": "Manipal University Jaipur", "type": "Analyst", "program": "B.Tech Data Science", "match": 96, "desc": "Structure & Rigor"},
+    {"name": "Amity University Online", "type": "Creator", "program": "BCA (Cloud Security)", "match": 94, "desc": "Flexibility & Innovation"},
+    {"name": "LPU Online", "type": "Catalyst", "program": "MBA (Operations)", "match": 91, "desc": "Process & Execution"},
+    {"name": "Jain University", "type": "Influencer", "program": "MBA (Marketing)", "match": 93, "desc": "Network & Leadership"},
+    {"name": "Chandigarh University", "type": "Creator", "program": "B.Des (UX/UI)", "match": 89, "desc": "Creative Freedom"},
+    {"name": "UPES Online", "type": "Analyst", "program": "BBA (Analytics)", "match": 95, "desc": "Data-Driven Focus"}
 ]
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
+if 'scores' not in st.session_state: st.session_state.scores = {'Creator':0, 'Influencer':0, 'Catalyst':0, 'Analyst':0}
 
-# --- 5. NAVIGATION SYSTEM ---
-def sidebar_nav():
-    with st.sidebar:
-        st.markdown("### 🔷 Distoversity")
-        st.caption("Identity-First Career Architecture")
-        
-        st.markdown("---")
-        
-        if st.button("🏠 Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
-        if st.button("ℹ️ About Us", use_container_width=True): st.session_state.page = 'About'; st.rerun()
-        if st.button("🛠️ Services", use_container_width=True): st.session_state.page = 'Services'; st.rerun()
-        if st.button("🏫 University Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
-        
-        st.markdown("---")
-        
-        if st.button("⚡ Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
-        
-        st.markdown("---")
-        st.info("© 2025 Distoversity\nDelhi, India")
+# --- 5. TOP NAVIGATION BAR ---
+def navbar():
+    # This creates a sticky top nav look
+    c1, c2, c3, c4, c5 = st.columns([2, 1, 1, 1, 1.2])
+    with c1:
+        st.markdown("<h3 style='margin:0; padding:0; font-size:1.8rem;'>Distoversity<span style='color:#0EA5E9'>.</span></h3>", unsafe_allow_html=True)
+    with c2:
+        if st.button("🏠 Home", key="nav_home", use_container_width=True): 
+            st.session_state.page = 'Home'
+            st.rerun()
+    with c3:
+        if st.button("ℹ️ About", key="nav_about", use_container_width=True): 
+            st.session_state.page = 'About'
+            st.rerun()
+    with c4:
+        if st.button("🛠️ Services", key="nav_services", use_container_width=True): 
+            st.session_state.page = 'Services'
+            st.rerun()
+    with c5:
+        if st.button("⚡ Assessment", key="nav_test", type="primary", use_container_width=True): 
+            st.session_state.page = 'Assessment'
+            st.rerun()
 
-# --- 6. PAGE: HOME ---
+# --- 6. PAGE DEFINITIONS ---
+
 def page_home():
-    # HERO SECTION
+    # HERO
     st.markdown("""
-    <div class="hero-wrapper">
-        <div style="color:#0077B6; font-weight:700; letter-spacing:2px; margin-bottom:10px;">INDIA'S #1 CAREER ARCHITECTURE PLATFORM</div>
+    <div class="hero-box">
+        <div style="color:#0EA5E9; font-weight:700; letter-spacing:2px; margin-bottom:15px; font-size:0.9rem;">INDIA'S PREMIER CAREER ARCHITECTURE PLATFORM</div>
         <h1>Stop Guessing Your Future.<br>Start Engineering It.</h1>
-        <p style="max-width:700px; margin:20px auto;">
+        <p style="max-width:750px; margin:25px auto; font-size:1.25rem;">
             We don't ask "What are your marks?". We ask <b>"What is your flow?"</b>.<br>
-            Join 50,000+ students using AI to match their psychological DNA to the top 1% of Universities.
+            We use <b>Wealth Dynamics</b> & AI to match your psychological DNA to the top 1% of Universities.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
+    # CTA BUTTON
     c1, c2, c3 = st.columns([1, 1, 1])
     with c2:
-        if st.button("🚀 Discover Your Core Genius (Free)", use_container_width=True):
+        if st.button("🚀 Start Free Career Assessment ➤", use_container_width=True):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    # TRUST SIGNALS
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; font-weight:600; color:#94A3B8; letter-spacing:1px;'>TRUSTED BY PARTNERS FROM</p>", unsafe_allow_html=True)
-    
+    # SOCIAL PROOF
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing:1px; font-size:0.9rem;'>TRUSTED BY PARTNERS FROM</p>", unsafe_allow_html=True)
     cols = st.columns(5)
     partners = ["IIT DELHI", "AMITY", "MANIPAL", "NMIMS", "LPU"]
     for i, p in enumerate(partners):
-        cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.5rem;'>{p}</h3>", unsafe_allow_html=True)
+        cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.4rem; margin:0;'>{p}</h3>", unsafe_allow_html=True)
 
-    # WHY US (Content from your prompt)
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # VALUE PROPOSITION
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
     st.markdown("<h2 style='text-align:center;'>Scientific Certainty. No Opinions.</h2>", unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown("""
-        <div class="glass-card">
-            <div style="font-size:2.5rem; margin-bottom:10px;">🧠</div>
+        <div class="veteran-card">
+            <div style="font-size:3rem; margin-bottom:1rem;">🧠</div>
             <h3>Identity Analysis</h3>
             <p>Our AI Engine segregates learners into 4 Archetypes: Creator, Influencer, Catalyst, and Analyst.</p>
         </div>
         """, unsafe_allow_html=True)
     with c2:
         st.markdown("""
-        <div class="glass-card">
-            <div style="font-size:2.5rem; margin-bottom:10px;">🏫</div>
+        <div class="veteran-card">
+            <div style="font-size:3rem; margin-bottom:1rem;">🏫</div>
             <h3>University Match</h3>
             <p>We don't sell admissions. We match you to curriculums (Amity, Manipal, LPU) that fit your brain.</p>
         </div>
         """, unsafe_allow_html=True)
     with c3:
         st.markdown("""
-        <div class="glass-card">
-            <div style="font-size:2.5rem; margin-bottom:10px;">🗺️</div>
+        <div class="veteran-card">
+            <div style="font-size:3rem; margin-bottom:1rem;">🗺️</div>
             <h3>Career Roadmap</h3>
             <p>A 4-year strategic plan including internships, skills (Alison/LinkedIn), and personal branding.</p>
         </div>
         """, unsafe_allow_html=True)
 
-# --- 7. PAGE: ABOUT US ---
 def page_about():
-    st.markdown("## Our Mission")
-    st.write("To democratize career certainty for every Indian student.")
+    st.markdown("<br>", unsafe_allow_html=True)
     
     col1, col2 = st.columns([1.5, 1])
     
     with col1:
-        st.markdown("### The Founder's Story")
-        st.write("""
-        I came to Delhi in 2019 from a middle-class background with limited opportunities. 
-        Like many, I searched for a career path and worked in industries like Engineering (SMT Department) 
-        at companies like **Yazaki** and **Oppo**.
+        st.markdown("## The Distoversity Story")
+        st.markdown("### From Factory Floor to Education Architect")
         
-        While working on the factory floor, I realized a critical flaw: 
-        *Brilliant people were failing because they were in roles that fought against their natural nature.*
+        st.markdown("""
+        <div class="timeline-card">
+            <h4>2019: The Struggle</h4>
+            <p>I arrived in Delhi with nothing but a middle-class background and a hunger for opportunity. I had no guidance, only pressure.</p>
+        </div>
         
-        Distoversity was born to fix this. We combine the **Wealth Dynamics** framework with AI to ensure 
-        no student ever climbs the wrong ladder again.
-        """)
+        <div class="timeline-card">
+            <h4>The Realization (Yazaki & Oppo)</h4>
+            <p>I worked in the <b>SMT and Electrical departments</b> of global giants like Yazaki and Oppo. 
+            On the factory floor, I saw a painful truth: 
+            <i>Brilliant engineers were failing, not because they lacked talent, but because they were misaligned with their roles.</i></p>
+        </div>
         
-        st.info("💡 **Our Philosophy:** Education is a right. Alignment is a necessity.")
-    
+        <div class="timeline-card">
+            <h4>The Shift to Education</h4>
+            <p>I moved into the education sector, hoping to fix this. Instead, I found a sales machine. 
+            Counselors were just pushing universities to meet targets. 
+            <b>"Why is a phone call the only filter for a student's future?"</b> I asked. No one had an answer.</p>
+        </div>
+        
+        <div class="timeline-card">
+            <h4>The Birth of Distoversity</h4>
+            <p>I combined my 6 years of experience with the <b>Wealth Dynamics</b> framework (Roger Hamilton) and AI. 
+            We built a system that doesn't just admit students—it aligns them.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
     with col2:
-        st.image("https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption="Building the Future of India")
+        st.image("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption="Building the Future")
+        st.markdown("""
+        <div class="veteran-card" style="background:#F0F9FF; border:none;">
+            <h4>Our Mission</h4>
+            <p><b>Education is a Right. Alignment is a Necessity.</b></p>
+            <p>We are here to ensure that no Indian student ever climbs the wrong ladder again.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
-# --- 8. PAGE: UNIVERSITY EXPLORER ---
-def page_explorer():
-    st.markdown("## 🏫 University Explorer")
-    st.write("Browse our database of NAAC A+ Accredited Partners.")
+def page_services():
+    st.markdown("## Our Premium Services")
+    st.write("A complete ecosystem for your career growth.")
     
-    # Search Bar
-    search = st.text_input("Search by Name or Program", placeholder="e.g., Manipal, MBA...")
+    c1, c2, c3 = st.columns(3)
     
-    # Filters
-    col_f1, col_f2 = st.columns(2)
-    with col_f1:
-        energy_filter = st.selectbox("Filter by Energy Type", ["All", "Creator", "Influencer", "Catalyst", "Analyst"])
+    with c1:
+        st.markdown("""
+        <div class="veteran-card">
+            <h3>🧠 Energy Assessment</h3>
+            <p>Our proprietary 15-question engine identifies your core archetype: Creator, Influencer, Catalyst, or Analyst.</p>
+            <div style="margin-top:20px; font-weight:700; color:#0077B6;">Price: FREE</div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Display Data
-    for uni in UNIVERSITY_DATA:
-        if search.lower() in uni['name'].lower() or search.lower() in uni['program'].lower():
-            if energy_filter == "All" or energy_filter == uni['energy']:
-                with st.container():
-                    st.markdown(f"""
-                    <div class="glass-card" style="margin-bottom:1rem;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <h3 style="margin:0;">{uni['name']}</h3>
-                                <p style="margin:0; color:#64748B;">📍 {uni['location']} | 🏆 NAAC {uni['naac']}</p>
-                            </div>
-                            <div style="text-align:right;">
-                                <div style="background:#E0F2FE; color:#0077B6; padding:5px 10px; border-radius:8px; font-weight:bold;">{uni['fees']}</div>
-                            </div>
-                        </div>
-                        <hr style="margin:10px 0; opacity:0.2;">
-                        <div style="display:flex; justify-content:space-between;">
-                            <p><b>Best For:</b> {uni['energy']}</p>
-                            <p><b>Program:</b> {uni['program']}</p>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+    with c2:
+        st.markdown("""
+        <div class="veteran-card">
+            <h3>🏫 University Matching</h3>
+            <p>We filter 500+ universities to find the exact program curriculum that fits your brain.</p>
+            <div style="margin-top:20px; font-weight:700; color:#0077B6;">Price: Included in Report</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with c3:
+        st.markdown("""
+        <div class="veteran-card" style="border-color:#0EA5E9; background:#F0F9FF;">
+            <h3>💎 Strategic Session</h3>
+            <p>A 30-minute 1:1 mentorship call, a 15-page PDF roadmap, and access to our Growth Community.</p>
+            <div style="margin-top:20px; font-weight:700; color:#0077B6;">Price: ₹499</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-# --- 9. PAGE: ASSESSMENT (LOGIC) ---
 def page_assessment():
     st.markdown("## ⚡ Decode Your Professional DNA")
-    st.write("Select the option that feels most natural to you.")
+    st.write("Select the option that feels most natural to you (not what you *think* you should be).")
     
     with st.form("quiz_form"):
         st.markdown("#### 1. In a team project, what role do you naturally take?")
@@ -358,7 +337,6 @@ def page_assessment():
             st.session_state.page = 'Result'
             st.rerun()
 
-# --- 10. PAGE: RESULT (GATED) ---
 def page_result():
     profile = st.session_state.user_profile
     if not profile:
@@ -382,18 +360,18 @@ def page_result():
     # LEFT: MATCHES
     with c1:
         st.markdown("### 🎯 Top University Matches")
-        matches = [u for u in UNIVERSITY_DATA if u['energy'] == profile]
+        matches = [u for u in UNIVERSITY_DB if u['type'] == profile]
         
         if matches:
             for u in matches:
                 st.markdown(f"""
-                <div class="glass-card" style="margin-bottom:1rem;">
+                <div class="veteran-card" style="margin-bottom:1rem; padding:1.5rem;">
                     <div style="display:flex; justify-content:space-between;">
                         <h4 style="margin:0;">{u['name']}</h4>
                         <span style="background:#E0F2FE; color:#0077B6; padding:4px 8px; border-radius:6px; font-weight:bold;">{u['match']}% Match</span>
                     </div>
                     <p style="font-size:0.9rem; margin-top:5px;"><b>Program:</b> {u['program']}</p>
-                    <p style="font-size:0.9rem; color:green;">✅ High Alignment with {profile} Energy</p>
+                    <p style="font-size:0.9rem; color:green;">✅ {u['desc']}</p>
                 </div>
                 """, unsafe_allow_html=True)
         else:
@@ -406,11 +384,11 @@ def page_result():
         st.markdown("""
         <div class="blur-container">
             <div class="blur-content">
-                <div class="glass-card" style="margin-bottom:1rem;">
+                <div class="veteran-card" style="margin-bottom:1rem;">
                     <h4>Year 1: Foundation Strategy</h4>
                     <p>Focus on the core skills of innovation. Avoid rigid structures...</p>
                 </div>
-                <div class="glass-card">
+                <div class="veteran-card">
                     <h4>The "Efficiency Trap" Warning</h4>
                     <p>Your biggest weakness is detailed execution. To fix this...</p>
                 </div>
@@ -441,8 +419,8 @@ def page_result():
                 else:
                     st.error("Please enter a valid email.")
 
-# --- 11. MAIN ROUTER ---
-sidebar_nav()
+# --- 7. MAIN ROUTER (CRITICAL FIX: Defined AFTER functions) ---
+navbar()
 
 if st.session_state.page == 'Home':
     page_home()
@@ -450,8 +428,6 @@ elif st.session_state.page == 'About':
     page_about()
 elif st.session_state.page == 'Services':
     page_services()
-elif st.session_state.page == 'Explorer':
-    page_explorer()
 elif st.session_state.page == 'Assessment':
     page_assessment()
 elif st.session_state.page == 'Result':
