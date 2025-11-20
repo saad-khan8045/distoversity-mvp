@@ -24,7 +24,7 @@ st.markdown("""
         --text-main: #0F172A;
         --text-sub: #475569;
         --white: #FFFFFF;
-        --hero-gradient: linear-gradient(180deg, #E0F2FE 0%, #FFFFFF 100%); 
+        --hero-gradient: radial-gradient(circle at 50% 0%, #E0F2FE 0%, #FFFFFF 70%); 
     }
 
     html, body, [class*="css"] {
@@ -36,7 +36,7 @@ st.markdown("""
 
     /* HEADERS */
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
-    h1 { font-size: 4.5rem !important; letter-spacing: -2px; line-height: 1.1; }
+    h1 { font-size: 4rem !important; letter-spacing: -2px; line-height: 1.1; }
     
     /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
@@ -249,8 +249,8 @@ def navbar():
 def render_home():
     st.markdown("""
     <div class="hero-section">
-        <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
+        <div style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px; border:1px solid rgba(0,119,182,0.2);">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
+        <h1 style="margin-bottom:20px; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
         <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
             Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Psychological DNA</b> to India's Top Online Universities.
@@ -294,7 +294,7 @@ def render_home():
     </div>
     """, unsafe_allow_html=True)
 
-# --- 7. PAGE: POWER EXPLORER (NEW!) ---
+# --- 7. PAGE: POWER EXPLORER (ENHANCED) ---
 def render_explorer():
     st.markdown("## 🏫 University Power Explorer")
     st.markdown("Use our advanced data engine to compare top online universities. **All listed are UGC/AICTE Approved.**")
@@ -305,9 +305,7 @@ def render_explorer():
     
     if compare_list:
         st.markdown("<br>", unsafe_allow_html=True)
-        # Filter data for comparison
         comp_df = df[df['name'].isin(compare_list)].set_index('name')
-        # Transpose for easy reading
         display_cols = ['fees', 'placement', 'avg_pkg', 'highest_pkg', 'naac', 'approvals', 'highlights']
         st.dataframe(comp_df[display_cols].style.format(thousands=","), use_container_width=True)
         st.markdown("<br>", unsafe_allow_html=True)
@@ -331,7 +329,6 @@ def render_explorer():
         (df['placement'].str.replace('%','').astype(int) >= min_placement)
     ]
     
-    # Sorting
     if sort_by == "Lowest Fees":
         filtered_df = filtered_df.sort_values(by='fees')
     elif sort_by == "Highest Placement %":
@@ -378,10 +375,14 @@ def render_explorer():
             with c_btn2:
                  st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
 
-# --- 8. PAGE: ASSESSMENT ---
+# --- 8. PAGE: ASSESSMENT (REFINED) ---
 def render_assessment():
-    st.markdown("## ⚡ Decode Your Professional DNA")
-    st.write("This isn't a test. It's a diagnostic tool for your career.")
+    st.markdown("""
+    <div style="text-align:center; margin-bottom:3rem;">
+        <h2 style="font-size:2.5rem;">Decode Your Professional DNA</h2>
+        <p style="color:#64748B;">Select the option that feels most natural to you.</p>
+    </div>
+    """, unsafe_allow_html=True)
     
     with st.form("assessment"):
         st.markdown("#### 1. In a high-pressure project, what role do you naturally take?")
@@ -436,10 +437,7 @@ def render_result():
                     <h4 style="margin:0;">{row['name']}</h4>
                     <span class="match-tag">94% Match</span>
                 </div>
-                <p style="margin-top:10px; color:#475569;">{row['program']}</p>
-                <div style="margin-top:10px; font-size:0.9rem;">
-                    <b>ROI Score:</b> 9/10 • <b>Placement:</b> {row['placement']}
-                </div>
+                <p style="margin-top:10px;">✅ High Alignment with {profile} Energy</p>
             </div>
             """, unsafe_allow_html=True)
             
@@ -496,12 +494,37 @@ def render_about():
 
 def render_faq():
     st.title("❓ Frequently Asked Questions")
-    with st.expander("❓ How is this different from regular counseling?"):
-        st.write("We use Energy Profiling, not just marks. We align you with your nature.")
-    with st.expander("❓ Are these online degrees valid?"):
-        st.write("Yes, all our partner universities (Amity, Manipal, Jain) are UGC-DEB approved and valid for government jobs.")
-    with st.expander("❓ Do you guarantee jobs?"):
-        st.write("We guarantee alignment. When you are in flow, success is inevitable.")
+    
+    tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
+    
+    with tab1:
+        st.header("General Guidance")
+        with st.expander("❓ I'm confused about my career path. How can Distoversity help?"):
+            st.write("We help you discover your 'Genius Profile' (natural strengths) via AI, guiding you to academic fields and careers that truly fit you.")
+        with st.expander("❓ Is the Distoversity 'Genius Profile' a psychological test?"):
+            st.write("It's a self-discovery and guidance tool based on Wealth Dynamics, not a psychological diagnostic test or guarantee.")
+        with st.expander("❓ How accurate are Distoversity's recommendations?"):
+            st.write("Our AI matches your Genius Profile to suitable institutions for informed guidance and a high relevance score.")
+        with st.expander("❓ What is the 'Genius Profile' and what do Dynamo, Blaze, Tempo, and Steel mean?"):
+            st.write("It's your natural strength: Dynamo (Ideas), Blaze (People), Tempo (Timing), Steel (Systems/Details).")
+            
+    with tab2:
+        st.header("Online Education")
+        with st.expander("❓ Is online education a good option for me?"):
+            st.write("Your Genius Profile reveals if your learning style thrives in online environments. We help you find matching programs.")
+        with st.expander("❓ How can I ensure the quality of an online degree program?"):
+            st.write("Look for accredited universities, clear curricula, and strong student support. We recommend reputable institutions.")
+        with st.expander("❓ Will an online degree be recognized by employers in India?"):
+            st.write("Yes, valid degrees from UGC-approved universities are recognized by employers.")
+        with st.expander("❓ Does technology make quality education more affordable?"):
+            st.write("Yes, online programs often have lower fees compared to traditional campus programs.")
+            
+    with tab3:
+        st.header("Universities & Programs")
+        with st.expander("❓ Which universities partner with Distoversity?"):
+            st.write("We partner with top-tier private universities known for their online programs.")
+        with st.expander("❓ How do I apply for an online degree program through Distoversity?"):
+            st.write("We guide you through the application process after your assessment and counseling session.")
 
 # --- 11. MAIN ROUTER ---
 navbar()
