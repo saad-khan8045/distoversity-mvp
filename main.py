@@ -30,6 +30,7 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: var(--text-dark);
         background-color: #FFFFFF;
+        scroll-behavior: smooth;
     }
 
     /* HEADERS */
@@ -52,14 +53,16 @@ st.markdown("""
         border-color: var(--accent);
     }
 
-    /* COMPONENT: NAVIGATION */
-    .nav-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 0;
+    /* COMPONENT: STICKY NAVIGATION (FIXED) */
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 999;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
         border-bottom: 1px solid #F1F5F9;
-        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px -10px rgba(0,0,0,0.1);
     }
     .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary); }
     
@@ -83,7 +86,8 @@ st.markdown("""
         text-align: center;
         border-radius: 0 0 50px 50px;
         margin-bottom: 3rem;
-        margin-top: -3rem;
+        /* Margin top ensures content doesn't hide behind sticky header */
+        margin-top: 1rem; 
     }
 
     /* TIMELINE */
@@ -102,8 +106,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA ENGINE (Embedded CSV Data) ---
-# This represents your actual university data from the images
+# --- 3. DATA ENGINE ---
 UNIVERSITY_DATA = [
     {"name": "Jain University", "location": "Bangalore", "naac": "A++", "placement": "98%", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
     {"name": "Manipal University Jaipur", "location": "Jaipur", "naac": "A+", "placement": "94%", "fees": 175000, "program": "B.Tech Data Science", "energy": "Analyst", "type": "Campus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
@@ -120,18 +123,20 @@ df = pd.DataFrame(UNIVERSITY_DATA)
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 
-# --- 5. NAVIGATION SYSTEM ---
+# --- 5. NAVIGATION SYSTEM (STICKY HEADER) ---
 def navbar():
-    c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1.5])
-    with c1:
-        st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
-    
-    # Navigation Logic
-    if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
-    if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
-    if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
-    if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
-    if c6.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
+    # The CSS 'position: sticky' above applies to this container
+    with st.container():
+        c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1.5])
+        with c1:
+            st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
+        
+        # Navigation Logic
+        if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
+        if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
+        if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
+        if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
+        if c6.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
 
 # --- 6. PAGE: HOME ---
 def render_home():
@@ -169,7 +174,7 @@ def render_home():
     with c3:
         st.markdown("""<div class="d-card"><h3>🗺️ Career Roadmap</h3><p>A 4-year strategic plan including internships, skills, and branding.</p></div>""", unsafe_allow_html=True)
 
-# --- 7. PAGE: UNIVERSITY EXPLORER (PRIORITY 1) ---
+# --- 7. PAGE: UNIVERSITY EXPLORER ---
 def render_explorer():
     st.markdown("## 🏫 University Explorer")
     st.write("Compare 500+ universities scientifically matched to your Genius Profile.")
@@ -212,7 +217,7 @@ def render_explorer():
             if st.button(f"View Details for {row['name']}", key=f"btn_{idx}"):
                 st.toast("Redirecting to Detailed Profile...")
 
-# --- 8. PAGE: ASSESSMENT (CORE LOGIC) ---
+# --- 8. PAGE: ASSESSMENT ---
 def render_assessment():
     st.markdown("## ⚡ Decode Your Professional DNA")
     st.write("Select the option that feels most natural to you.")
@@ -246,7 +251,7 @@ def render_assessment():
             st.session_state.page = 'Result'
             st.rerun()
 
-# --- 9. PAGE: RESULT (GATED) ---
+# --- 9. PAGE: RESULT ---
 def render_result():
     profile = st.session_state.user_profile
     if not profile:
@@ -295,7 +300,7 @@ def render_result():
             if st.form_submit_button("Unlock Now - ₹499", use_container_width=True):
                 st.success("Redirecting to Payment...")
 
-# --- 10. PAGE: ABOUT & FAQ ---
+# --- 10. PAGE: ABOUT & FAQ (FULL CONTENT) ---
 def render_about():
     c1, c2 = st.columns(2)
     with c1:
@@ -318,11 +323,41 @@ def render_about():
         st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
 
 def render_faq():
-    st.markdown("## Frequently Asked Questions")
-    with st.expander("❓ How is this different from regular counseling?"):
-        st.write("We use Energy Profiling, not just marks. We align you with your nature.")
-    with st.expander("❓ Do you guarantee jobs?"):
-        st.write("We guarantee alignment. When you are in flow, success is inevitable.")
+    st.title("❓ Frequently Asked Questions")
+    st.markdown("Everything you need to know about Distoversity and online education.")
+    
+    tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
+    
+    with tab1:
+        st.header("General Guidance")
+        with st.expander("❓ I'm confused about my career path. How can Distoversity help?"):
+            st.write("We help you discover your 'Genius Profile' via AI, guiding you to academic fields and careers that truly fit you.")
+        with st.expander("❓ Is the Distoversity Profile a psychological test?"):
+            st.write("It's a self-discovery tool based on Wealth Dynamics, not a clinical diagnosis.")
+        with st.expander("❓ How accurate are the recommendations?"):
+            st.write("Our AI matches your profile to suitable institutions with high relevance, backed by a 92% student satisfaction rate.")
+        with st.expander("❓ How does personalized matching work?"):
+            st.write("We analyze your Energy Type (Dynamo, Blaze, Tempo, Steel) to find the curriculum style that fits your brain.")
+
+    with tab2:
+        st.header("Online Education")
+        with st.expander("❓ Is online education a good option for me?"):
+            st.write("If you are a Creator or Analyst type, online education offers the flexibility you crave. We help you validate this.")
+        with st.expander("❓ How can I ensure quality?"):
+            st.write("We only partner with NAAC A+ and A++ accredited universities like Amity and Manipal.")
+        with st.expander("❓ Are these degrees recognized?"):
+            st.write("Yes, all our partner universities are UGC-DEB approved, making your degree valid for government jobs and corporate hiring.")
+        with st.expander("❓ Is it affordable?"):
+            st.write("Online degrees cost 60-80% less than on-campus degrees while providing the same qualification.")
+
+    with tab3:
+        st.header("Universities & Programs")
+        with st.expander("❓ Which universities partner with Distoversity?"):
+            st.write("We partner with 16+ top universities including Jain, LPU, Amrita, IGNOU, and DY Patil.")
+        with st.expander("❓ How do I apply?"):
+            st.write("After your assessment, book a Strategic Session, and our counselors will handle the entire application process for you.")
+        with st.expander("❓ Do you help with placement?"):
+            st.write("Our partner universities have robust placement cells, and we provide career roadmaps to maximize your hirability.")
 
 # --- 11. MAIN ROUTER ---
 navbar()
