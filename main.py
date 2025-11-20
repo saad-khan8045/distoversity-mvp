@@ -69,6 +69,15 @@ st.markdown("""
         background: #DCFCE7; color: #166534; padding: 4px 12px; 
         border-radius: 20px; font-size: 0.8rem; font-weight: 700;
     }
+    
+    /* COMPONENT: ASSESSMENT QUESTION TEXT (New Fix) */
+    .question-text {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #0F172A;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
 
     /* COMPONENT: STICKY NAV */
     div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
@@ -223,6 +232,22 @@ UNIVERSITY_DATA = [
         "highest_pkg": "45 LPA",
         "highlights": "Premium Brand, Leadership Focus",
         "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"
+    },
+    {
+        "name": "DY Patil Online", 
+        "location": "Pune", 
+        "naac": "A++", 
+        "nirf": "Rank 46",
+        "fees": 120000, 
+        "program": "BBA General", 
+        "energy": "Catalyst", 
+        "type": "Online Degree", 
+        "approvals": "UGC, AICTE", 
+        "placement": "90%",
+        "avg_pkg": "4.2 LPA",
+        "highest_pkg": "12 LPA",
+        "highlights": "Flexible Exams, Mentor Support",
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"
     }
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
@@ -250,7 +275,7 @@ def render_home():
     st.markdown("""
     <div class="hero-section">
         <div style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px; border:1px solid rgba(0,119,182,0.2);">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 style="margin-bottom:20px; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
+        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
         <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
             Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Psychological DNA</b> to India's Top Online Universities.
@@ -377,40 +402,52 @@ def render_explorer():
 
 # --- 8. PAGE: ASSESSMENT (REFINED) ---
 def render_assessment():
+    # Centered Header
     st.markdown("""
-    <div style="text-align:center; margin-bottom:3rem;">
-        <h2 style="font-size:2.5rem;">Decode Your Professional DNA</h2>
-        <p style="color:#64748B;">Select the option that feels most natural to you.</p>
+    <div style="text-align:center; margin-bottom:40px;">
+        <h2 style="font-size:2.5rem; color:#0077B6; margin-bottom:10px;">Decode Your Professional DNA</h2>
+        <p style="color:#64748B; font-size:1.1rem;">This isn't a test. It's a diagnostic tool for your career.</p>
     </div>
     """, unsafe_allow_html=True)
     
-    with st.form("assessment"):
-        st.markdown("#### 1. In a high-pressure project, what role do you naturally take?")
-        q1 = st.radio("Select one:", [
-            "💡 The Idea Generator (I hate details)",
-            "🗣️ The Presenter (I love talking)",
-            "⚡ The Organizer (I keep things on time)",
-            "📊 The Analyst (I check the data)"
-        ], label_visibility="collapsed")
-        
-        st.markdown("<br>#### 2. What drains your energy the most?", unsafe_allow_html=True)
-        q2 = st.radio("Select one:", [
-            "Routine and repetitive data entry",
-            "Working alone in a quiet room",
-            "Chaos and unclear instructions",
-            "Emotional conflict and sales"
-        ], label_visibility="collapsed", key="q2")
-        
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.form_submit_button("Analyze My Profile ➤", type="primary"):
-            with st.spinner("Mapping Neural Pathways..."):
-                time.sleep(1.5)
-            if "Idea" in q1: st.session_state.user_profile = "Creator"
-            elif "Presenter" in q1: st.session_state.user_profile = "Influencer"
-            elif "Organizer" in q1: st.session_state.user_profile = "Catalyst"
-            else: st.session_state.user_profile = "Analyst"
-            st.session_state.page = 'Result'
-            st.rerun()
+    # Centered Form Container (Visual trick using columns)
+    c1, c2, c3 = st.columns([1, 2, 1])
+    
+    with c2:
+        with st.form("assessment_form"):
+            # Question 1: Clean HTML styling
+            st.markdown('<p class="question-text">1. In a high-pressure project, what role do you naturally take?</p>', unsafe_allow_html=True)
+            q1 = st.radio("q1_select", [
+                "💡 The Idea Generator (I hate details)",
+                "🗣️ The Presenter (I love talking)",
+                "⚡ The Organizer (I keep things on time)",
+                "📊 The Analyst (I check the data)"
+            ], label_visibility="collapsed")
+            
+            # Question 2: Clean HTML styling
+            st.markdown('<p class="question-text">2. What drains your energy the most?</p>', unsafe_allow_html=True)
+            q2 = st.radio("q2_select", [
+                "Routine and repetitive data entry",
+                "Working alone in a quiet room",
+                "Chaos and unclear instructions",
+                "Emotional conflict and sales"
+            ], label_visibility="collapsed")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # Submit Button
+            if st.form_submit_button("Analyze My Profile ➤", type="primary", use_container_width=True):
+                with st.spinner("Mapping Neural Pathways..."):
+                    time.sleep(1.5)
+                
+                # Logic
+                if "Idea" in q1: st.session_state.user_profile = "Creator"
+                elif "Presenter" in q1: st.session_state.user_profile = "Influencer"
+                elif "Organizer" in q1: st.session_state.user_profile = "Catalyst"
+                else: st.session_state.user_profile = "Analyst"
+                
+                st.session_state.page = 'Result'
+                st.rerun()
 
 # --- 9. PAGE: RESULT ---
 def render_result():
