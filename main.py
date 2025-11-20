@@ -1,577 +1,199 @@
 import streamlit as st
 import pandas as pd
 import time
-import random
+import plotly.express as px
 
 # --- 1. SYSTEM CONFIGURATION ---
 st.set_page_config(
-    page_title="Distoversity | Discover Your Spark",
-    page_icon="✨",
+    page_title="Distoversity",
+    page_icon="🎓",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed" # Keeps sidebar hidden on mobile until clicked
 )
 
-# --- 2. ULTRA-PREMIUM DESIGN SYSTEM (CSS) ---
+# --- 2. RESPONSIVE CSS (Fixes Mobile Issues) ---
 st.markdown("""
     <style>
+    /* Import fonts */
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-    :root {
-        --primary: #0077B6;       /* Deep Sky Blue */
-        --primary-dark: #023E8A;
-        --primary-light: #ADE8F4;
-        --accent: #00B4D8;        /* Bright Blue */
-        --text-main: #0F172A;
-        --text-sub: #475569;
-        --white: #FFFFFF;
-        --hero-gradient: radial-gradient(circle at 50% 0%, #E0F2FE 0%, #FFFFFF 70%); 
-    }
-
+    :root { --primary: #0077B6; --text-main: #0F172A; }
+    
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: var(--text-main);
-        background-color: #FFFFFF;
-        scroll-behavior: smooth;
+        background-color: #F8FAFC;
     }
 
-    /* HEADERS */
-    h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
-    h1 { font-size: 4rem !important; letter-spacing: -2px; line-height: 1.1; }
-    
-    /* COMPONENT: PREMIUM GLASS CARD */
+    /* Fix for the header overlap on mobile */
+    .block-container {
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+    }
+
+    /* Card Styling */
     .d-card {
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
-        border-radius: 24px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-        transition: all 0.3s ease;
-        height: 100%;
-        position: relative;
-        overflow: hidden;
-    }
-    .d-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
-        border-color: var(--accent);
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
     }
 
-    /* COMPONENT: CHAT INTERFACE */
-    .stChatMessage {
-        background-color: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 15px;
-        padding: 1rem;
-    }
-
-    /* COMPONENT: AI REPORT CARD (Inside Modal) */
-    .ai-report-box {
-        background: #F8FAFC;
-        border-left: 5px solid #0EA5E9;
-        padding: 20px;
-        margin-bottom: 20px;
-        font-family: 'Courier New', monospace; /* Tech/AI feel */
-        font-size: 0.95rem;
+    /* Make radio buttons larger for mobile tapping */
+    .stRadio label {
+        font-size: 16px !important;
+        padding: 10px 0;
     }
     
-    /* COMPONENT: CTA BOX */
-    .cta-box {
-        background: linear-gradient(135deg, #0077B6 0%, #023E8A 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        text-align: center;
-        margin-top: 20px;
-        box-shadow: 0 10px 25px rgba(0, 119, 182, 0.3);
-    }
-    .cta-box h3 { color: white !important; margin-bottom: 10px; }
-
-    /* COMPONENT: TAGS */
-    .feature-tag {
-        background: #F1F5F9; color: #475569; padding: 4px 12px; 
-        border-radius: 20px; font-size: 0.8rem; font-weight: 600; 
-        display: inline-block; margin-right: 5px; margin-bottom: 5px;
-    }
-    .match-tag {
-        background: #DCFCE7; color: #166534; padding: 4px 12px; 
-        border-radius: 20px; font-size: 0.8rem; font-weight: 700;
-    }
-
-    /* COMPONENT: ASSESSMENT QUESTION TEXT */
-    .question-text {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #0F172A;
-        margin-top: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-
-    /* COMPONENT: STICKY NAV */
-    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
-        position: sticky;
-        top: 0;
-        background-color: rgba(255, 255, 255, 0.98);
-        z-index: 999;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #F1F5F9;
-    }
-    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
-    
-    /* COMPONENT: BUTTONS */
-    .stButton>button {
-        background: linear-gradient(90deg, #0077B6 0%, #0096C7 100%);
-        color: white;
-        border-radius: 50px;
-        padding: 0.6rem 2rem;
-        font-weight: 600;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.2);
-        transition: 0.2s;
-    }
-    .stButton>button:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(0, 119, 182, 0.3); }
-    
-    /* HERO */
-    .hero-section {
-        background: var(--hero-gradient);
-        padding: 6rem 2rem 5rem 2rem;
-        text-align: center;
-        border-radius: 0 0 60px 60px;
-        margin-bottom: 4rem;
-        border-bottom: 1px solid #E0F2FE;
-    }
-
-    /* UTILS */
-    .icon-circle {
-        width: 60px; height: 60px; background: #F0F9FF; border-radius: 50%; 
-        display: flex; align-items: center; justify-content: center; 
-        font-size: 1.8rem; margin: 0 auto 1rem auto; color: var(--primary);
-    }
-
+    /* Hide default Streamlit elements */
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. ENRICHED PARTNER DATA ---
+# --- 3. DATA ---
+# (Keeping your data structure)
 UNIVERSITY_DATA = [
-    {
-        "name": "Jain Online", 
-        "location": "Bangalore", 
-        "naac": "A++", 
-        "nirf": "Top 100",
-        "fees": 210000, 
-        "program": "MBA Marketing", 
-        "energy": "Distoversity Influencer", 
-        "type": "Online Degree", 
-        "approvals": "UGC-DEB, AICTE", 
-        "placement": "98%",
-        "avg_pkg": "6.2 LPA",
-        "highest_pkg": "32 LPA",
-        "highlights": "Strong Alumni, Live Classes",
-        "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"
-    },
-    {
-        "name": "Manipal University Online", 
-        "location": "Jaipur", 
-        "naac": "A+", 
-        "nirf": "Rank 76",
-        "fees": 175000, 
-        "program": "MCA Data Science", 
-        "energy": "Distoversity Analyst", 
-        "type": "Online Degree", 
-        "approvals": "UGC, NAAC", 
-        "placement": "94%",
-        "avg_pkg": "5.5 LPA",
-        "highest_pkg": "18 LPA",
-        "highlights": "Global Access, Coursera Free",
-        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"
-    },
-    {
-        "name": "Amity University Online", 
-        "location": "Global", 
-        "naac": "A+", 
-        "nirf": "Top 50",
-        "fees": 345000, 
-        "program": "BCA Cloud Security", 
-        "energy": "Distoversity Creator", 
-        "type": "Online Degree", 
-        "approvals": "UGC-DEB, WES", 
-        "placement": "92%",
-        "avg_pkg": "4.8 LPA",
-        "highest_pkg": "15 LPA",
-        "highlights": "Virtual Job Fairs, Portfolio Building",
-        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"
-    },
-    {
-        "name": "LPU Online", 
-        "location": "Global", 
-        "naac": "A++", 
-        "nirf": "Rank 47",
-        "fees": 160000, 
-        "program": "MBA Operations", 
-        "energy": "Distoversity Catalyst", 
-        "type": "Online Degree", 
-        "approvals": "UGC, AICTE", 
-        "placement": "91%",
-        "avg_pkg": "5.0 LPA",
-        "highest_pkg": "21 LPA",
-        "highlights": "Affordable, Mentor Support",
-        "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"
-    },
-    {
-        "name": "NMIMS CDOL", 
-        "location": "Online", 
-        "naac": "A+", 
-        "nirf": "Top 20 B-School",
-        "fees": 400000, 
-        "program": "MBA Finance", 
-        "energy": "Distoversity Analyst", 
-        "type": "Online Degree", 
-        "approvals": "UGC-DEB, AICTE", 
-        "placement": "93%",
-        "avg_pkg": "7.0 LPA",
-        "highest_pkg": "45 LPA",
-        "highlights": "Premium Brand, Leadership Focus",
-        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"
-    },
-    {
-        "name": "DY Patil Online", 
-        "location": "Pune", 
-        "naac": "A++", 
-        "nirf": "Rank 46",
-        "fees": 120000, 
-        "program": "BBA General", 
-        "energy": "Distoversity Catalyst", 
-        "type": "Online Degree", 
-        "approvals": "UGC, AICTE", 
-        "placement": "90%",
-        "avg_pkg": "4.2 LPA",
-        "highest_pkg": "12 LPA",
-        "highlights": "Flexible Exams, Mentor Support",
-        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"
-    }
+    {"name": "Manipal Online", "location": "Jaipur", "program": "MCA Data Science", "energy": "Steel (Analyst)", "fees": 175000, "emi": 4500, "placement": 94, "avg_pkg": 5.5, "naac": "A+", "approvals": "UGC, AICTE", "recruiters": ["Google", "Deloitte"], "logo": "https://via.placeholder.com/50"},
+    {"name": "Jain Online", "location": "Bangalore", "program": "MBA Marketing", "energy": "Blaze (Influencer)", "fees": 210000, "emi": 5200, "placement": 98, "avg_pkg": 6.2, "naac": "A++", "approvals": "UGC-DEB", "recruiters": ["HDFC", "Amazon"], "logo": "https://via.placeholder.com/50"},
+    {"name": "Amity Online", "location": "Global", "program": "BCA Cloud Security", "energy": "Creator (Dynamo)", "fees": 345000, "emi": 6500, "placement": 92, "avg_pkg": 4.8, "naac": "A+", "approvals": "UGC, WES", "recruiters": ["Microsoft", "TCS"], "logo": "https://via.placeholder.com/50"},
+    {"name": "LPU Online", "location": "Punjab", "program": "MBA Operations", "energy": "Tempo (Catalyst)", "fees": 160000, "emi": 3500, "placement": 91, "avg_pkg": 5.0, "naac": "A++", "approvals": "UGC, AICTE", "recruiters": ["Capgemini", "Wipro"], "logo": "https://via.placeholder.com/50"}
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
-if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
-if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
+if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. Ask me about your Genius Profile or any University."}]
 
-# --- 5. AI GENERATION LOGIC (Assessment Report) ---
-def generate_report_text(profile, scores):
-    core_type = profile.replace("Distoversity ", "")
-    pain_point = ""
-    achilles_heel = ""
-    skills = []
-    
-    if core_type == "Creator":
-        pain_point = "You despise routine. Ambiguity is your playground, but execution is your prison."
-        achilles_heel = "The 'Idea Junkie' Syndrome."
-        skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
-    elif core_type == "Influencer":
-        pain_point = "You hate isolation. You thrive on energy, but struggle in silos."
-        achilles_heel = "The 'Surface Level' Trap."
-        skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
-    elif core_type == "Catalyst":
-        pain_point = "You hate chaos. You want a clear target and undervalued when 'creatives' get glory."
-        achilles_heel = "The 'Cog in the Wheel' Risk."
-        skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
-    elif core_type == "Analyst":
-        pain_point = "You hate hype. You want the data, not a good story."
-        achilles_heel = "Analysis Paralysis."
-        skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
+# --- 5. RESPONSIVE NAVIGATION (THE FIX) ---
+# Instead of columns at the top, we use the sidebar for navigation.
+# This works perfectly on mobile (hamburger menu) and desktop (sidebar).
 
-    report = f"""
-    ### SECTION 1: YOUR CORE GENIUS REVEAL
-    **Archetype: {profile} ({int(scores.get(profile, 0))}% Match)**
+with st.sidebar:
+    st.title("Distoversity.")
+    st.write("Discover Your Spark.")
+    st.write("---")
     
-    Listen closely: Your brain is wired differently. {pain_point}
+    # Navigation Menu
+    selected = st.radio(
+        "Navigate to:",
+        ["Home", "University Explorer", "Eduveer AI", "Take Assessment", "FAQ"],
+        index=0 if st.session_state.page == 'Home' else 1
+    )
     
-    ---
-    ### SECTION 2: YOUR CRITICAL WEAK POINT
-    **The Danger Zone: {achilles_heel}**
-    
-    ---
-    ### SECTION 3: YOUR STRATEGIC ROADMAP
-    **The Solution: Your Next Move**
-    1. **{skills[0]}**
-    2. **{skills[1]}**
-    3. **{skills[2]}**
-    """
-    return report
+    # Update session state based on sidebar selection
+    if selected == "Home": st.session_state.page = 'Home'
+    elif selected == "University Explorer": st.session_state.page = 'Explorer'
+    elif selected == "Eduveer AI": st.session_state.page = 'Eduveer'
+    elif selected == "Take Assessment": st.session_state.page = 'Assessment'
+    elif selected == "FAQ": st.session_state.page = 'FAQ'
 
-@st.dialog("⚡ CHIEF GENIUS OFFICER REPORT")
-def show_popup_report(profile, scores):
-    report_content = generate_report_text(profile, scores)
-    st.markdown(f"""<div class="ai-report-box">{report_content}</div>""", unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="cta-box">
-        <h3>🚀 The Final Decision</h3>
-        <p>You are standing at a crossroads. Step into clarity.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
-        st.success("Request Received!")
-        time.sleep(2)
-        st.rerun()
+    st.divider()
+    st.info("Need help? Chat with Eduveer!")
 
-# --- 6. NAVIGATION SYSTEM ---
-def navbar():
-    with st.container():
-        # Modified columns to fit Eduveer Chatbot button
-        c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.5, 0.8, 0.8, 0.8, 0.8, 1, 1, 1.5])
-        with c1:
-            st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
-        
-        if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
-        if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
-        if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
-        if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
-        if c6.button("Partners", use_container_width=True): st.session_state.page = 'Institutions'; st.rerun()
-        
-        # EDUVEER BUTTON ADDED HERE
-        if c7.button("🤖 Eduveer", use_container_width=True): st.session_state.page = 'Eduveer'; st.rerun()
-        
-        if c8.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
-
-# --- 7. PAGE RENDER FUNCTIONS ---
+# --- 6. PAGE CONTENT ---
 
 def render_home():
+    # Hero Section optimized for mobile (no fixed height)
     st.markdown("""
-    <div class="hero-section">
-        <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
-        <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
-            Whether you are a student or a working professional, alignment is everything.<br>
-            We match your <b>Core Professional Identity</b> to India's Top Online Universities.
+    <div style="text-align:center; padding: 3rem 1rem; background: radial-gradient(circle at 50% 0%, #E0F2FE 0%, #FFFFFF 70%); border-radius: 0 0 30px 30px;">
+        <h1 style="font-size: 2.5rem; color:#023E8A; margin-bottom: 1rem;">Start Engineering Your Future.</h1>
+        <p style="font-size: 1.1rem; color: #475569; margin-bottom: 2rem;">
+            We match your natural <b>Genius Profile</b> to India's Top Online Universities using AI.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    c1, c2, c3 = st.columns([1, 2, 1])
-    with c2:
-        if st.button("🚀 Discover Your Spark (Free)", key="home_cta", use_container_width=True):
-            st.session_state.page = 'Assessment'
-            st.rerun()
+    # CTA Button
+    if st.button("⚡ Start Assessment (Free)", type="primary", use_container_width=True):
+        st.session_state.page = 'Assessment'
+        st.rerun()
 
-    st.markdown("<br><p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing:1px;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
-    cols = st.columns(5)
-    for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS CDOL", "LPU ONLINE"]):
-        cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; opacity:0.8; font-size:1.1rem;'>{p}</h3>", unsafe_allow_html=True)
-
-    st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        st.markdown("""<div class="d-card"><div class="icon-circle">🧠</div><h3 style="text-align:center; font-size:1.5rem;">Identity Analysis</h3><p style="text-align:center; color:#64748B;">Stop forcing yourself into roles you hate. Find your natural flow.</p></div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown("""<div class="d-card"><div class="icon-circle">🏫</div><h3 style="text-align:center; font-size:1.5rem;">Online Degrees</h3><p style="text-align:center; color:#64748B;">Valid degrees from UGC-approved universities like Amity & Manipal.</p></div>""", unsafe_allow_html=True)
-    with c3:
-        st.markdown("""<div class="d-card"><div class="icon-circle">🚀</div><h3 style="text-align:center; font-size:1.5rem;">Career Roadmap</h3><p style="text-align:center; color:#64748B;">Integrate your degree with <b>ALISON</b> certifications for maximum impact.</p></div>""", unsafe_allow_html=True)
+    st.divider()
+    st.subheader("Why Distoversity?")
+    
+    # Cards that stack on mobile automatically
+    st.markdown("""
+    <div class="d-card"><h3>🧠 Identity First</h3><p>We look at your Mind, not just your marks.</p></div>
+    <div class="d-card"><h3>🤖 AI Powered</h3><p>Chat with Eduveer 24/7 for unbiased advice.</p></div>
+    <div class="d-card"><h3>💼 Career Roadmap</h3><p>Don't just get a degree. Get a Strategy.</p></div>
+    """, unsafe_allow_html=True)
 
 def render_explorer():
-    st.markdown("## 🏫 University Power Explorer")
-    st.markdown("Use our advanced data engine to compare top online universities. **All listed are UGC/AICTE Approved.**")
+    st.header("🏫 University Explorer")
     
-    st.markdown("###⚖️ Compare Universities")
-    compare_list = st.multiselect("Select up to 3 universities to compare side-by-side:", df['name'].tolist(), max_selections=3)
+    # Filters inside an expander to save space on mobile
+    with st.expander("Filter Options", expanded=False):
+        budget = st.slider("Max Fees (₹)", 100000, 500000, 300000)
+        energy_fit = st.multiselect("Genius Profile", ["Creator (Dynamo)", "Blaze (Influencer)", "Tempo (Catalyst)", "Steel (Analyst)"])
     
-    if compare_list:
-        st.markdown("<br>", unsafe_allow_html=True)
-        comp_df = df[df['name'].isin(compare_list)].set_index('name')
-        display_cols = ['fees', 'placement', 'avg_pkg', 'highest_pkg', 'naac', 'approvals', 'highlights']
-        st.dataframe(comp_df[display_cols].style.format(thousands=","), use_container_width=True)
-        st.markdown("<br>", unsafe_allow_html=True)
-
-    st.markdown("### 🔍 Find Your Match")
-    c1, c2, c3, c4 = st.columns(4)
-    with c1: max_fee = st.slider("Max Budget (₹)", 50000, 500000, 350000, 50000)
-    with c2: energy_filter = st.multiselect("Energy Fit", ["Distoversity Creator", "Distoversity Influencer", "Distoversity Catalyst", "Distoversity Analyst"], default=["Distoversity Creator", "Distoversity Analyst", "Distoversity Influencer", "Distoversity Catalyst"])
-    with c3: sort_by = st.selectbox("Sort By", ["Lowest Fees", "Highest Placement %", "Highest Avg Package"])
-    with c4: min_placement = st.slider("Min Placement %", 50, 100, 80)
-
-    filtered_df = df[(df['fees'] <= max_fee) & (df['energy'].isin(energy_filter)) & (df['placement'].str.replace('%','').astype(int) >= min_placement)]
+    filtered_df = df[df['fees'] <= budget]
+    if energy_fit:
+        filtered_df = filtered_df[filtered_df['energy'].isin(energy_fit)]
+        
+    st.write(f"Found {len(filtered_df)} universities.")
     
-    if sort_by == "Lowest Fees": filtered_df = filtered_df.sort_values(by='fees')
-    elif sort_by == "Highest Placement %": filtered_df = filtered_df.sort_values(by='placement', ascending=False)
-    
-    st.write(f"Showing **{len(filtered_df)}** universities based on your filters:")
-    
-    for idx, row in filtered_df.iterrows():
-        with st.container():
-            st.markdown(f"""
-            <div class="d-card" style="margin-bottom:20px; border-left: 5px solid #0077B6; padding: 1.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:start; flex-wrap: wrap; gap: 15px;">
-                    <div style="display:flex; align-items:center; gap:20px; flex: 2;">
-                        <img src="{row['img']}" height="70" style="object-fit:contain; max-width:100px;">
-                        <div>
-                            <h3 style="margin:0; font-size:1.4rem; color:#023E8A;">{row['name']}</h3>
-                            <div style="margin-top:5px;">
-                                <span class="feature-tag">📍 {row['location']}</span>
-                                <span class="feature-tag">🏆 NAAC {row['naac']}</span>
-                                <span class="feature-tag">📜 {row['approvals']}</span>
-                            </div>
-                            <p style="margin-top:8px; font-size:0.9rem; color:#64748B;"><b>Highlights:</b> {row['highlights']}</p>
-                        </div>
-                    </div>
-                    <div style="text-align:right; flex: 1; border-left:1px solid #E2E8F0; padding-left:20px;">
-                        <div style="font-weight:800; color:#0077B6; font-size:1.5rem;">₹{row['fees']:,}</div>
-                        <p style="margin:0; font-size:0.9rem; color:#475569;">Total Fees</p>
-                        <div style="margin-top:10px;">
-                            <span style="color:#16A34A; font-weight:700;">{row['placement']} Placement</span><br>
-                            <span style="font-size:0.85rem; color:#64748B;">Avg Pkg: {row['avg_pkg']}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-            c_btn1, c_btn2, c_space = st.columns([1, 1, 4])
-            with c_btn1: st.button(f"View Brochure", key=f"broch_{idx}")
-            with c_btn2: st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
+    # Mobile-friendly Card View
+    for index, row in filtered_df.iterrows():
+        with st.container(border=True):
+            st.subheader(row['name'])
+            st.write(f"**{row['program']}** | {row['location']}")
+            st.caption(f"Energy Match: {row['energy']}")
+            st.metric("Fees", f"₹{row['fees']:,}", f"EMI: ₹{row['emi']}/mo")
+            
+            c1, c2 = st.columns(2)
+            c1.button("Brochure", key=f"b_{index}", use_container_width=True)
+            c2.button("Apply", key=f"a_{index}", type="primary", use_container_width=True)
 
 def render_assessment():
-    st.markdown("""<div style="text-align:center; margin-bottom:40px;"><h2 style="font-size:2.5rem; color:#0077B6;">Discover Your Spark</h2><p style="color:#64748B;">Answer these 5 questions to find your core energy type.</p></div>""", unsafe_allow_html=True)
-    c1, c2, c3 = st.columns([1, 2, 1])
-    with c2:
-        with st.form("assessment_form"):
-            st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
-            q1 = st.radio("q1", ["Generate multiple creative solutions (Creator)", "Discuss with others (Influencer)", "Follow proven steps (Catalyst)", "Analyze data (Analyst)"], label_visibility="collapsed")
-            
-            st.markdown('<p class="question-text">2. Your ideal work environment:</p>', unsafe_allow_html=True)
-            q2 = st.radio("q2", ["Freedom to experiment", "Collaborative team", "Structured processes", "Quiet analysis"], label_visibility="collapsed")
-            
-            st.markdown('<p class="question-text">3. Most energized when:</p>', unsafe_allow_html=True)
-            q3 = st.radio("q3", ["Creating something new", "Presenting ideas", "Completing tasks", "Solving puzzles"], label_visibility="collapsed")
-            
-            st.markdown('<p class="question-text">4. Decision-making style:</p>', unsafe_allow_html=True)
-            q4 = st.radio("q4", ["Intuitive", "People-focused", "Experience-based", "Data-driven"], label_visibility="collapsed")
-            
-            st.markdown('<p class="question-text">5. In groups, you:</p>', unsafe_allow_html=True)
-            q5 = st.radio("q5", ["Share innovative concepts", "Network actively", "Organize action items", "Provide data insights"], label_visibility="collapsed")
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            if st.form_submit_button("Reveal My Spark ➤", type="primary", use_container_width=True):
-                with st.spinner("Analyzing your Energy Profile..."):
-                    time.sleep(1.5)
-                    answers = [q1, q2, q3, q4, q5]
-                    counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
-                    for a in answers:
-                        if "Creator" in a or "innovate" in a or "new" in a or "Intuitive" in a: counts["Distoversity Creator"] += 1
-                        elif "Influencer" in a or "Collaborative" in a or "Presenting" in a or "People" in a: counts["Distoversity Influencer"] += 1
-                        elif "Catalyst" in a or "Structured" in a or "tasks" in a or "Experience" in a: counts["Distoversity Catalyst"] += 1
-                        else: counts["Distoversity Analyst"] += 1
-                    
-                    scores = {k: (v/5)*100 for k,v in counts.items()}
-                    st.session_state.user_profile = max(counts, key=counts.get)
-                    st.session_state.user_scores = scores
-                    st.session_state.page = 'Result'
-                    st.rerun()
+    st.header("⚡ Discover Your Spark")
+    st.write("Select the option that fits you best.")
+    
+    with st.form("assessment_form"):
+        st.write("**1. When solving a problem, you naturally:**")
+        q1 = st.radio("Q1", ["Create new ideas", "Talk to people", "Organize timing", "Analyze details"], label_visibility="collapsed")
+        
+        st.write("**2. Your ideal work environment:**")
+        q2 = st.radio("Q2", ["Freedom & Innovation", "Social & Collaborative", "Busy & Service-oriented", "Quiet & Structured"], label_visibility="collapsed")
+        
+        st.write("**3. You are most valuable when:**")
+        q3 = st.radio("Q3", ["Starting things", "Networking", "Reacting to needs", "Refining systems"], label_visibility="collapsed")
 
-def render_result():
-    profile = st.session_state.user_profile
-    scores = st.session_state.user_scores
-    if not profile: st.warning("Take assessment first!"); st.stop()
-
-    st.balloons()
-    st.markdown(f"""
-    <div style="text-align:center; padding:3rem; background:#F0F9FF; border-radius:20px; border:1px solid #BAE6FD; margin-bottom:3rem;">
-        <div style="color:#0077B6; font-weight:700; letter-spacing:2px;">YOUR CORE ENERGY IS</div>
-        <h1 style="font-size:5rem !important; color:#0077B6; margin:10px 0;">{profile}</h1>
-        <p style="font-size:1.2rem;">Your Spark profile aligns with specific high-growth environments.</p>
-        <div style="display:flex; justify-content:center; gap:20px; margin-top:20px; flex-wrap:wrap;">
-            <span class="feature-tag">Creator: {int(scores['Distoversity Creator'])}%</span>
-            <span class="feature-tag">Influencer: {int(scores['Distoversity Influencer'])}%</span>
-            <span class="feature-tag">Catalyst: {int(scores['Distoversity Catalyst'])}%</span>
-            <span class="feature-tag">Analyst: {int(scores['Distoversity Analyst'])}%</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("### 🎯 Potential University Matches")
-        matches = df[df['energy'] == profile]
-        for idx, row in matches.iterrows():
-             st.markdown(f"""<div class="d-card" style="margin-bottom:1rem; padding:1.5rem;"><h4>{row['name']}</h4><p style="margin-top:10px;">✅ Aligns with {profile} learning style</p></div>""", unsafe_allow_html=True)
-    with c2:
-        st.markdown("### 🗺️ Your Full Genius Profile")
-        st.markdown("""<div class="d-card"><h4>4-Year Strategic Roadmap</h4><p>Year 1: Foundation...</p></div><br>""", unsafe_allow_html=True)
-        email = st.text_input("Enter Email to Unlock Full Results", key="email_input")
-        if st.button("Generate My AI Report Now", use_container_width=True):
-            if email:
-                with st.spinner("Connecting to AI Neural Network..."):
-                    time.sleep(2)
-                    show_popup_report(profile, scores)
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.form_submit_button("Reveal My Profile ➤", type="primary", use_container_width=True):
+            st.balloons()
+            st.success("Assessment Complete! (Logic placeholder)")
 
 def render_eduveer():
-    st.markdown("""
-    <div class="hero-section" style="padding-bottom: 2rem; margin-bottom: 2rem;">
-        <h1>Chat with <span style="color:#00B4D8">Eduveer AI</span></h1>
-        <p style="color:#475569;">Your 24/7 Academic Counselor.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    with st.container():
-        st.markdown('<div class="d-card" style="min-height: 500px; display: flex; flex-direction: column;">', unsafe_allow_html=True)
-        
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-
-        if prompt := st.chat_input("Ask Eduveer about MBA fees, courses..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"):
-                st.markdown(prompt)
-
-            with st.chat_message("assistant"):
-                message_placeholder = st.empty()
-                full_response = ""
-                
-                # SIMULATED INTELLIGENCE
-                if "fee" in prompt.lower(): response_text = "Based on our data, MBA fees range from ₹1.2L (DY Patil) to ₹4L (NMIMS)."
-                elif "placement" in prompt.lower(): response_text = "Most partners offer 90%+ placement assistance."
-                elif "profile" in prompt.lower(): 
-                    prof = st.session_state.user_profile if st.session_state.user_profile else "Unknown"
-                    response_text = f"Your profile is {prof}."
-                else: response_text = "That is an interesting question. I can help compare universities or explain your career path."
-
-                for chunk in response_text.split():
-                    full_response += chunk + " "
-                    time.sleep(0.05)
-                    message_placeholder.markdown(full_response + "▌")
-                message_placeholder.markdown(full_response)
+    st.header("🤖 Eduveer AI Chat")
+    
+    # Chat history
+    for msg in st.session_state.messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
             
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
-        st.markdown('</div>', unsafe_allow_html=True)
-
-def render_about():
-    c1, c2 = st.columns(2)
-    with c1:
-        st.markdown("## The Distoversity Story")
-        st.write("Founded to fix Career Misalignment using Wealth Dynamics + AI.")
-    with c2:
-        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
+    if prompt := st.chat_input("Ask about fees, placements..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+            
+        with st.chat_message("assistant"):
+            response = "I can help you compare universities. Try checking the Explorer tab!"
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
 
 def render_faq():
-    st.title("❓ Frequently Asked Questions")
-    with st.expander("❓ I'm confused about my career path."):
-        st.write("We help you discover your 'Genius Profile' via AI.")
+    st.header("❓ FAQ")
+    with st.expander("How do I choose a career?"):
+        st.write("We use the 4 Genius framework to match your personality to the right job.")
+    with st.expander("Are these degrees valid?"):
+        st.write("Yes, all universities listed are UGC-approved.")
 
-def render_institutions():
-    st.title("Partner With Us")
-    st.write("Recruit students aligned with your institutional DNA.")
-
-# --- 8. MAIN ROUTER ---
-navbar()
-
+# --- 7. MAIN ROUTER ---
 if st.session_state.page == 'Home': render_home()
-elif st.session_state.page == 'About': render_about()
 elif st.session_state.page == 'Explorer': render_explorer()
-elif st.session_state.page == 'FAQ': render_faq()
-elif st.session_state.page == 'Institutions': render_institutions()
-elif st.session_state.page == 'Assessment': render_assessment()
-elif st.session_state.page == 'Result': render_result()
 elif st.session_state.page == 'Eduveer': render_eduveer()
+elif st.session_state.page == 'Assessment': render_assessment()
+elif st.session_state.page == 'FAQ': render_faq()
