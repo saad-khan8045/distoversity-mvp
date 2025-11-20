@@ -39,12 +39,6 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
     h1 { font-size: 4rem !important; letter-spacing: -2px; line-height: 1.1; }
     
-    /* MOBILE ADJUSTMENT FOR HEADERS */
-    @media (max-width: 768px) {
-        h1 { font-size: 2.5rem !important; }
-        .nav-logo { font-size: 1.5rem !important; }
-    }
-
     /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
         background: #FFFFFF;
@@ -62,14 +56,6 @@ st.markdown("""
         box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
     }
-    
-    /* CUSTOM SCROLLABLE CHAT CONTAINER STYLE */
-    [data-testid="stVerticalBlockBorderWrapper"] {
-        background: #FFFFFF;
-        border-radius: 24px;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
-    }
 
     /* COMPONENT: AI REPORT CARD (Inside Modal) */
     .ai-report-box {
@@ -77,7 +63,7 @@ st.markdown("""
         border-left: 5px solid #0EA5E9;
         padding: 20px;
         margin-bottom: 20px;
-        font-family: 'Courier New', monospace;
+        font-family: 'Courier New', monospace; /* Tech/AI feel */
         font-size: 0.95rem;
     }
     
@@ -113,28 +99,17 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
 
-    /* NAVIGATION STYLING (HORIZONTAL SCROLL) */
-    div[role="radiogroup"] {
-        display: flex;
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        padding-bottom: 10px;
-        justify-content: center;
+    /* COMPONENT: STICKY NAV */
+    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
+        position: sticky;
+        top: 0;
+        background-color: rgba(255, 255, 255, 0.98);
+        z-index: 999;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #F1F5F9;
     }
-    div[role="radiogroup"] label {
-        background-color: #F8FAFC;
-        padding: 10px 20px;
-        border-radius: 30px;
-        margin: 0 5px;
-        border: 1px solid #E2E8F0;
-        transition: all 0.3s;
-    }
-    div[role="radiogroup"] label:hover {
-        border-color: #0077B6;
-        color: #0077B6;
-    }
-    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 2rem; color: var(--primary-dark); margin-bottom: 10px; text-align: center;}
+    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
     
     /* COMPONENT: BUTTONS */
     .stButton>button {
@@ -166,32 +141,33 @@ st.markdown("""
         font-size: 1.8rem; margin: 0 auto 1rem auto; color: var(--primary);
     }
 
+    /* SCROLLABLE CHAT CONTAINER */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-radius: 20px;
+    }
+
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. ENRICHED PARTNER DATA (CACHED FOR SPEED) ---
-@st.cache_data
-def load_data():
-    return pd.DataFrame([
-        {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "nirf": "Top 100", "fees": 210000, "program": "MBA Marketing", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "98%", "avg_pkg": "6.2 LPA", "highest_pkg": "32 LPA", "highlights": "Strong Alumni, Live Classes", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-        {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
-        {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
-        {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
-        {"name": "Chandigarh University", "location": "Online", "naac": "A+", "nirf": "Rank 29", "fees": 180000, "program": "MBA General", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "placement": "89%", "avg_pkg": "5.2 LPA", "highest_pkg": "28 LPA", "highlights": "Flexible Exams, Case Studies", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
-        {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
-        {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
-    ])
-
-df = load_data()
+# --- 3. ENRICHED PARTNER DATA ---
+UNIVERSITY_DATA = [
+    {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "nirf": "Top 100", "fees": 210000, "program": "MBA Marketing", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "98%", "avg_pkg": "6.2 LPA", "highest_pkg": "32 LPA", "highlights": "Strong Alumni, Live Classes", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
+    {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
+    {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
+    {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
+    {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
+    {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
+]
+df = pd.DataFrame(UNIVERSITY_DATA)
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
-if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
+if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile."}]
 
-# --- 5. AI GENERATION LOGIC ---
+# --- 5. AI GENERATION LOGIC & POPUP ---
 def generate_report_text(profile, scores):
     core_type = profile.replace("Distoversity ", "")
     pain_point = ""
@@ -199,19 +175,19 @@ def generate_report_text(profile, scores):
     skills = []
     
     if core_type == "Creator":
-        pain_point = "You despise routine. Ambiguity is your playground, but execution is your prison."
+        pain_point = "You despise routine. Ambiguity is your playground."
         achilles_heel = "The 'Idea Junkie' Syndrome."
         skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
     elif core_type == "Influencer":
-        pain_point = "You hate isolation and spreadsheets. You thrive on energy, but struggle in silos."
+        pain_point = "You hate isolation and spreadsheets."
         achilles_heel = "The 'Surface Level' Trap."
         skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
     elif core_type == "Catalyst":
-        pain_point = "You hate chaos. You want a clear target and feel undervalued when 'creatives' get glory."
+        pain_point = "You hate chaos and vague instructions."
         achilles_heel = "The 'Cog in the Wheel' Risk."
         skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
     elif core_type == "Analyst":
-        pain_point = "You hate hype. You want the data, not a good story."
+        pain_point = "You hate hype and emotional decision making."
         achilles_heel = "Analysis Paralysis."
         skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
 
@@ -235,41 +211,35 @@ def show_popup_report(profile, scores):
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
         st.success("Request Received!")
-        time.sleep(1)
+        time.sleep(2)
         st.rerun()
 
-# --- 6. NAVIGATION SYSTEM (OPTIMIZED) ---
+# --- 6. NAVIGATION SYSTEM ---
 def navbar():
-    # 1. Logo Title
-    st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
-    
-    # 2. Horizontal Navigation (Mobile Optimized)
-    # Determine Index safely to prevent errors if state changes externally
-    options = ["Home", "Explorer", "Eduveer AI", "Assessment", "FAQ", "Partners"]
-    try:
-        curr_index = options.index(st.session_state.page)
-    except ValueError:
-        curr_index = 0
+    with st.container():
+        # Added extra column for Eduveer to match screenshot and fix access
+        c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.5, 0.8, 0.8, 0.8, 0.8, 0.8, 1, 1.5])
+        with c1:
+            st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
+        
+        if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
+        if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
+        if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
+        if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
+        if c6.button("Partners", use_container_width=True): st.session_state.page = 'Institutions'; st.rerun()
+        # ADDED: Button to access the Chatbot
+        if c7.button("🤖 Eduveer", use_container_width=True): st.session_state.page = 'Eduveer'; st.rerun()
+        if c8.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
 
-    # NO RERUN LOGIC HERE. Just update state.
-    selected_page = st.radio(
-        "Nav", 
-        options, 
-        horizontal=True, 
-        label_visibility="collapsed",
-        index=curr_index
-    )
-    
-    st.session_state.page = selected_page
-
-# --- 7. PAGE RENDERERS ---
+# --- 7. PAGES ---
 
 def render_home():
     st.markdown("""
     <div class="hero-section">
         <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 style="margin-bottom:20px; color:#023E8A;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
+        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
         <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
+            Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Core Professional Identity</b> to India's Top Online Universities.
         </p>
     </div>
@@ -351,7 +321,7 @@ def render_explorer():
             </div>
             """, unsafe_allow_html=True)
             c_btn1, c_btn2, c_space = st.columns([1, 1, 4])
-            with c_btn1: st.button(f"View Brochure", key=f"broch_{idx}")
+            with c_btn1: st.button(f"View Brochure", key=f"broch_{idx}", use_container_width=True)
             with c_btn2: st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
 
 def render_assessment():
@@ -359,25 +329,30 @@ def render_assessment():
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         with st.form("assessment_form"):
-            # FIX: index=None prevents pre-selection
+            # FIX: Added index=None to all radio buttons so they start unchecked
             st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
             q1 = st.radio("q1_select", ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"], label_visibility="collapsed", index=None)
+            
             st.markdown('<p class="question-text">2. Your ideal work environment involves:</p>', unsafe_allow_html=True)
             q2 = st.radio("q2_select", ["Freedom to experiment and innovate", "Collaborative team settings", "Structured processes and clear timelines", "Quiet space for deep analytical work"], label_visibility="collapsed", index=None)
+            
             st.markdown('<p class="question-text">3. You feel most energized when:</p>', unsafe_allow_html=True)
             q3 = st.radio("q3_select", ["Creating something new from scratch", "Presenting ideas and influencing outcomes", "Completing tasks on schedule", "Perfecting systems and solving puzzles"], label_visibility="collapsed", index=None)
+            
             st.markdown('<p class="question-text">4. Your decision-making style is:</p>', unsafe_allow_html=True)
             q4 = st.radio("q4_select", ["Intuitive and pattern-based", "People-focused and consensus-driven", "Experience-based and practical", "Data-driven and logical"], label_visibility="collapsed", index=None)
+            
             st.markdown('<p class="question-text">5. In group settings, you naturally:</p>', unsafe_allow_html=True)
             q5 = st.radio("q5_select", ["Share innovative concepts and possibilities", "Build relationships and network actively", "Organize action items and ensure follow-through", "Provide data-backed insights and analysis"], label_visibility="collapsed", index=None)
+            
             st.markdown("<br>", unsafe_allow_html=True)
             if st.form_submit_button("Reveal My Spark ➤", type="primary", use_container_width=True):
+                # Validating that all questions are answered
                 if None in [q1, q2, q3, q4, q5]:
-                    st.warning("Please answer all questions.")
+                    st.warning("Please answer all questions to reveal your profile.")
                 else:
                     with st.spinner("Analyzing your Energy Profile..."):
-                        # FIX: Reduced delay for speed
-                        time.sleep(0.5)
+                        time.sleep(1.5)
                         answers = [q1, q2, q3, q4, q5]
                         counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
                         for a in answers:
@@ -409,7 +384,7 @@ def render_result():
         if st.button("Generate My AI Report Now", use_container_width=True):
             if email:
                 with st.spinner("Connecting to AI Neural Network..."):
-                    time.sleep(1)
+                    time.sleep(2)
                     show_popup_report(profile, scores)
 
 def render_about():
@@ -430,22 +405,28 @@ def render_institutions():
     with c1: st.image("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
     with c2: st.markdown("### Why Partner With Us?"); st.button("Request Partnership Demo")
 
-# --- FIX: SCROLLABLE CHAT ---
+# --- FIX: SCROLLABLE CHAT CONTAINER ---
 def render_eduveer():
     st.markdown("""<div style="text-align:center; padding-bottom: 20px;"><h1>Chat with <span style="color:#00B4D8">Eduveer AI</span></h1></div>""", unsafe_allow_html=True)
     
-    # Replaced raw HTML wrapper with st.container(height=600) to fix scrolling
+    # Used st.container with fixed height for scrollable area (Like WhatsApp Web)
     with st.container(height=600, border=True):
         for message in st.session_state.messages:
-            with st.chat_message(message["role"]): st.markdown(message["content"])
-            
-        if prompt := st.chat_input("Ask Eduveer..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            with st.chat_message("user"): st.markdown(prompt)
-            response_text = "I recommend looking at our Explorer tab for detailed fees."
-            st.session_state.messages.append({"role": "assistant", "content": response_text})
-            with st.chat_message("assistant"): st.markdown(response_text)
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
+        # Chat input inside the container context or just below
+        if prompt := st.chat_input("Ask Eduveer about fees, syllabus..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+            
+            # Simulated Response
+            response_text = "I can help with that! Based on your request, I recommend looking at our Explorer tab for detailed fees."
+            st.session_state.messages.append({"role": "assistant", "content": response_text})
+            with st.chat_message("assistant"):
+                st.markdown(response_text)
+                
 # --- 12. MAIN ROUTER ---
 navbar()
 
