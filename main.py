@@ -69,8 +69,8 @@ st.markdown("""
         background: #DCFCE7; color: #166534; padding: 4px 12px; 
         border-radius: 20px; font-size: 0.8rem; font-weight: 700;
     }
-    
-    /* COMPONENT: ASSESSMENT QUESTION TEXT (New Fix) */
+
+    /* COMPONENT: ASSESSMENT QUESTION TEXT (FIXED) */
     .question-text {
         font-size: 1.2rem;
         font-weight: 600;
@@ -232,22 +232,6 @@ UNIVERSITY_DATA = [
         "highest_pkg": "45 LPA",
         "highlights": "Premium Brand, Leadership Focus",
         "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"
-    },
-    {
-        "name": "DY Patil Online", 
-        "location": "Pune", 
-        "naac": "A++", 
-        "nirf": "Rank 46",
-        "fees": 120000, 
-        "program": "BBA General", 
-        "energy": "Catalyst", 
-        "type": "Online Degree", 
-        "approvals": "UGC, AICTE", 
-        "placement": "90%",
-        "avg_pkg": "4.2 LPA",
-        "highest_pkg": "12 LPA",
-        "highlights": "Flexible Exams, Mentor Support",
-        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"
     }
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
@@ -274,11 +258,11 @@ def navbar():
 def render_home():
     st.markdown("""
     <div class="hero-section">
-        <div style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px; border:1px solid rgba(0,119,182,0.2);">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
+        <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
         <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
         <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
             Whether you are a student or a working professional, alignment is everything.<br>
-            We match your <b>Psychological DNA</b> to India's Top Online Universities.
+            We match your <b>Core Professional Identity</b> to India's Top Online Universities.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -459,7 +443,7 @@ def render_result():
     <div style="text-align:center; padding:3rem; background:#F0F9FF; border-radius:20px; border:1px solid #BAE6FD; margin-bottom:3rem;">
         <div style="color:#0077B6; font-weight:700; letter-spacing:2px;">PRIMARY ARCHETYPE DETECTED</div>
         <h1 style="font-size:5rem !important; color:#0077B6; margin:10px 0;">{profile}</h1>
-        <p style="font-size:1.2rem;">Your psychological DNA maps to specific high-growth careers.</p>
+        <p style="font-size:1.2rem;">Your core professional identity maps to specific high-growth careers.</p>
     </div>
     """, unsafe_allow_html=True)
 
