@@ -1,350 +1,300 @@
 import streamlit as st
 import time
 
-# --- PAGE CONFIGURATION ---
+# --- PAGE CONFIGURATION (Must be first) ---
 st.set_page_config(
-    page_title="Distoversity | Empowering India",
+    page_title="Distoversity | Premium Career Architecture",
     page_icon="🚀",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# --- CUSTOM PROFESSIONAL THEME (CSS) ---
+# --- PREMIUM CSS OVERHAUL ---
 st.markdown("""
     <style>
-    /* IMPORT FONTS */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+    /* 1. IMPORT GOOGLE FONTS (Poppins for Headings, Inter for Body) */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@300;400;600&display=swap');
 
-    /* GLOBAL STYLES */
+    /* 2. GLOBAL RESET */
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
-        background-color: #FFFFFF;
-        color: #1A202C;
-    }
-
-    /* HEADERS */
-    h1, h2, h3 {
-        color: #000080; /* Navy Blue */
-        font-weight: 700;
+        color: #1E293B; /* Slate 800 */
     }
     
-    h4, h5 {
-        color: #0077B6; /* Distoversity Blue */
+    /* 3. HEADINGS */
+    h1, h2, h3 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: #0F172A; /* Slate 900 */
+    }
+    h1 { font-size: 3rem !important; line-height: 1.2 !important; }
+    h2 { font-size: 2rem !important; }
+    h3 { color: #0077B6 !important; } /* Distoversity Blue */
+
+    /* 4. CUSTOM CARDS (Glassmorphism) */
+    .premium-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 1px solid #F1F5F9;
+        transition: transform 0.3s ease;
+    }
+    .premium-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,71,255,0.1);
+        border-color: #0077B6;
     }
 
-    /* BUTTON STYLING (Premium Gradient) */
+    /* 5. BUTTON STYLING */
     .stButton>button {
-        background: linear-gradient(90deg, #0077B6 0%, #005f8b 100%);
+        background: linear-gradient(135deg, #0077B6 0%, #0056b3 100%);
         color: white;
-        border-radius: 8px;
-        padding: 12px 30px;
+        border-radius: 50px; /* Pill shape */
+        padding: 12px 35px;
         font-weight: 600;
         border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+        font-family: 'Poppins', sans-serif;
     }
     .stButton>button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
     }
 
-    /* THE 'BLUR' EFFECT (For Lead Magnet) */
-    .blur-content {
-        filter: blur(8px);
-        -webkit-filter: blur(8px);
-        user-select: none;
-        opacity: 0.6;
-        pointer-events: none;
+    /* 6. HERO SECTION GRADIENT */
+    .hero-bg {
+        background: linear-gradient(180deg, #F0F9FF 0%, #FFFFFF 100%);
+        padding: 4rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        text-align: center;
     }
     
-    /* LOCKED BOX OVERLAY */
-    .locked-overlay {
-        background-color: rgba(240, 248, 255, 0.9);
-        border: 2px solid #000080;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        position: relative;
-        margin-top: -100px;
-        z-index: 10;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    }
-
-    /* TRUST BOX (Disclaimer) */
-    .trust-disclaimer {
-        background-color: #F7FAFC;
-        border-left: 4px solid #000080;
-        padding: 15px;
-        font-size: 0.85rem;
-        color: #4A5568;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    /* CARD STYLING */
-    .uni-card {
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 15px;
-        background-color: white;
-        transition: 0.3s;
-    }
-    .uni-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        border-color: #BEE3F8;
+    /* 7. HIDE STREAMLIT DEFAULT ELEMENTS */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* 8. BLUR EFFECT FOR UPSELL */
+    .blur-text {
+        color: transparent;
+        text-shadow: 0 0 8px rgba(0,0,0,0.5);
+        user-select: none;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # --- SESSION STATE ---
 if 'step' not in st.session_state:
-    st.session_state['step'] = 'home'
-if 'profile' not in st.session_state:
-    st.session_state['profile'] = "Not Assessed"
+    st.session_state['step'] = 'landing'
 
-# --- CONTENT VARIABLES (From Spreadsheets) ---
-DISCLAIMER = """
-**Core Guidance Disclaimer:** Distoversity's Genius Profile is a tool for career guidance based on personal preferences. 
-It is not a substitute for professional psychological counseling or a guarantee of job placement.
-"""
-
-PRIVACY_POLICY = """
-🔒 **Your Privacy is Key:** We collect your email to send you your results and personalized recommendations. 
-We will never sell your data. Your information is stored securely per Indian data protection regulations.
-"""
+# --- ASSETS (Use Unsplash URLs so it works on cloud) ---
+IMG_HERO = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1171&q=80"
+IMG_DYNAMO = "https://cdn-icons-png.flaticon.com/512/2921/2921222.png" # Lightbulb
+IMG_STEEL = "https://cdn-icons-png.flaticon.com/512/2103/2103650.png" # Chart
 
 # --- PAGES ---
 
-def page_home():
-    # Hero Section
-    col1, col2 = st.columns([1.2, 1])
+def render_navbar():
+    # A custom simple navbar using columns
+    c1, c2, c3 = st.columns([1, 3, 1])
+    with c1:
+        st.markdown("### 🔹 Distoversity")
+    with c3:
+        if st.button("Login / Sign Up"):
+            st.toast("Portal coming soon!")
+
+def render_hero():
+    st.markdown('<div class="hero-bg">', unsafe_allow_html=True)
+    
+    col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.markdown("### 🇮🇳 Empowering India's Students")
-        st.title("Stop Guessing Your Future.\nStart Engineering It.")
-        st.write(
-            "90% of students choose the wrong degree based on marks, not mindset. "
-            "Our AI-Psychometric Engine matches your unique 'Spark' to Top Universities like **Manipal, Amity, and LPU**."
-        )
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("# Stop Guessing.\n# Start Engineering.")
+        st.markdown("""
+        <p style='font-size: 1.2rem; color: #475569; margin-top: 1rem;'>
+        The Indian education system sells you degrees. We give you an <b>Identity</b>.
+        Join 50,000+ students using AI to match their psychological DNA to the perfect university.
+        </p>
+        """, unsafe_allow_html=True)
         
-        st.markdown(f'<div class="trust-disclaimer">{DISCLAIMER}</div>', unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
         
-        if st.button("Discover Your Spark (Free 2-Min Test) ➤"):
+        if st.button("🚀 Discover Your Spark (Free Analysis)"):
             st.session_state['step'] = 'assessment'
             st.rerun()
             
-        st.caption("Trusted by 50,000+ Students | Methodology inspired by Wealth Dynamics")
+        st.markdown("<small>✨ Backed by Wealth Dynamics | 🏆 Partnered with Amity & Manipal</small>", unsafe_allow_html=True)
 
     with col2:
-        # Placeholder for a high-quality student image
-        st.image("https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption="Find your flow.")
-
-    st.divider()
-    
-    # Social Proof / University Logos Strip
-    st.markdown("<h5 style='text-align: center; color:#718096;'>PARTNERING WITH INDIA'S BEST ONLINE & CAMPUS PROGRAMS</h5>", unsafe_allow_html=True)
-    c1, c2, c3, c4, c5 = st.columns(5)
-    with c1: st.markdown("**IIT Delhi**")
-    with c2: st.markdown("**Manipal Online**")
-    with c3: st.markdown("**Amity Online**")
-    with c4: st.markdown("**LPU Online**")
-    with c5: st.markdown("**DY Patil**")
-
-def page_assessment():
-    st.progress(25, text="Step 1 of 4: Identifying Core Energy...")
-    st.subheader("⚡ Discover Your Spark")
-    
-    with st.form("spark_form"):
-        st.write("**1. When working on a major project, what is your natural role?**")
-        q1 = st.radio("Select the option that feels most like 'you':", [
-            "A) Generating new ideas and starting things (Dynamo)",
-            "B) Connecting with people and presenting (Blaze)",
-            "C) Ensuring the timing and service is perfect (Tempo)",
-            "D) Analyzing the data and building systems (Steel)"
-        ], label_visibility="collapsed")
+        st.image(IMG_HERO, use_column_width=True, output_format="PNG")
         
-        st.write("")
-        st.write("**2. What environment makes you feel most exhausted?**")
-        st.radio("Select one:", [
-            "A) Routine data entry and silence",
-            "B) Being isolated in a room alone",
-            "C) Chaos and lack of clear instructions",
-            "D) Emotional drama and selling to strangers"
-        ])
-        
-        st.write("")
-        st.info("💡 *There are no wrong answers. Be honest to get the best University Match.*")
-        
-        submit = st.form_submit_button("Analyze My Profile")
-        
-        if submit:
-            # SIMULATED ANALYSIS (Loading Screen)
-            with st.spinner("🧠 Analyzing Neural Pathways..."):
-                time.sleep(1)
-            with st.spinner("🏛️ Scanning Database: Manipal, Amity, LPU, DY Patil..."):
-                time.sleep(1.5)
-            with st.spinner("⚙️ Calculating Career Risk Factors..."):
-                time.sleep(1)
-            
-            # Simple Logic for MVP
-            if "Dynamo" in q1: st.session_state['profile'] = "Dynamo (Creator)"
-            elif "Blaze" in q1: st.session_state['profile'] = "Blaze (Influencer)"
-            elif "Tempo" in q1: st.session_state['profile'] = "Tempo (Catalyst)"
-            else: st.session_state['profile'] = "Steel (Analyst)"
-            
-            st.session_state['step'] = 'upsell'
-            st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-def page_upsell():
-    # THE RESULT (Visible)
-    st.success(f"🎉 Analysis Complete: You are a **{st.session_state['profile']}**!")
+def render_features():
+    st.markdown("<h2 style='text-align: center;'>How Distoversity Works</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #64748B;'>Three steps to absolute career certainty.</p><br>", unsafe_allow_html=True)
     
-    st.markdown("### 🔓 Your Profile Snapshot")
-    col_a, col_b = st.columns(2)
-    with col_a:
-        st.info(f"**Strength:** As a {st.session_state['profile']}, you thrive when you can focus on your natural flow. Traditional education often fails you because it ignores this.")
-    with col_b:
-        st.write("We have identified **3 University Programs** where your specific personality type is statistically more likely to succeed.")
-
-    st.divider()
-
-    # THE GATED CONTENT (Blurred)
-    st.subheader("🏛️ Your Personalized University Matches")
-    st.caption("Based on: Affordability, Accreditation, and Personality Fit.")
-
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns(3)
     
-    # LEFT: VISIBLE LOGOS (The Tease)
     with c1:
         st.markdown("""
-        <div class="uni-card">
-            <h4>1. Amity University Online</h4>
-            <p><b>Program:</b> BCA / MCA (AI Specialization)</p>
-            <p>✅ <b>Match Score: 94%</b></p>
-        </div>
-        <div class="uni-card">
-            <h4>2. Manipal University Jaipur</h4>
-            <p><b>Program:</b> BBA (Digital Marketing)</p>
-            <p>✅ <b>Match Score: 89%</b></p>
-        </div>
-         <div class="uni-card">
-            <h4>3. Lovely Professional Uni (LPU)</h4>
-            <p><b>Program:</b> MBA (Business Analytics)</p>
-            <p>✅ <b>Match Score: 87%</b></p>
+        <div class="premium-card">
+            <h3>1. The Spark Test</h3>
+            <p>Forget long exams. Our 2-minute AI assessment identifies your core energy frequency (Dynamo, Blaze, Tempo, Steel).</p>
         </div>
         """, unsafe_allow_html=True)
-
-    # RIGHT: BLURRED REASONING (The Value)
+        
     with c2:
         st.markdown("""
-        <div class="blur-content">
-            <h4>Why Amity fits your DNA:</h4>
-            <p>Based on your Dynamo profile, Amity's flexible module allows you to innovate without getting stuck in rigid attendance structures. The curriculum focuses on...</p>
-            <br>
-            <h4>Why Manipal fits your DNA:</h4>
-            <p>Manipal offers the specific analytical rigor that a Steel profile needs. Their alumni network in Data Science is...</p>
-            <br>
-            <h4>Career Roadmap 2025-2029:</h4>
-            <p>Year 1: Focus on Foundation. Year 2: Internship at...</p>
+        <div class="premium-card">
+            <h3>2. The Alignment</h3>
+            <p>We don't just suggest jobs. We match you to specific University Programs (BCA/MBA) that fit your psychological makeup.</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # THE LOCK OVERLAY
+    with c3:
         st.markdown("""
-        <div class="locked-overlay">
-            <h3>🔒 UNLOCK YOUR REPORT</h3>
-            <p>See exactly <b>WHY</b> these universities match your personality and get your 4-Year Roadmap.</p>
+        <div class="premium-card">
+            <h3>3. The Roadmap</h3>
+            <p>Get a 4-Year Strategic Plan, including internships and skills, not just a degree certificate.</p>
         </div>
         """, unsafe_allow_html=True)
 
-    # LEAD CAPTURE FORM
-    st.markdown("### 📩 Where should we send your Full Report?")
-    with st.form("lead_capture"):
-        email = st.text_input("Enter your email address", placeholder="student@gmail.com")
-        st.markdown(f"<small>{PRIVACY_POLICY}</small>", unsafe_allow_html=True)
-        
-        unlock = st.form_submit_button("Send My Full Profile & Roadmap Now ➤")
-        
-        if unlock:
-            if "@" in email:
-                st.balloons()
-                st.success(f"Success! The Full Report for {st.session_state['profile']} has been emailed to {email}.")
-                st.info("Check your inbox (and spam folder) in 2 minutes.")
-            else:
-                st.error("Please enter a valid email address.")
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
-def page_institutions():
-    st.title("For Institutions: Recruit Precision, Not Just Volume.")
-    st.markdown("### Transform Your Student Recruitment with AI")
-    
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.write("**The Problem:** High dropout rates and disengaged students happen when you recruit based on marks alone.")
-        st.write("**The Distoversity Solution:** We don't just send you leads. We send you students whose **Genius Profile** aligns with your institutional DNA.")
-        
-        st.markdown("#### Partnership Benefits")
-        st.markdown("""
-        - ✅ **Targeted Recruitment:** Move beyond academics to recruit based on personality alignment.
-        - ✅ **Lower Attrition:** Students matched by 'Energy' stay longer and perform better.
-        - ✅ **Data-Driven:** Access our proprietary AI-matching algorithm.
-        """)
-        
-        st.info('"Distoversity empowers us to recruit not just brilliant minds, but aligned personalities." — Dean, Top Partner University')
-
-    with col2:
-        with st.form("b2b_form"):
-            st.write("**Request Institutional Demo**")
-            st.text_input("Institution Name")
-            st.text_input("Contact Person")
-            st.text_input("Official Email")
-            st.form_submit_button("Request Demo")
-
-def page_faq():
-    st.title("Frequently Asked Questions")
-    
-    with st.expander("Q: I'm confused about my career. How can Distoversity help?"):
-        st.write("A: We help you discover your 'Genius Profile' via AI, guiding you to academic fields and universities (like Amity, Manipal, etc.) that truly fit your natural strengths.")
-        
-    with st.expander("Q: Is this a psychological test?"):
-        st.write("A: No. It is a self-discovery tool based on Wealth Dynamics and Energy Profiling. It is designed for guidance, not clinical diagnosis.")
-        
-    with st.expander("Q: Is the University recommendation guaranteed admission?"):
-        st.write("A: No. We identify 'Potential Matches' where you may thrive based on your profile. Admission depends on your academic performance and the university's criteria.")
-
-    with st.expander("Q: Do you cover Online Degrees?"):
-        st.write("A: Yes! We specialize in matching students to high-quality Online Degrees (Amity Online, Manipal Online, etc.) which are perfect for self-driven 'Dynamo' profiles.")
-
-# --- MAIN NAVIGATION ---
-def main():
-    # Sidebar Navigation
-    st.sidebar.image("https://cdn-icons-png.flaticon.com/512/4729/4729351.png", width=50) # Placeholder Logo
-    st.sidebar.title("Distoversity")
-    menu = st.sidebar.radio("Navigation", ["Home", "Discover Your Spark", "For Universities (B2B)", "FAQ"])
-    
-    st.sidebar.markdown("---")
-    st.sidebar.info("© 2025 Distoversity\nEmpowering India.")
-
-    if menu == "Home":
-        if st.session_state['step'] == 'home':
-            page_home()
-        elif st.session_state['step'] == 'assessment':
-            page_assessment()
-        elif st.session_state['step'] == 'upsell':
-            page_upsell()
-    
-    elif menu == "Discover Your Spark":
-        if st.session_state['step'] == 'upsell':
-            page_upsell()
-        else:
-            page_assessment()
+def render_assessment():
+    st.markdown("<br>", unsafe_allow_html=True)
+    # Using a container to center the form and make it look like a paper
+    with st.container():
+        c1, c2, c3 = st.columns([1, 2, 1])
+        with c2:
+            st.markdown("""
+            <div class="premium-card" style="border-top: 5px solid #0077B6;">
+                <h2 style="text-align:center;">⚡ Energy Profile Assessment</h2>
+                <p style="text-align:center; color:#64748B;">Answer honestly to unlock your University Matches.</p>
+            </div>
+            <br>
+            """, unsafe_allow_html=True)
             
-    elif menu == "For Universities (B2B)":
-        page_institutions()
-        
-    elif menu == "FAQ":
-        page_faq()
+            with st.form("assessment_form"):
+                st.markdown("#### Q1. In a team, what is your superpower?")
+                q1 = st.radio("Select one:", [
+                    "Creating the Vision (I hate details)",
+                    "Leading the People (I love talking)",
+                    "Managing the Timeline (I love stability)",
+                    "Analyzing the Data (I love facts)"
+                ])
+                
+                st.markdown("<br>#### Q2. What is your biggest fear?", unsafe_allow_html=True)
+                q2 = st.radio("Select one:", [
+                    "Boredom & Routine",
+                    "Being Ignored / Isolation",
+                    "Sudden Changes / Chaos",
+                    "Being Wrong / Criticism"
+                ])
+                
+                st.markdown("<br>", unsafe_allow_html=True)
+                submit = st.form_submit_button("Analyze My DNA 🧬")
+                
+                if submit:
+                    with st.spinner("Connecting to Neural Engine..."):
+                        time.sleep(1.5)
+                    
+                    # Simple Logic
+                    if "Creating" in q1: st.session_state['result'] = "DYNAMO (Creator)"
+                    elif "Leading" in q1: st.session_state['result'] = "BLAZE (Influencer)"
+                    elif "Managing" in q1: st.session_state['result'] = "TEMPO (Catalyst)"
+                    else: st.session_state['result'] = "STEEL (Analyst)"
+                    
+                    st.session_state['step'] = 'result'
+                    st.rerun()
 
-if __name__ == "__main__":
-    main()
+def render_result():
+    profile = st.session_state.get('result', 'DYNAMO')
+    
+    st.balloons()
+    st.markdown(f"""
+    <div class="hero-bg" style="background: #F0FDF4; border: 1px solid #22C55E;">
+        <h2 style="color: #15803D;">🎉 Analysis Complete</h2>
+        <h1>You are a {profile}</h1>
+        <p>You possess the rare ability to see what others cannot.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    c1, c2 = st.columns(2)
+    
+    with c1:
+        st.markdown("### 🔓 Your University Matches")
+        st.markdown("""
+        <div class="premium-card">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png" width="50">
+                <h4>Amity University Online</h4>
+            </div>
+            <p><b>Match Score: 98%</b></p>
+            <p style="color:green; font-size:0.9rem;">Recommended for your profile</p>
+        </div>
+        <br>
+        <div class="premium-card">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png" width="50">
+                <h4>Manipal University Jaipur</h4>
+            </div>
+            <p><b>Match Score: 92%</b></p>
+            <p style="color:green; font-size:0.9rem;">High Alignment</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with c2:
+        st.markdown("### 🔒 The Why & The Roadmap")
+        st.markdown("""
+        <div class="premium-card" style="position:relative; overflow:hidden;">
+            <h4>Why Amity Fits You:</h4>
+            <p class="blur-text">Based on your profile, the curriculum structure allows for maximum creativity...</p>
+            <br>
+            <h4>Your 4-Year Plan:</h4>
+            <p class="blur-text">Year 1: Focus on Ideation. Year 2: Intern at...</p>
+            
+            <div style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <h3>🔒 LOCKED</h3>
+                <p>Enter email to unlock full report</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.form("lead_gen"):
+            email = st.text_input("Email Address", placeholder="name@gmail.com")
+            btn = st.form_submit_button("Unlock Full Report")
+            if btn and email:
+                st.success(f"Report sent to {email}!")
+
+# --- MAIN ROUTING ---
+
+render_navbar()
+
+if st.session_state['step'] == 'landing':
+    render_hero()
+    render_features()
+    
+    # Footer / Social Proof
+    st.markdown("---")
+    c1, c2, c3, c4 = st.columns(4)
+    c1.markdown("**Trusted by:**")
+    c2.markdown("**IIT Delhi Alumni**")
+    c3.markdown("**NID Design Heads**")
+    c4.markdown("**500+ Schools**")
+
+elif st.session_state['step'] == 'assessment':
+    if st.button("← Back to Home"):
+        st.session_state['step'] = 'landing'
+        st.rerun()
+    render_assessment()
+
+elif st.session_state['step'] == 'result':
+    if st.button("← Start Over"):
+        st.session_state['step'] = 'landing'
+        st.rerun()
+    render_result()
