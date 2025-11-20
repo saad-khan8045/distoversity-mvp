@@ -170,17 +170,20 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. ENRICHED PARTNER DATA ---
-UNIVERSITY_DATA = [
-    {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "nirf": "Top 100", "fees": 210000, "program": "MBA Marketing", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "98%", "avg_pkg": "6.2 LPA", "highest_pkg": "32 LPA", "highlights": "Strong Alumni, Live Classes", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-    {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
-    {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
-    {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
-    {"name": "Chandigarh University", "location": "Online", "naac": "A+", "nirf": "Rank 29", "fees": 180000, "program": "MBA General", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "placement": "89%", "avg_pkg": "5.2 LPA", "highest_pkg": "28 LPA", "highlights": "Flexible Exams, Case Studies", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
-    {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
-    {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
-]
-df = pd.DataFrame(UNIVERSITY_DATA)
+# --- 3. ENRICHED PARTNER DATA (CACHED FOR SPEED) ---
+@st.cache_data
+def load_data():
+    return pd.DataFrame([
+        {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "nirf": "Top 100", "fees": 210000, "program": "MBA Marketing", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "98%", "avg_pkg": "6.2 LPA", "highest_pkg": "32 LPA", "highlights": "Strong Alumni, Live Classes", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
+        {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
+        {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
+        {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
+        {"name": "Chandigarh University", "location": "Online", "naac": "A+", "nirf": "Rank 29", "fees": 180000, "program": "MBA General", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "placement": "89%", "avg_pkg": "5.2 LPA", "highest_pkg": "28 LPA", "highlights": "Flexible Exams, Case Studies", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
+        {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
+        {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
+    ])
+
+df = load_data()
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
@@ -200,7 +203,7 @@ def generate_report_text(profile, scores):
         achilles_heel = "The 'Idea Junkie' Syndrome."
         skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
     elif core_type == "Influencer":
-        pain_point = "You hate isolation. You thrive on energy, but struggle in silos."
+        pain_point = "You hate isolation and spreadsheets. You thrive on energy, but struggle in silos."
         achilles_heel = "The 'Surface Level' Trap."
         skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
     elif core_type == "Catalyst":
@@ -232,33 +235,32 @@ def show_popup_report(profile, scores):
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
         st.success("Request Received!")
-        time.sleep(2)
+        time.sleep(1)
         st.rerun()
 
-# --- 6. NAVIGATION SYSTEM ---
+# --- 6. NAVIGATION SYSTEM (OPTIMIZED) ---
 def navbar():
     # 1. Logo Title
     st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
     
-    # 2. Horizontal Navigation (User Friendly on Mobile)
+    # 2. Horizontal Navigation (Mobile Optimized)
+    # Determine Index safely to prevent errors if state changes externally
+    options = ["Home", "Explorer", "Eduveer AI", "Assessment", "FAQ", "Partners"]
+    try:
+        curr_index = options.index(st.session_state.page)
+    except ValueError:
+        curr_index = 0
+
+    # NO RERUN LOGIC HERE. Just update state.
     selected_page = st.radio(
         "Nav", 
-        ["Home", "Explorer", "Eduveer AI", "Assessment", "FAQ", "Partners"], 
+        options, 
         horizontal=True, 
         label_visibility="collapsed",
-        key="nav_radio"
+        index=curr_index
     )
     
-    # 3. Routing Logic
-    if selected_page == "Home": st.session_state.page = 'Home'
-    elif selected_page == "Explorer": st.session_state.page = 'Explorer'
-    elif selected_page == "Eduveer AI": st.session_state.page = 'Eduveer'
-    elif selected_page == "Assessment": st.session_state.page = 'Assessment'
-    elif selected_page == "FAQ": st.session_state.page = 'FAQ'
-    elif selected_page == "Partners": st.session_state.page = 'Institutions'
-    
-    if st.session_state.page != selected_page:
-        st.rerun()
+    st.session_state.page = selected_page
 
 # --- 7. PAGE RENDERERS ---
 
@@ -357,7 +359,7 @@ def render_assessment():
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         with st.form("assessment_form"):
-            # FIX: Added index=None to all radio buttons to prevent pre-selection
+            # FIX: index=None prevents pre-selection
             st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
             q1 = st.radio("q1_select", ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"], label_visibility="collapsed", index=None)
             st.markdown('<p class="question-text">2. Your ideal work environment involves:</p>', unsafe_allow_html=True)
@@ -374,7 +376,8 @@ def render_assessment():
                     st.warning("Please answer all questions.")
                 else:
                     with st.spinner("Analyzing your Energy Profile..."):
-                        time.sleep(1.5)
+                        # FIX: Reduced delay for speed
+                        time.sleep(0.5)
                         answers = [q1, q2, q3, q4, q5]
                         counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
                         for a in answers:
@@ -406,7 +409,7 @@ def render_result():
         if st.button("Generate My AI Report Now", use_container_width=True):
             if email:
                 with st.spinner("Connecting to AI Neural Network..."):
-                    time.sleep(2)
+                    time.sleep(1)
                     show_popup_report(profile, scores)
 
 def render_about():
