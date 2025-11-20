@@ -86,8 +86,17 @@ st.markdown("""
         text-align: center;
         border-radius: 0 0 50px 50px;
         margin-bottom: 3rem;
-        /* Margin top ensures content doesn't hide behind sticky header */
         margin-top: 1rem; 
+    }
+
+    /* COMPONENT: PROCESS STEPS (New Graphic Element) */
+    .step-circle {
+        width: 60px; height: 60px; background: var(--primary-light); color: var(--primary);
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: 700; margin: 0 auto 1rem auto;
+    }
+    .step-line {
+        border-top: 2px dashed var(--primary); margin-top: -40px; position: relative; z-index: -1;
     }
 
     /* TIMELINE */
@@ -106,16 +115,56 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA ENGINE ---
+# --- 3. ENRICHED DATA ENGINE ---
 UNIVERSITY_DATA = [
-    {"name": "Jain University", "location": "Bangalore", "naac": "A++", "placement": "98%", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-    {"name": "Manipal University Jaipur", "location": "Jaipur", "naac": "A+", "placement": "94%", "fees": 175000, "program": "B.Tech Data Science", "energy": "Analyst", "type": "Campus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
-    {"name": "Amity University Online", "location": "Noida", "naac": "A+", "placement": "92%", "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
-    {"name": "LPU Online", "location": "Punjab", "naac": "A++", "placement": "91%", "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
-    {"name": "Chandigarh University", "location": "Punjab", "naac": "A+", "placement": "89%", "fees": 180000, "program": "B.Des UX/UI", "energy": "Creator", "type": "Campus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
-    {"name": "UPES Online", "location": "Dehradun", "naac": "A", "placement": "95%", "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online", "img": "https://www.upes.ac.in/media/1003/upes-logo.png"},
-    {"name": "NMIMS Global", "location": "Mumbai", "naac": "A+", "placement": "93%", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
-    {"name": "DY Patil University", "location": "Pune", "naac": "A++", "placement": "90%", "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
+    {
+        "name": "Jain University", "location": "Bangalore", "naac": "A++", "placement": "98%", 
+        "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png",
+        "avg_pkg": "6.2 LPA", "recruiters": "Google, HDFC, Flipkart"
+    },
+    {
+        "name": "Manipal University Jaipur", "location": "Jaipur", "naac": "A+", "placement": "94%", 
+        "fees": 175000, "program": "B.Tech Data Science", "energy": "Analyst", "type": "Campus", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png",
+        "avg_pkg": "5.5 LPA", "recruiters": "Dell, Microsoft, Accenture"
+    },
+    {
+        "name": "Amity University Online", "location": "Noida", "naac": "A+", "placement": "92%", 
+        "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png",
+        "avg_pkg": "4.8 LPA", "recruiters": "TCS, Wipro, Capgemini"
+    },
+    {
+        "name": "LPU Online", "location": "Punjab", "naac": "A++", "placement": "91%", 
+        "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png",
+        "avg_pkg": "5.0 LPA", "recruiters": "Amazon, Bosch, Cognizant"
+    },
+    {
+        "name": "Chandigarh University", "location": "Punjab", "naac": "A+", "placement": "89%", 
+        "fees": 180000, "program": "B.Des UX/UI", "energy": "Creator", "type": "Campus", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png",
+        "avg_pkg": "5.2 LPA", "recruiters": "Adobe, Deloitte, HP"
+    },
+    {
+        "name": "UPES Online", "location": "Dehradun", "naac": "A", "placement": "95%", 
+        "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online", 
+        "img": "https://www.upes.ac.in/media/1003/upes-logo.png",
+        "avg_pkg": "4.5 LPA", "recruiters": "KPMG, EY, Genpact"
+    },
+    {
+        "name": "NMIMS Global", "location": "Mumbai", "naac": "A+", "placement": "93%", 
+        "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png",
+        "avg_pkg": "7.0 LPA", "recruiters": "Goldman Sachs, JP Morgan, ICICI"
+    },
+    {
+        "name": "DY Patil University", "location": "Pune", "naac": "A++", "placement": "90%", 
+        "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online", 
+        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png",
+        "avg_pkg": "4.2 LPA", "recruiters": "Infosys, Tech Mahindra, Bajaj"
+    }
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
 
@@ -125,13 +174,11 @@ if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 
 # --- 5. NAVIGATION SYSTEM (STICKY HEADER) ---
 def navbar():
-    # The CSS 'position: sticky' above applies to this container
     with st.container():
         c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1.5])
         with c1:
             st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
         
-        # Navigation Logic
         if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
         if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
         if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
@@ -143,11 +190,11 @@ def render_home():
     # Hero
     st.markdown("""
     <div class="hero-section">
-        <div style="color:#0077B6; font-weight:700; letter-spacing:2px; margin-bottom:15px;">INDIA'S IDENTITY-FIRST CAREER PLATFORM</div>
-        <h1>Stop Guessing Your Future.<br>Start Engineering It.</h1>
+        <div style="color:#0077B6; font-weight:700; letter-spacing:2px; margin-bottom:15px;">INDIA'S PREMIER CAREER ARCHITECTURE PLATFORM</div>
+        <h1>Stop Guessing Your Future.<br>Start Planning It.</h1>
         <p style="max-width:700px; margin:20px auto;">
-            We don't ask "What are your marks?". We ask <b>"What is your flow?"</b>.<br>
-            Match your psychological DNA to the top 1% of Universities like Amity, Manipal, and LPU.
+            We move beyond "What are your marks?" to <b>"What is your flow?"</b>.<br>
+            Align your psychological DNA with the top 1% of Universities like Amity, Manipal, and LPU for a career that fits.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -164,13 +211,25 @@ def render_home():
     for i, p in enumerate(["IIT DELHI", "AMITY", "MANIPAL", "NMIMS", "LPU"]):
         cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.4rem;'>{p}</h3>", unsafe_allow_html=True)
 
+    # Visual "How It Works" Section
+    st.markdown("<br><br><h2 style='text-align:center;'>From Confusion to Clarity</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;'>Our 3-Step Process to Career Alignment</p><br>", unsafe_allow_html=True)
+    
+    s1, s2, s3 = st.columns(3)
+    with s1:
+        st.markdown("""<div class="step-circle">1</div><div style="text-align:center"><h3>Decode Identity</h3><p>Take our AI assessment to find your core archetype.</p></div>""", unsafe_allow_html=True)
+    with s2:
+        st.markdown("""<div class="step-circle">2</div><div style="text-align:center"><h3>Align Education</h3><p>Match with university curriculums that fit your style.</p></div>""", unsafe_allow_html=True)
+    with s3:
+        st.markdown("""<div class="step-circle">3</div><div style="text-align:center"><h3>Build Roadmap</h3><p>Get a strategic plan for skills & internships.</p></div>""", unsafe_allow_html=True)
+
     # Value Prop Grid
     st.markdown("<br><br><h2 style='text-align:center;'>Scientific Certainty. No Opinions.</h2>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown("""<div class="d-card"><h3>🧠 Identity Analysis</h3><p>Segregates learners into 4 Archetypes: Creator, Influencer, Catalyst, Analyst.</p></div>""", unsafe_allow_html=True)
     with c2:
-        st.markdown("""<div class="d-card"><h3>🏫 University Match</h3><p>Filter 500+ universities to find curriculums that fit your cognitive style.</p></div>""", unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><h3>🏫 Smart Matching</h3><p>Filter 500+ universities to find curriculums that fit your cognitive style.</p></div>""", unsafe_allow_html=True)
     with c3:
         st.markdown("""<div class="d-card"><h3>🗺️ Career Roadmap</h3><p>A 4-year strategic plan including internships, skills, and branding.</p></div>""", unsafe_allow_html=True)
 
@@ -196,21 +255,23 @@ def render_explorer():
     
     st.write(f"Found **{len(filtered_df)}** matches for you:")
     
-    # Display Cards
+    # Display Cards with Enhanced Data
     for idx, row in filtered_df.iterrows():
         with st.container():
             st.markdown(f"""
             <div class="d-card" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
                 <div style="display:flex; align-items:center; gap:20px;">
-                    <img src="{row['img']}" height="50">
+                    <img src="{row['img']}" height="60" style="object-fit:contain;">
                     <div>
                         <h3 style="margin:0; font-size:1.4rem;">{row['name']}</h3>
-                        <p style="margin:0; font-size:0.9rem;">📍 {row['location']} | 🏆 {row['naac']}</p>
+                        <p style="margin:0; font-size:0.9rem; color:#64748B;">📍 {row['location']} | 🏆 {row['naac']} | 💼 {row['placement']} Placement</p>
+                        <p style="margin:0; font-size:0.8rem; color:#0EA5E9;">🏢 Top Recruiters: {row['recruiters']}</p>
                     </div>
                 </div>
                 <div style="text-align:right;">
                     <div style="font-weight:700; color:#0077B6; font-size:1.2rem;">₹{row['fees']:,}</div>
-                    <div style="font-size:0.8rem; background:#E0F2FE; padding:4px 8px; border-radius:4px; color:#0077B6; display:inline-block;">{row['energy']} Fit</div>
+                    <div style="font-size:0.8rem; color:#475569;">Avg Pkg: {row['avg_pkg']}</div>
+                    <div style="font-size:0.8rem; background:#E0F2FE; padding:4px 8px; border-radius:4px; color:#0077B6; display:inline-block; margin-top:5px;">{row['energy']} Fit</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
