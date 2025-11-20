@@ -11,121 +11,153 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 2. PROFESSIONAL DESIGN SYSTEM (CSS) ---
+# --- 2. ULTRA-PREMIUM DESIGN SYSTEM (CSS) ---
 st.markdown("""
     <style>
+    /* IMPORT FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     :root {
         --primary: #0077B6;       /* Deep Sky Blue */
-        --primary-light: #E0F2FE; /* Light Blue BG */
-        --accent: #0EA5E9;        /* Bright Blue */
-        --text-dark: #0F172A;
-        --text-gray: #475569;
+        --primary-dark: #023E8A;  /* Darker Blue for text */
+        --primary-light: #ADE8F4; /* Glow Color */
+        --accent: #00B4D8;        /* Bright Blue */
+        --text-main: #0F172A;
+        --text-sub: #475569;
         --white: #FFFFFF;
-        --gold: #F59E0B;
+        --gradient-bg: radial-gradient(circle at 50% 0%, #E0F2FE 0%, #FFFFFF 70%);
     }
 
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        color: var(--text-dark);
+        color: var(--text-main);
         background-color: #FFFFFF;
         scroll-behavior: smooth;
     }
 
     /* HEADERS */
-    h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary); font-weight: 700; }
-    h1 { font-size: 3.8rem !important; letter-spacing: -1px; line-height: 1.1; }
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
+    h1 { 
+        font-size: 4.5rem !important; 
+        letter-spacing: -2px; 
+        line-height: 1.1; 
+        background: -webkit-linear-gradient(45deg, #0077B6, #0096C7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
     
-    /* COMPONENT: PREMIUM CARD */
+    /* COMPONENT: HERO SECTION (The "Attractive Force") */
+    .hero-section {
+        background: var(--gradient-bg);
+        padding: 6rem 2rem 5rem 2rem;
+        text-align: center;
+        border-radius: 0 0 60px 60px;
+        margin-bottom: 4rem;
+        margin-top: 0rem;
+        border-bottom: 1px solid #E0F2FE;
+    }
+    
+    .hero-badge {
+        background: rgba(0, 119, 182, 0.1);
+        color: #0077B6;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 1.5px;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(0, 119, 182, 0.2);
+    }
+
+    /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
-        background: white;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
         border: 1px solid #E2E8F0;
-        border-radius: 16px;
-        padding: 2rem;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
         height: 100%;
-        position: relative;
-        overflow: hidden;
     }
     .d-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 119, 182, 0.1);
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
     }
 
-    /* COMPONENT: FEATURE CARD (Why Us) */
-    .feature-card {
-        background: linear-gradient(145deg, #ffffff, #f0f9ff);
+    /* COMPONENT: FEATURE ICON */
+    .icon-box {
+        width: 70px;
+        height: 70px;
+        background: linear-gradient(135deg, #E0F2FE, #FFFFFF);
         border-radius: 20px;
-        padding: 2.5rem;
-        text-align: center;
-        border: 1px solid #E2E8F0;
-        box-shadow: 0 10px 30px -10px rgba(0, 119, 182, 0.1);
-        transition: transform 0.3s ease;
-    }
-    .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px -10px rgba(0, 119, 182, 0.2);
-    }
-    .feature-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        display: inline-block;
-        padding: 15px;
-        background: var(--primary-light);
-        border-radius: 50%;
-        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 20px -5px rgba(0, 119, 182, 0.1);
     }
 
-    /* COMPONENT: ALISON CARD (Special) */
-    .alison-card {
-        background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
-        border: 1px solid #FED7AA;
-    }
-
-    /* COMPONENT: STICKY NAVIGATION */
+    /* COMPONENT: STICKY NAV */
     div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
         position: sticky;
         top: 0;
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
         z-index: 999;
         padding-top: 1rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid #F1F5F9;
-        box-shadow: 0 4px 20px -10px rgba(0,0,0,0.1);
     }
-    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary); }
+    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
     
     /* COMPONENT: BUTTONS */
     .stButton>button {
-        background: linear-gradient(135deg, #0077B6 0%, #0284C7 100%);
+        background: linear-gradient(90deg, #0077B6 0%, #0096C7 100%);
         color: white;
         border-radius: 50px;
-        padding: 0.6rem 2rem;
-        font-weight: 600;
+        padding: 0.8rem 3rem;
+        font-weight: 700;
+        font-size: 1.1rem;
         border: none;
-        box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2);
-        transition: 0.2s;
+        box-shadow: 0 10px 25px rgba(0, 119, 182, 0.3);
+        transition: all 0.3s;
     }
-    .stButton>button:hover { transform: scale(1.02); box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3); }
+    .stButton>button:hover { 
+        transform: scale(1.05); 
+        box-shadow: 0 15px 35px rgba(0, 119, 182, 0.4); 
+    }
     
-    /* COMPONENT: HERO */
-    .hero-section {
-        background: linear-gradient(180deg, #F0F9FF 0%, #FFFFFF 100%);
-        padding: 5rem 2rem 3rem 2rem;
+    /* COMPONENT: ALISON PARTNER SECTION */
+    .alison-section {
+        background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
+        border: 1px solid #FFEDD5;
+        border-radius: 24px;
+        padding: 3rem;
         text-align: center;
-        border-radius: 0 0 50px 50px;
-        margin-bottom: 3rem;
-        margin-top: 1rem; 
+        margin-top: 4rem;
+    }
+    .pill {
+        background: white;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        color: #D97706;
+        border: 1px solid #FED7AA;
+        margin: 0 10px;
+        box-shadow: 0 4px 10px rgba(251, 146, 60, 0.1);
     }
 
+    /* HIDE STREAMLIT UI */
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. PARTNER DATA ENGINE (UPDATED NAMES) ---
+# --- 3. PARTNER DATA ENGINE ---
 UNIVERSITY_DATA = [
     {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
     {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "fees": 175000, "program": "MCA Data Science", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
@@ -157,76 +189,77 @@ def navbar():
 
 # --- 6. PAGE: HOME ---
 def render_home():
-    # Hero - Tailored for Professionals
+    # ULTRA-PREMIUM HERO
     st.markdown("""
     <div class="hero-section">
-        <div style="color:#0077B6; font-weight:700; letter-spacing:2px; margin-bottom:15px;">CAREER ARCHITECTURE FOR PROFESSIONALS & STUDENTS</div>
-        <h1>Don't Just Upgrade Your Degree.<br>Upgrade Your <span style="color:#0EA5E9">Identity.</span></h1>
-        <p style="max-width:700px; margin:20px auto;">
+        <div class="hero-badge">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
+        <h1>Don't Just Upgrade Your Degree.<br>Upgrade Your <span style="color:#00B4D8">Identity.</span></h1>
+        <p style="max-width:800px; margin:25px auto; font-size:1.3rem; color:#475569; line-height:1.6;">
             Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Psychological DNA</b> to India's Top Online Universities.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Centered CTA Button
+    # CENTERED CTA (PERFECTLY ALIGNED)
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         if st.button("🚀 Discover Your Career Energy (Free)", key="home_cta", use_container_width=True):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    # Partners (UPDATED: Official Names, Black Font)
-    st.markdown("<br><p style='text-align:center; font-weight:600; color:#94A3B8; letter-spacing: 1px;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
+    # PARTNER LOGOS (Bold & Black)
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing: 1px; font-size:0.9rem;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
     
-    # Defining the list of names exactly as requested
     partner_list = ["Amity University Online", "Manipal University Online", "Jain Online", "NMIMS CDOL", "LPU Online"]
-    
     cols = st.columns(5)
     for i, p in enumerate(partner_list):
-        # Styled with Black (#000000), Bold (800), and decent size
-        cols[i].markdown(f"<h3 style='text-align:center; color:#000000; font-weight:800; font-size:1.3rem; line-height:1.4;'>{p}</h3>", unsafe_allow_html=True)
+        cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; font-weight:800; font-size:1.2rem; opacity:0.9;'>{p}</h3>", unsafe_allow_html=True)
 
-    # Value Prop (Enhanced Graphics)
-    st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; color:#64748B; margin-bottom:3rem;'>A holistic approach to career growth.</p>", unsafe_allow_html=True)
+    # FEATURE CARDS (The "Attractive Force")
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center; font-size:2.5rem; color:#023E8A;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#64748B; margin-bottom:4rem; font-size:1.1rem;'>Scientific alignment for maximum career impact.</p>", unsafe_allow_html=True)
     
     c1, c2, c3 = st.columns(3)
     with c1:
         st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🧠</div>
-            <h3>Identity Analysis</h3>
+        <div class="d-card">
+            <div class="icon-box">🧠</div>
+            <h3 style="font-size:1.5rem; margin-bottom:1rem;">Identity Analysis</h3>
             <p style="color:#475569;">Stop forcing yourself into roles you hate. Find your natural flow with our AI assessment.</p>
         </div>
         """, unsafe_allow_html=True)
     with c2:
         st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🏫</div>
-            <h3>Online Degrees</h3>
+        <div class="d-card">
+            <div class="icon-box">🏫</div>
+            <h3 style="font-size:1.5rem; margin-bottom:1rem;">Online Degrees</h3>
             <p style="color:#475569;">Work while you learn. Valid degrees from UGC-approved universities like Amity & Manipal.</p>
         </div>
         """, unsafe_allow_html=True)
     with c3:
         st.markdown("""
-        <div class="feature-card">
-            <div class="feature-icon">🚀</div>
-            <h3>Career Roadmap</h3>
+        <div class="d-card">
+            <div class="icon-box">🚀</div>
+            <h3 style="font-size:1.5rem; margin-bottom:1rem;">Career Roadmap</h3>
             <p style="color:#475569;">Integrate your degree with <b>ALISON</b> certifications for maximum professional impact.</p>
         </div>
         """, unsafe_allow_html=True)
 
-    # ALISON Integration
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # ALISON INTEGRATION (Visual & Attractive)
     st.markdown("""
-    <div style="background:#FFF7ED; border:1px solid #FED7AA; border-radius:16px; padding:40px; text-align:center;">
-        <h3 style="color:#D97706;">🎓 Upskill with ALISON</h3>
-        <p style="color:#92400E;">We have partnered with <b>ALISON</b> to provide free certification courses that complement your degree.</p>
-        <div style="display:flex; gap:20px; justify-content:center; margin-top:20px; flex-wrap: wrap;">
-            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">📜 Project Management</span>
-            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">💻 IT Support</span>
-            <span style="background:white; padding:10px 20px; border-radius:30px; border:1px solid #FED7AA; color:#D97706; font-weight:600;">🗣️ Communication</span>
+    <div class="alison-section">
+        <h3 style="color:#D97706; font-size:2rem; margin-bottom:1rem;">🎓 Upskill with ALISON</h3>
+        <p style="color:#92400E; font-size:1.1rem; max-width:700px; margin:0 auto 2rem auto;">
+            We have partnered with <b>ALISON</b> to provide free certification courses that complement your degree.
+        </p>
+        <div style="display:flex; gap:15px; justify-content:center; flex-wrap: wrap;">
+            <div class="pill">📜 Project Management</div>
+            <div class="pill">💻 IT Support</div>
+            <div class="pill">🗣️ Business Communication</div>
+            <div class="pill">📊 Data Analytics</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -236,7 +269,6 @@ def render_explorer():
     st.markdown("## 🏫 University Explorer")
     st.markdown("Compare top private online universities matched to your Genius Profile. **All universities listed are UGC/AICTE Approved.**")
     
-    # Filters
     col1, col2, col3 = st.columns(3)
     with col1:
         max_fee = st.slider("Max Budget (₹)", 50000, 500000, 250000, 50000)
@@ -245,37 +277,31 @@ def render_explorer():
     with col3:
         prog_type = st.multiselect("Program", ["MBA", "BCA", "BBA", "MCA"], default=["MBA", "BCA"])
 
-    # Filtering Logic
-    filtered_df = df[
-        (df['fees'] <= max_fee) & 
-        (df['energy'].isin(energy_filter))
-    ]
+    filtered_df = df[(df['fees'] <= max_fee) & (df['energy'].isin(energy_filter))]
     
     st.write(f"Found **{len(filtered_df)}** matches for you:")
     
-    # Display Cards
     for idx, row in filtered_df.iterrows():
         with st.container():
             st.markdown(f"""
-            <div class="d-card" style="margin-bottom:15px;">
+            <div class="d-card" style="margin-bottom:20px; border-left: 5px solid #0077B6;">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
-                    <div style="display:flex; align-items:center; gap:20px;">
-                        <img src="{row['img']}" height="60" style="object-fit:contain; max-width: 100px;">
+                    <div style="display:flex; align-items:center; gap:25px;">
+                        <img src="{row['img']}" height="70" style="object-fit:contain; max-width: 120px;">
                         <div>
-                            <h3 style="margin:0; font-size:1.4rem;">{row['name']}</h3>
-                            <p style="margin:0; font-size:0.9rem; color:#64748B;">📍 {row['location']} | 🏆 {row['naac']} | 🎓 {row['type']}</p>
-                            <p style="margin:0; font-size:0.8rem; color:#0EA5E9;">✅ Approvals: {row['approvals']}</p>
+                            <h3 style="margin:0; font-size:1.5rem; color:#023E8A;">{row['name']}</h3>
+                            <p style="margin:5px 0; font-size:1rem; color:#64748B;">📍 {row['location']} | 🏆 {row['naac']} | 🎓 {row['type']}</p>
+                            <p style="margin:0; font-size:0.9rem; color:#00B4D8; font-weight:600;">✅ Approvals: {row['approvals']}</p>
                         </div>
                     </div>
                     <div style="text-align:right;">
-                        <div style="font-weight:700; color:#0077B6; font-size:1.2rem;">₹{row['fees']:,}</div>
-                        <div style="font-size:0.8rem; background:#E0F2FE; padding:4px 8px; border-radius:4px; color:#0077B6; display:inline-block; margin-top:5px;">{row['energy']} Fit</div>
+                        <div style="font-weight:800; color:#0077B6; font-size:1.4rem;">₹{row['fees']:,}</div>
+                        <div style="font-size:0.85rem; background:#E0F2FE; padding:6px 12px; border-radius:6px; color:#0077B6; display:inline-block; margin-top:8px; font-weight:600;">{row['energy']} Fit</div>
                     </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
             
-            # Adding columns for buttons inside the card container area (visually)
             c_btn1, c_btn2, c_void = st.columns([1, 1, 3])
             with c_btn1:
                  if st.button(f"View Details", key=f"btn_view_{idx}"):
@@ -283,7 +309,6 @@ def render_explorer():
             with c_btn2:
                  if st.button(f"Brochure", key=f"btn_brochure_{idx}"):
                      st.toast("Downloading Brochure...")
-
 
 # --- 8. PAGE: ASSESSMENT ---
 def render_assessment():
@@ -382,16 +407,16 @@ def render_about():
     with c1:
         st.markdown("## The Distoversity Story")
         st.markdown("""
-        <div class="timeline-item">
-            <h4>2019: The Struggle</h4>
+        <div style="border-left: 4px solid #0077B6; padding-left: 20px; margin-bottom: 30px;">
+            <h4 style="color:#023E8A;">2019: The Struggle</h4>
             <p>Arrived in Delhi. Middle-class background. Zero guidance.</p>
         </div>
-        <div class="timeline-item">
-            <h4>The Factory Floor (Yazaki & Oppo)</h4>
+        <div style="border-left: 4px solid #0077B6; padding-left: 20px; margin-bottom: 30px;">
+            <h4 style="color:#023E8A;">The Factory Floor (Yazaki & Oppo)</h4>
             <p>Worked in SMT/Electrical depts. Saw brilliant engineers failing because of misalignment.</p>
         </div>
-        <div class="timeline-item">
-            <h4>The Solution</h4>
+        <div style="border-left: 4px solid #0077B6; padding-left: 20px; margin-bottom: 30px;">
+            <h4 style="color:#023E8A;">The Solution</h4>
             <p>Founded Distoversity to combine Wealth Dynamics + AI to fix Career Misalignment.</p>
         </div>
         """, unsafe_allow_html=True)
