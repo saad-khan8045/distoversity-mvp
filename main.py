@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import time
-import plotly.express as px
 import random
 
 # --- 1. SYSTEM CONFIGURATION ---
