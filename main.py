@@ -25,7 +25,8 @@ st.markdown("""
         --text-main: #0F172A;
         --text-sub: #475569;
         --white: #FFFFFF;
-        --gradient-bg: radial-gradient(circle at 50% 0%, #E0F2FE 0%, #FFFFFF 70%);
+        /* A subtle, professional gradient */
+        --hero-gradient: linear-gradient(180deg, #E0F2FE 0%, #FFFFFF 100%); 
     }
 
     html, body, [class*="css"] {
@@ -37,50 +38,57 @@ st.markdown("""
 
     /* HEADERS */
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
-    h1 { 
-        font-size: 4.5rem !important; 
-        letter-spacing: -2px; 
-        line-height: 1.1; 
+    
+    /* HERO HEADLINE */
+    .hero-title {
+        font-size: 4.5rem;
+        letter-spacing: -2px;
+        line-height: 1.1;
         background: -webkit-linear-gradient(45deg, #0077B6, #0096C7);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
-    }
-    
-    /* COMPONENT: HERO SECTION (The "Attractive Force") */
-    .hero-section {
-        background: var(--gradient-bg);
-        padding: 6rem 2rem 5rem 2rem;
+        margin-bottom: 1.5rem;
         text-align: center;
-        border-radius: 0 0 60px 60px;
-        margin-bottom: 4rem;
-        margin-top: 0rem;
-        border-bottom: 1px solid #E0F2FE;
     }
     
+    /* HERO BADGE */
     .hero-badge {
-        background: rgba(0, 119, 182, 0.1);
+        background: rgba(0, 119, 182, 0.08);
         color: #0077B6;
-        padding: 8px 20px;
+        padding: 8px 24px;
         border-radius: 50px;
         font-weight: 700;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         letter-spacing: 1.5px;
         display: inline-block;
         margin-bottom: 1.5rem;
-        border: 1px solid rgba(0, 119, 182, 0.2);
+        border: 1px solid rgba(0, 119, 182, 0.15);
+        text-transform: uppercase;
+    }
+
+    /* HERO SECTION CONTAINER */
+    .hero-section {
+        background: var(--hero-gradient);
+        padding: 6rem 2rem 5rem 2rem;
+        text-align: center;
+        border-radius: 0 0 60px 60px;
+        margin-bottom: 5rem;
+        margin-top: 0rem;
+        border-bottom: 1px solid #E0F2FE;
+        position: relative;
+        overflow: hidden;
     }
 
     /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(10px);
+        background: #FFFFFF;
         border: 1px solid #E2E8F0;
         border-radius: 24px;
         padding: 2.5rem;
-        box-shadow: 0 10px 40px -10px rgba(0,0,0,0.05);
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
         transition: all 0.3s ease;
         height: 100%;
+        text-align: center; /* Center content for better visual flow */
     }
     .d-card:hover {
         transform: translateY(-10px);
@@ -88,35 +96,36 @@ st.markdown("""
         border-color: var(--accent);
     }
 
-    /* COMPONENT: FEATURE ICON */
-    .icon-box {
-        width: 70px;
-        height: 70px;
+    /* COMPONENT: FEATURE ICON CIRCLE */
+    .icon-circle {
+        width: 80px;
+        height: 80px;
         background: linear-gradient(135deg, #E0F2FE, #FFFFFF);
-        border-radius: 20px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 2.5rem;
-        margin-bottom: 1.5rem;
+        margin: 0 auto 1.5rem auto; /* Center the icon */
         box-shadow: 0 10px 20px -5px rgba(0, 119, 182, 0.1);
+        border: 1px solid #E0F2FE;
     }
 
     /* COMPONENT: STICKY NAV */
     div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
         position: sticky;
         top: 0;
-        background-color: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
+        background-color: rgba(255, 255, 255, 0.98);
         z-index: 999;
         padding-top: 1rem;
         padding-bottom: 1rem;
         border-bottom: 1px solid #F1F5F9;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
     }
     .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
     
-    /* COMPONENT: BUTTONS */
-    .stButton>button {
+    /* COMPONENT: MAIN CTA BUTTON (The "Attractive Force") */
+    div.stButton > button:first-child {
         background: linear-gradient(90deg, #0077B6 0%, #0096C7 100%);
         color: white;
         border-radius: 50px;
@@ -125,11 +134,13 @@ st.markdown("""
         font-size: 1.1rem;
         border: none;
         box-shadow: 0 10px 25px rgba(0, 119, 182, 0.3);
-        transition: all 0.3s;
+        transition: all 0.3s ease-in-out;
+        width: 100%; /* Ensure full width in column */
     }
-    .stButton>button:hover { 
-        transform: scale(1.05); 
-        box-shadow: 0 15px 35px rgba(0, 119, 182, 0.4); 
+    div.stButton > button:first-child:hover { 
+        transform: scale(1.03); 
+        box-shadow: 0 15px 35px rgba(0, 119, 182, 0.4);
+        background: linear-gradient(90deg, #005f8b 0%, #0077B6 100%);
     }
     
     /* COMPONENT: ALISON PARTNER SECTION */
@@ -139,8 +150,23 @@ st.markdown("""
         border-radius: 24px;
         padding: 3rem;
         text-align: center;
-        margin-top: 4rem;
+        margin-top: 5rem;
+        position: relative;
+        overflow: hidden;
     }
+    /* Decorative background element for Alison */
+    .alison-section::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 237, 213, 0.5);
+        border-radius: 50%;
+        z-index: 0;
+    }
+    
     .pill {
         background: white;
         padding: 8px 20px;
@@ -148,8 +174,10 @@ st.markdown("""
         font-weight: 600;
         color: #D97706;
         border: 1px solid #FED7AA;
-        margin: 0 10px;
+        margin: 5px;
         box-shadow: 0 4px 10px rgba(251, 146, 60, 0.1);
+        display: inline-block;
+        z-index: 1; position: relative;
     }
 
     /* HIDE STREAMLIT UI */
@@ -193,7 +221,7 @@ def render_home():
     st.markdown("""
     <div class="hero-section">
         <div class="hero-badge">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1>Don't Just Upgrade Your Degree.<br>Upgrade Your <span style="color:#00B4D8">Identity.</span></h1>
+        <h1 class="hero-title">Don't Just Upgrade Your Degree.<br>Upgrade Your <span style="color:#00B4D8">Identity.</span></h1>
         <p style="max-width:800px; margin:25px auto; font-size:1.3rem; color:#475569; line-height:1.6;">
             Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Psychological DNA</b> to India's Top Online Universities.
@@ -202,6 +230,7 @@ def render_home():
     """, unsafe_allow_html=True)
     
     # CENTERED CTA (PERFECTLY ALIGNED)
+    # Using 3 columns to center the button: [Spacer, Button, Spacer]
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         if st.button("🚀 Discover Your Career Energy (Free)", key="home_cta", use_container_width=True):
@@ -210,7 +239,7 @@ def render_home():
 
     # PARTNER LOGOS (Bold & Black)
     st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing: 1px; font-size:0.9rem;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing: 1px; font-size:0.9rem; text-transform:uppercase;'>Trusted by Students of Top Universities</p>", unsafe_allow_html=True)
     
     partner_list = ["Amity University Online", "Manipal University Online", "Jain Online", "NMIMS CDOL", "LPU Online"]
     cols = st.columns(5)
@@ -226,7 +255,7 @@ def render_home():
     with c1:
         st.markdown("""
         <div class="d-card">
-            <div class="icon-box">🧠</div>
+            <div class="icon-circle">🧠</div>
             <h3 style="font-size:1.5rem; margin-bottom:1rem;">Identity Analysis</h3>
             <p style="color:#475569;">Stop forcing yourself into roles you hate. Find your natural flow with our AI assessment.</p>
         </div>
@@ -234,7 +263,7 @@ def render_home():
     with c2:
         st.markdown("""
         <div class="d-card">
-            <div class="icon-box">🏫</div>
+            <div class="icon-circle">🏫</div>
             <h3 style="font-size:1.5rem; margin-bottom:1rem;">Online Degrees</h3>
             <p style="color:#475569;">Work while you learn. Valid degrees from UGC-approved universities like Amity & Manipal.</p>
         </div>
@@ -242,7 +271,7 @@ def render_home():
     with c3:
         st.markdown("""
         <div class="d-card">
-            <div class="icon-box">🚀</div>
+            <div class="icon-circle">🚀</div>
             <h3 style="font-size:1.5rem; margin-bottom:1rem;">Career Roadmap</h3>
             <p style="color:#475569;">Integrate your degree with <b>ALISON</b> certifications for maximum professional impact.</p>
         </div>
@@ -284,7 +313,7 @@ def render_explorer():
     for idx, row in filtered_df.iterrows():
         with st.container():
             st.markdown(f"""
-            <div class="d-card" style="margin-bottom:20px; border-left: 5px solid #0077B6;">
+            <div class="d-card" style="margin-bottom:20px; border-left: 5px solid #0077B6; text-align: left;">
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px;">
                     <div style="display:flex; align-items:center; gap:25px;">
                         <img src="{row['img']}" height="70" style="object-fit:contain; max-width: 120px;">
@@ -309,6 +338,7 @@ def render_explorer():
             with c_btn2:
                  if st.button(f"Brochure", key=f"btn_brochure_{idx}"):
                      st.toast("Downloading Brochure...")
+
 
 # --- 8. PAGE: ASSESSMENT ---
 def render_assessment():
@@ -363,7 +393,7 @@ def render_result():
         matches = df[df['energy'] == profile]
         for idx, row in matches.iterrows():
              st.markdown(f"""
-            <div class="d-card" style="margin-bottom:1rem; padding:1.5rem;">
+            <div class="d-card" style="margin-bottom:1rem; padding:1.5rem; text-align: left;">
                 <div style="display:flex; justify-content:space-between;">
                     <h4 style="margin:0;">{row['name']}</h4>
                     <span style="background:#E0F2FE; color:#0077B6; padding:4px 8px; border-radius:6px;">94% Match</span>
@@ -375,7 +405,7 @@ def render_result():
     with c2:
         st.markdown("### 🗺️ Your Strategic Roadmap")
         st.markdown("""
-        <div class="d-card alison-card" style="margin-bottom:1rem;">
+        <div class="d-card alison-card" style="margin-bottom:1rem; text-align: left;">
             <h4>Recommended ALISON Courses</h4>
             <p>To complement your degree, we recommend these free certifications:</p>
             <ul>
@@ -407,16 +437,16 @@ def render_about():
     with c1:
         st.markdown("## The Distoversity Story")
         st.markdown("""
-        <div style="border-left: 4px solid #0077B6; padding-left: 20px; margin-bottom: 30px;">
-            <h4 style="color:#023E8A;">2019: The Struggle</h4>
+        <div class="timeline-item">
+            <h4>2019: The Struggle</h4>
             <p>Arrived in Delhi. Middle-class background. Zero guidance.</p>
         </div>
-        <div style="border-left: 4px solid #0077B6; padding-left: 20px; margin-bottom: 30px;">
-            <h4 style="color:#023E8A;">The Factory Floor (Yazaki & Oppo)</h4>
+        <div class="timeline-item">
+            <h4>The Factory Floor (Yazaki & Oppo)</h4>
             <p>Worked in SMT/Electrical depts. Saw brilliant engineers failing because of misalignment.</p>
         </div>
-        <div style="border-left: 4px solid #0077B6; padding-left: 20px; margin-bottom: 30px;">
-            <h4 style="color:#023E8A;">The Solution</h4>
+        <div class="timeline-item">
+            <h4>The Solution</h4>
             <p>Founded Distoversity to combine Wealth Dynamics + AI to fix Career Misalignment.</p>
         </div>
         """, unsafe_allow_html=True)
