@@ -77,7 +77,7 @@ st.markdown("""
         border-left: 5px solid #0EA5E9;
         padding: 20px;
         margin-bottom: 20px;
-        font-family: 'Courier New', monospace;
+        font-family: 'Courier New', monospace; /* Tech/AI feel */
         font-size: 0.95rem;
     }
     
@@ -113,7 +113,7 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
 
-    /* NAVIGATION STYLING (HORIZONTAL SCROLL) */
+    /* --- NAVIGATION STYLING (HORIZONTAL SCROLL) --- */
     div[role="radiogroup"] {
         display: flex;
         flex-direction: row;
@@ -134,7 +134,31 @@ st.markdown("""
         border-color: #0077B6;
         color: #0077B6;
     }
-    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 2rem; color: var(--primary-dark); margin-bottom: 10px; text-align: center;}
+
+    /* --- ASSESSMENT FORM FIX (VERTICAL ALIGNMENT) --- */
+    /* This explicitly resets the above Horizontal style ONLY for the Assessment Form */
+    [data-testid="stForm"] div[role="radiogroup"] {
+        flex-direction: column !important; /* Force Vertical */
+        background-color: transparent !important;
+        padding: 0 !important;
+        justify-content: flex-start !important;
+        overflow: visible !important;
+    }
+    [data-testid="stForm"] div[role="radiogroup"] label {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        margin-bottom: 10px !important;
+        width: 100% !important; /* Full width options */
+        border-radius: 12px !important;
+        padding: 15px !important;
+    }
+    [data-testid="stForm"] div[role="radiogroup"] label:hover {
+        border-color: #0077B6 !important;
+        background-color: #F0F9FF !important;
+    }
+    /* ------------------------------------------------ */
+
+    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
     
     /* COMPONENT: BUTTONS */
     .stButton>button {
@@ -166,21 +190,28 @@ st.markdown("""
         font-size: 1.8rem; margin: 0 auto 1rem auto; color: var(--primary);
     }
 
+    /* SCROLLABLE CHAT CONTAINER */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        border-radius: 20px;
+    }
+
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. ENRICHED PARTNER DATA ---
-UNIVERSITY_DATA = [
-    {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "nirf": "Top 100", "fees": 210000, "program": "MBA Marketing", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "98%", "avg_pkg": "6.2 LPA", "highest_pkg": "32 LPA", "highlights": "Strong Alumni, Live Classes", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-    {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
-    {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
-    {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
-    {"name": "Chandigarh University", "location": "Online", "naac": "A+", "nirf": "Rank 29", "fees": 180000, "program": "MBA General", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "placement": "89%", "avg_pkg": "5.2 LPA", "highest_pkg": "28 LPA", "highlights": "Flexible Exams, Case Studies", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
-    {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
-    {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
-]
-df = pd.DataFrame(UNIVERSITY_DATA)
+# --- 3. DATA ENGINE (With Caching for Speed) ---
+@st.cache_data
+def load_data():
+    return pd.DataFrame([
+        {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "nirf": "Top 100", "fees": 210000, "program": "MBA Marketing", "energy": "Distoversity Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "98%", "avg_pkg": "6.2 LPA", "highest_pkg": "32 LPA", "highlights": "Strong Alumni, Live Classes", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
+        {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "nirf": "Rank 76", "fees": 175000, "program": "MCA Data Science", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "placement": "94%", "avg_pkg": "5.5 LPA", "highest_pkg": "18 LPA", "highlights": "Global Access, Coursera Free", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
+        {"name": "Amity University Online", "location": "Global", "naac": "A+", "nirf": "Top 50", "fees": 345000, "program": "BCA Cloud Security", "energy": "Distoversity Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "placement": "92%", "avg_pkg": "4.8 LPA", "highest_pkg": "15 LPA", "highlights": "Virtual Job Fairs, Portfolio Building", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
+        {"name": "LPU Online", "location": "Global", "naac": "A++", "nirf": "Rank 47", "fees": 160000, "program": "MBA Operations", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "91%", "avg_pkg": "5.0 LPA", "highest_pkg": "21 LPA", "highlights": "Affordable, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
+        {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "nirf": "Top 20 B-School", "fees": 400000, "program": "MBA Finance", "energy": "Distoversity Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "placement": "93%", "avg_pkg": "7.0 LPA", "highest_pkg": "45 LPA", "highlights": "Premium Brand, Leadership Focus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
+        {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "nirf": "Rank 46", "fees": 120000, "program": "BBA General", "energy": "Distoversity Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "placement": "90%", "avg_pkg": "4.2 LPA", "highest_pkg": "12 LPA", "highlights": "Flexible Exams, Mentor Support", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
+    ])
+
+df = load_data()
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
@@ -188,81 +219,62 @@ if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
 if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
 
-# --- 5. AI GENERATION LOGIC & POPUP ---
+# --- 5. AI GENERATION LOGIC ---
 def generate_report_text(profile, scores):
     core_type = profile.replace("Distoversity ", "")
+    pain_point = ""
+    achilles_heel = ""
+    skills = []
     
-    # Define dynamic content based on profile using your "Rhythm Master" style language
-    if "Creator" in profile:
-        archetype = "THE INNOVATION ARCHITECT"
-        pain = "Your biggest pain point is ROUTINE and BUREAUCRACY. You despise systems that stifle your ability to create."
-        weakness = "The 'Idea Junkie' Syndrome: Starting 50 projects and finishing zero."
-        roadmap = ["Structured Agile Methodologies", "Strategic Delegation", "Product Launch Systems"]
-    elif "Influencer" in profile:
-        archetype = "THE NETWORK COMMANDER"
-        pain = "Your biggest pain point is ISOLATION and SILOS. You wither in environments that lack human connection."
-        weakness = "The 'Surface Level' Trap: Being seen as all talk, no action."
-        roadmap = ["Executive Storytelling", "High-Ticket Negotiation", "Organizational Advocacy"]
-    elif "Catalyst" in profile:
-        archetype = "THE RHYTHM MASTER"
-        pain = "Your biggest pain point is AMBIGUITY and WASTED TIME. You despise chaotic inputs and unscheduled stops."
-        weakness = "The Efficiency Trap: Paralyzing your speed with over-analysis."
-        roadmap = ["Rapid Prototyping", "Dynamic Resource Optimization", "High-Velocity Implementation"]
-    elif "Analyst" in profile:
-        archetype = "THE DATA SOVEREIGN"
-        pain = "Your biggest pain point is HYPE and EMOTIONAL DECISION MAKING. You need verifiable precision."
-        weakness = "Analysis Paralysis: Waiting for 100% certainty before moving."
-        roadmap = ["Predictive Analytics", "Risk Quantification", "Systems Architecture"]
-    else:
-        # Fallback
-        archetype = "THE UNTAPPED GENIUS"
-        pain = "Lack of clarity."
-        weakness = "Misalignment."
-        roadmap = ["Self Discovery", "Market Analysis", "Skill Acquisition"]
+    if core_type == "Creator":
+        pain_point = "You despise routine. Ambiguity is your playground."
+        achilles_heel = "The 'Idea Junkie' Syndrome."
+        skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
+    elif core_type == "Influencer":
+        pain_point = "You hate isolation and spreadsheets."
+        achilles_heel = "The 'Surface Level' Trap."
+        skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
+    elif core_type == "Catalyst":
+        pain_point = "You hate chaos and vague instructions."
+        achilles_heel = "The 'Cog in the Wheel' Risk."
+        skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
+    elif core_type == "Analyst":
+        pain_point = "You hate hype and emotional decision making."
+        achilles_heel = "Analysis Paralysis."
+        skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
 
     return f"""
-    ### 1. 🎯 YOUR CORE GENIUS REVEAL (The Instant Validation)
-    **The Archetype: {archetype}**
+    ### 🚨 THE URGENT TRUTH ABOUT YOUR CAREER
+    **Your Profile: {profile}**
     
-    Your psychological energy is driven by **{core_type}**.
+    Most people guess their career path. You don't have to. 
+    You are a **{core_type}**, which means you are wired for specific high-value roles, not generic jobs.
     
-    **Emotional Hook:** {pain}
-    
-    ---
-    
-    ### 2. 🚨 YOUR CRITICAL WEAK POINT (The Urgency)
-    **Achilles' Heel: {weakness}**
-    
-    If you fail to consciously develop your missing energies, your expertise will devolve into STAGNATION. You will be seen as a participant rather than a leader.
-    
-    **Immediate Risk:** Without mastering these skills, you risk hitting a professional ceiling where you are paid to follow orders, not create strategy.
+    **Why you feel stuck:**
+    {pain_point}
     
     ---
-
-    ### 3. 🗺️ YOUR STRATEGIC ROADMAP (The High Value Path)
-    **The Solution: Lead Through Your Genius**
-    
-    To transcend the gap, you must master these high-impact skills:
-    
-    1. **{roadmap[0]}**
-    2. **{roadmap[1]}**
-    3. **{roadmap[2]}**
+    ### ⚠️ THE RISK OF IGNORING THIS
+    **Your Achilles Heel: {achilles_heel}**
+    If you don't align your degree with your energy, you risk burning out in a job you hate within 3 years.
     
     ---
+    ### 🚀 YOUR MILLION-RUPEE ROADMAP
+    To dominate your industry, you need these exact skills:
+    1. **{skills[0]}** 2. **{skills[1]}**
+    3. **{skills[2]}**
     
-    ### 4. 🔑 THE FINAL DECISION
-    **Stop guessing your future. Start engineering it.**
-    Your Expertise + Missing Skills = Unstoppable Executive.
+    **Don't just get a degree. Build an unfair advantage.**
     """
 
 @st.dialog("⚡ CHIEF GENIUS OFFICER REPORT")
 def show_popup_report(profile, scores):
     report_content = generate_report_text(profile, scores)
     st.markdown(f"""<div class="ai-report-box">{report_content}</div>""", unsafe_allow_html=True)
-    st.markdown("""<div class="cta-box"><h3>🚀 ACCELERATE YOUR AUTHORITY</h3><p>Join the Distoversity Community & Get Your 4-Year Roadmap.</p></div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="cta-box"><h3>🚀 STOP GUESSING. START WINNING.</h3><p>Expert Career Strategy Call (Usually ₹1999, FREE for you today).</p></div>""", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("📞 Book My Strategic Power Session (₹499)", type="primary", use_container_width=True):
-        st.success("Request Received! Redirecting to secure payment gateway...")
+    if st.button("📞 Claim My Free Career Strategy Call", type="primary", use_container_width=True):
+        st.success("Request Received! Our Chief Genius Officer will contact you within 2 hours.")
         time.sleep(2)
         st.rerun()
 
@@ -379,8 +391,6 @@ def render_assessment():
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         with st.form("assessment_form"):
-            # Define questions and options precisely in 1-2-3-4 order
-            
             q1_options = ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"]
             st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
             q1 = st.radio("q1_select", q1_options, label_visibility="collapsed", index=None)
@@ -408,15 +418,11 @@ def render_assessment():
                 else:
                     with st.spinner("Analyzing your Energy Profile with Multidimensional Regression..."):
                         time.sleep(1.5)
-                        
                         scores = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
                         profile_map = ["Distoversity Creator", "Distoversity Influencer", "Distoversity Catalyst", "Distoversity Analyst"]
-                        
                         answers_indices = [q1_options.index(q1), q2_options.index(q2), q3_options.index(q3), q4_options.index(q4), q5_options.index(q5)]
-                        
                         for idx in answers_indices:
                             scores[profile_map[idx]] += 1
-                            
                         final_scores = {k: (v/5)*100 for k,v in scores.items()}
                         st.session_state.user_profile = max(scores, key=scores.get)
                         st.session_state.user_scores = final_scores
@@ -461,7 +467,6 @@ def render_about():
     with c2:
         st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
 
-# --- FIX: POPULATED FAQ SECTION ---
 def render_faq():
     st.title("❓ Frequently Asked Questions")
     tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
@@ -492,7 +497,6 @@ def render_faq():
         with st.expander("❓ How do I apply?"):
             st.write("Once you find your match, you can request a brochure or book a call. Our counselors will guide you through the application process.")
 
-# --- FIX: PARTNER SECTION CONTENT ---
 def render_institutions():
     st.markdown("""
     <div class="hero-section">
