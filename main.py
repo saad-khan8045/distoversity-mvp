@@ -2,8 +2,9 @@ import streamlit as st
 import pandas as pd
 import time
 import plotly.express as px
+import plotly.graph_objects as go
 
-# --- 1. PREMIUM CONFIGURATION ---
+# --- 1. SYSTEM CONFIGURATION ---
 st.set_page_config(
     page_title="Distoversity | Identity-First Career Architecture",
     page_icon="💎",
@@ -11,293 +12,212 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 2. VETERAN DESIGN SYSTEM (SKY BLUE THEME) ---
+# --- 2. THE "SKY BLUE" DESIGN SYSTEM (CSS) ---
 st.markdown("""
     <style>
-    /* IMPORT FONTS */
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     :root {
         --primary: #0077B6;       /* Deep Sky Blue */
-        --primary-light: #E0F2FE; /* Very Light Blue */
+        --primary-light: #E0F2FE; /* Light Blue BG */
         --accent: #0EA5E9;        /* Bright Blue */
-        --text-dark: #0F172A;     /* Navy Black */
-        --text-gray: #475569;     /* Slate Grey */
-        --bg-white: #FFFFFF;
-        --shadow: 0 10px 30px -10px rgba(0, 119, 182, 0.15);
+        --text-dark: #0F172A;
+        --text-gray: #475569;
+        --white: #FFFFFF;
     }
 
-    /* GLOBAL STYLES */
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: var(--text-dark);
         background-color: #FFFFFF;
     }
 
-    /* TYPOGRAPHY */
+    /* HEADERS */
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary); font-weight: 700; }
-    h1 { font-size: 3.5rem !important; line-height: 1.1 !important; letter-spacing: -1px; }
-    h2 { font-size: 2.5rem !important; margin-bottom: 1.5rem !important; }
-    p { font-size: 1.15rem; line-height: 1.7; color: var(--text-gray); margin-bottom: 1.5rem; }
+    h1 { font-size: 3.5rem !important; letter-spacing: -1px; line-height: 1.1; }
+    
+    /* COMPONENT: PREMIUM CARD */
+    .d-card {
+        background: white;
+        border: 1px solid #E2E8F0;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+        height: 100%;
+    }
+    .d-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 119, 182, 0.1);
+        border-color: var(--accent);
+    }
 
-    /* COMPONENT: NAVIGATION BAR */
-    div[data-testid="stHorizontalBlock"] {
+    /* COMPONENT: NAVIGATION */
+    .nav-bar {
+        display: flex;
+        justify-content: space-between;
         align-items: center;
-        padding-bottom: 1rem;
+        padding: 1rem 0;
         border-bottom: 1px solid #F1F5F9;
         margin-bottom: 2rem;
     }
-
-    /* COMPONENT: INFO CARDS */
-    .veteran-card {
-        background: white;
-        border: 1px solid #E2E8F0;
-        border-radius: 20px;
-        padding: 2.5rem;
-        box-shadow: var(--shadow);
-        transition: transform 0.2s;
-        height: 100%;
-    }
-    .veteran-card:hover {
-        transform: translateY(-5px);
-        border-color: var(--accent);
-        box-shadow: 0 20px 40px -10px rgba(0, 119, 182, 0.2);
-    }
-
-    /* COMPONENT: TIMELINE CARD */
-    .timeline-card {
-        border-left: 4px solid var(--primary);
-        padding-left: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    /* BUTTONS */
+    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary); }
+    
+    /* COMPONENT: BUTTONS */
     .stButton>button {
         background: linear-gradient(135deg, #0077B6 0%, #0284C7 100%);
         color: white;
         border-radius: 50px;
-        padding: 0.8rem 2.5rem;
+        padding: 0.6rem 2rem;
         font-weight: 600;
         border: none;
-        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-        transition: all 0.3s;
-        font-size: 1rem;
+        box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2);
+        transition: 0.2s;
     }
-    .stButton>button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
-        color: white;
-    }
-
-    /* HERO SECTION */
-    .hero-box {
+    .stButton>button:hover { transform: scale(1.02); box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3); }
+    
+    /* COMPONENT: HERO */
+    .hero-section {
         background: linear-gradient(180deg, #F0F9FF 0%, #FFFFFF 100%);
-        padding: 6rem 2rem 4rem 2rem;
+        padding: 5rem 2rem 3rem 2rem;
         text-align: center;
         border-radius: 0 0 50px 50px;
-        margin-bottom: 4rem;
-        margin-top: -2rem;
+        margin-bottom: 3rem;
+        margin-top: -3rem;
     }
-    
-    /* HIDE STREAMLIT ELEMENTS */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* BLUR MECHANIC */
-    .blur-container { position: relative; }
-    .blur-content { filter: blur(10px); opacity: 0.5; pointer-events: none; user-select: none; }
-    .lock-badge {
-        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        background: white; padding: 2.5rem; border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.12); text-align: center; width: 90%; max-width: 450px;
-        border: 1px solid #BAE6FD;
+
+    /* TIMELINE */
+    .timeline-item {
+        border-left: 4px solid var(--primary);
+        padding-left: 1.5rem;
+        padding-bottom: 2rem;
+        position: relative;
     }
+    .timeline-item::before {
+        content: ''; width: 16px; height: 16px; background: var(--primary);
+        border-radius: 50%; position: absolute; left: -10px; top: 0;
+    }
+
+    #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA ENGINE (Hardcoded for Stability) ---
-UNIVERSITY_DB = [
-    {"name": "Manipal University Jaipur", "type": "Analyst", "program": "B.Tech Data Science", "match": 96, "desc": "Structure & Rigor"},
-    {"name": "Amity University Online", "type": "Creator", "program": "BCA (Cloud Security)", "match": 94, "desc": "Flexibility & Innovation"},
-    {"name": "LPU Online", "type": "Catalyst", "program": "MBA (Operations)", "match": 91, "desc": "Process & Execution"},
-    {"name": "Jain University", "type": "Influencer", "program": "MBA (Marketing)", "match": 93, "desc": "Network & Leadership"},
-    {"name": "Chandigarh University", "type": "Creator", "program": "B.Des (UX/UI)", "match": 89, "desc": "Creative Freedom"},
-    {"name": "UPES Online", "type": "Analyst", "program": "BBA (Analytics)", "match": 95, "desc": "Data-Driven Focus"}
+# --- 3. DATA ENGINE (Embedded CSV Data) ---
+# This represents your actual university data from the images
+UNIVERSITY_DATA = [
+    {"name": "Jain University", "location": "Bangalore", "naac": "A++", "placement": "98%", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
+    {"name": "Manipal University Jaipur", "location": "Jaipur", "naac": "A+", "placement": "94%", "fees": 175000, "program": "B.Tech Data Science", "energy": "Analyst", "type": "Campus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
+    {"name": "Amity University Online", "location": "Noida", "naac": "A+", "placement": "92%", "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
+    {"name": "LPU Online", "location": "Punjab", "naac": "A++", "placement": "91%", "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
+    {"name": "Chandigarh University", "location": "Punjab", "naac": "A+", "placement": "89%", "fees": 180000, "program": "B.Des UX/UI", "energy": "Creator", "type": "Campus", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
+    {"name": "UPES Online", "location": "Dehradun", "naac": "A", "placement": "95%", "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online", "img": "https://www.upes.ac.in/media/1003/upes-logo.png"},
+    {"name": "NMIMS Global", "location": "Mumbai", "naac": "A+", "placement": "93%", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
+    {"name": "DY Patil University", "location": "Pune", "naac": "A++", "placement": "90%", "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
 ]
+df = pd.DataFrame(UNIVERSITY_DATA)
 
 # --- 4. STATE MANAGEMENT ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
-if 'scores' not in st.session_state: st.session_state.scores = {'Creator':0, 'Influencer':0, 'Catalyst':0, 'Analyst':0}
 
-# --- 5. TOP NAVIGATION BAR ---
+# --- 5. NAVIGATION SYSTEM ---
 def navbar():
-    # This creates a sticky top nav look
-    c1, c2, c3, c4, c5 = st.columns([2, 1, 1, 1, 1.2])
+    c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1.5])
     with c1:
-        st.markdown("<h3 style='margin:0; padding:0; font-size:1.8rem;'>Distoversity<span style='color:#0EA5E9'>.</span></h3>", unsafe_allow_html=True)
-    with c2:
-        if st.button("🏠 Home", key="nav_home", use_container_width=True): 
-            st.session_state.page = 'Home'
-            st.rerun()
-    with c3:
-        if st.button("ℹ️ About", key="nav_about", use_container_width=True): 
-            st.session_state.page = 'About'
-            st.rerun()
-    with c4:
-        if st.button("🛠️ Services", key="nav_services", use_container_width=True): 
-            st.session_state.page = 'Services'
-            st.rerun()
-    with c5:
-        if st.button("⚡ Assessment", key="nav_test", type="primary", use_container_width=True): 
-            st.session_state.page = 'Assessment'
-            st.rerun()
+        st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
+    
+    # Navigation Logic
+    if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
+    if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
+    if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
+    if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
+    if c6.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
 
-# --- 6. PAGE DEFINITIONS ---
-
-def page_home():
-    # HERO
+# --- 6. PAGE: HOME ---
+def render_home():
+    # Hero
     st.markdown("""
-    <div class="hero-box">
-        <div style="color:#0EA5E9; font-weight:700; letter-spacing:2px; margin-bottom:15px; font-size:0.9rem;">INDIA'S PREMIER CAREER ARCHITECTURE PLATFORM</div>
+    <div class="hero-section">
+        <div style="color:#0077B6; font-weight:700; letter-spacing:2px; margin-bottom:15px;">INDIA'S IDENTITY-FIRST CAREER PLATFORM</div>
         <h1>Stop Guessing Your Future.<br>Start Engineering It.</h1>
-        <p style="max-width:750px; margin:25px auto; font-size:1.25rem;">
+        <p style="max-width:700px; margin:20px auto;">
             We don't ask "What are your marks?". We ask <b>"What is your flow?"</b>.<br>
-            We use <b>Wealth Dynamics</b> & AI to match your psychological DNA to the top 1% of Universities.
+            Match your psychological DNA to the top 1% of Universities like Amity, Manipal, and LPU.
         </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # CTA BUTTON
     c1, c2, c3 = st.columns([1, 1, 1])
     with c2:
-        if st.button("🚀 Start Free Career Assessment ➤", use_container_width=True):
+        if st.button("🚀 Discover Your Energy Type (Free)", key="home_cta"):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    # SOCIAL PROOF
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center; font-weight:700; color:#94A3B8; letter-spacing:1px; font-size:0.9rem;'>TRUSTED BY PARTNERS FROM</p>", unsafe_allow_html=True)
+    # Social Proof
+    st.markdown("<br><p style='text-align:center; font-weight:600; color:#94A3B8;'>TRUSTED BY STUDENTS FROM</p>", unsafe_allow_html=True)
     cols = st.columns(5)
-    partners = ["IIT DELHI", "AMITY", "MANIPAL", "NMIMS", "LPU"]
-    for i, p in enumerate(partners):
-        cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.4rem; margin:0;'>{p}</h3>", unsafe_allow_html=True)
+    for i, p in enumerate(["IIT DELHI", "AMITY", "MANIPAL", "NMIMS", "LPU"]):
+        cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.4rem;'>{p}</h3>", unsafe_allow_html=True)
 
-    # VALUE PROPOSITION
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown("<h2 style='text-align:center;'>Scientific Certainty. No Opinions.</h2>", unsafe_allow_html=True)
-    
+    # Value Prop Grid
+    st.markdown("<br><br><h2 style='text-align:center;'>Scientific Certainty. No Opinions.</h2>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown("""
-        <div class="veteran-card">
-            <div style="font-size:3rem; margin-bottom:1rem;">🧠</div>
-            <h3>Identity Analysis</h3>
-            <p>Our AI Engine segregates learners into 4 Archetypes: Creator, Influencer, Catalyst, and Analyst.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><h3>🧠 Identity Analysis</h3><p>Segregates learners into 4 Archetypes: Creator, Influencer, Catalyst, Analyst.</p></div>""", unsafe_allow_html=True)
     with c2:
-        st.markdown("""
-        <div class="veteran-card">
-            <div style="font-size:3rem; margin-bottom:1rem;">🏫</div>
-            <h3>University Match</h3>
-            <p>We don't sell admissions. We match you to curriculums (Amity, Manipal, LPU) that fit your brain.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><h3>🏫 University Match</h3><p>Filter 500+ universities to find curriculums that fit your cognitive style.</p></div>""", unsafe_allow_html=True)
     with c3:
-        st.markdown("""
-        <div class="veteran-card">
-            <div style="font-size:3rem; margin-bottom:1rem;">🗺️</div>
-            <h3>Career Roadmap</h3>
-            <p>A 4-year strategic plan including internships, skills (Alison/LinkedIn), and personal branding.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("""<div class="d-card"><h3>🗺️ Career Roadmap</h3><p>A 4-year strategic plan including internships, skills, and branding.</p></div>""", unsafe_allow_html=True)
 
-def page_about():
-    st.markdown("<br>", unsafe_allow_html=True)
+# --- 7. PAGE: UNIVERSITY EXPLORER (PRIORITY 1) ---
+def render_explorer():
+    st.markdown("## 🏫 University Explorer")
+    st.write("Compare 500+ universities scientifically matched to your Genius Profile.")
     
-    col1, col2 = st.columns([1.5, 1])
-    
+    # Filters
+    col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("## The Distoversity Story")
-        st.markdown("### From Factory Floor to Education Architect")
-        
-        st.markdown("""
-        <div class="timeline-card">
-            <h4>2019: The Struggle</h4>
-            <p>I arrived in Delhi with nothing but a middle-class background and a hunger for opportunity. I had no guidance, only pressure.</p>
-        </div>
-        
-        <div class="timeline-card">
-            <h4>The Realization (Yazaki & Oppo)</h4>
-            <p>I worked in the <b>SMT and Electrical departments</b> of global giants like Yazaki and Oppo. 
-            On the factory floor, I saw a painful truth: 
-            <i>Brilliant engineers were failing, not because they lacked talent, but because they were misaligned with their roles.</i></p>
-        </div>
-        
-        <div class="timeline-card">
-            <h4>The Shift to Education</h4>
-            <p>I moved into the education sector, hoping to fix this. Instead, I found a sales machine. 
-            Counselors were just pushing universities to meet targets. 
-            <b>"Why is a phone call the only filter for a student's future?"</b> I asked. No one had an answer.</p>
-        </div>
-        
-        <div class="timeline-card">
-            <h4>The Birth of Distoversity</h4>
-            <p>I combined my 6 years of experience with the <b>Wealth Dynamics</b> framework (Roger Hamilton) and AI. 
-            We built a system that doesn't just admit students—it aligns them.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
+        max_fee = st.slider("Max Budget (₹)", 50000, 500000, 250000, 50000)
     with col2:
-        st.image("https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", caption="Building the Future")
-        st.markdown("""
-        <div class="veteran-card" style="background:#F0F9FF; border:none;">
-            <h4>Our Mission</h4>
-            <p><b>Education is a Right. Alignment is a Necessity.</b></p>
-            <p>We are here to ensure that no Indian student ever climbs the wrong ladder again.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        energy_filter = st.multiselect("Energy Fit", ["Creator", "Influencer", "Catalyst", "Analyst"], default=["Creator", "Analyst"])
+    with col3:
+        prog_type = st.multiselect("Program", ["MBA", "B.Tech", "BCA", "BBA", "B.Des"], default=["MBA", "BCA"])
 
-def page_services():
-    st.markdown("## Our Premium Services")
-    st.write("A complete ecosystem for your career growth.")
+    # Filtering Logic
+    filtered_df = df[
+        (df['fees'] <= max_fee) & 
+        (df['energy'].isin(energy_filter))
+    ]
     
-    c1, c2, c3 = st.columns(3)
+    st.write(f"Found **{len(filtered_df)}** matches for you:")
     
-    with c1:
-        st.markdown("""
-        <div class="veteran-card">
-            <h3>🧠 Energy Assessment</h3>
-            <p>Our proprietary 15-question engine identifies your core archetype: Creator, Influencer, Catalyst, or Analyst.</p>
-            <div style="margin-top:20px; font-weight:700; color:#0077B6;">Price: FREE</div>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with c2:
-        st.markdown("""
-        <div class="veteran-card">
-            <h3>🏫 University Matching</h3>
-            <p>We filter 500+ universities to find the exact program curriculum that fits your brain.</p>
-            <div style="margin-top:20px; font-weight:700; color:#0077B6;">Price: Included in Report</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with c3:
-        st.markdown("""
-        <div class="veteran-card" style="border-color:#0EA5E9; background:#F0F9FF;">
-            <h3>💎 Strategic Session</h3>
-            <p>A 30-minute 1:1 mentorship call, a 15-page PDF roadmap, and access to our Growth Community.</p>
-            <div style="margin-top:20px; font-weight:700; color:#0077B6;">Price: ₹499</div>
-        </div>
-        """, unsafe_allow_html=True)
+    # Display Cards
+    for idx, row in filtered_df.iterrows():
+        with st.container():
+            st.markdown(f"""
+            <div class="d-card" style="margin-bottom:15px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:20px;">
+                    <img src="{row['img']}" height="50">
+                    <div>
+                        <h3 style="margin:0; font-size:1.4rem;">{row['name']}</h3>
+                        <p style="margin:0; font-size:0.9rem;">📍 {row['location']} | 🏆 {row['naac']}</p>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-weight:700; color:#0077B6; font-size:1.2rem;">₹{row['fees']:,}</div>
+                    <div style="font-size:0.8rem; background:#E0F2FE; padding:4px 8px; border-radius:4px; color:#0077B6; display:inline-block;">{row['energy']} Fit</div>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"View Details for {row['name']}", key=f"btn_{idx}"):
+                st.toast("Redirecting to Detailed Profile...")
 
-def page_assessment():
+# --- 8. PAGE: ASSESSMENT (CORE LOGIC) ---
+def render_assessment():
     st.markdown("## ⚡ Decode Your Professional DNA")
-    st.write("Select the option that feels most natural to you (not what you *think* you should be).")
+    st.write("Select the option that feels most natural to you.")
     
-    with st.form("quiz_form"):
+    with st.form("assessment"):
         st.markdown("#### 1. In a team project, what role do you naturally take?")
         q1 = st.radio("Select one:", [
             "💡 The Idea Generator (I hate details)",
@@ -314,40 +234,25 @@ def page_assessment():
             "Emotional conflict and sales"
         ], label_visibility="collapsed", key="q2")
         
-        st.markdown("<br>#### 3. How do you prefer to be rewarded?", unsafe_allow_html=True)
-        q3 = st.radio("Select one:", [
-            "Freedom to create new things",
-            "Recognition and applause",
-            "A sense of belonging and stability",
-            "Certainty and accuracy"
-        ], label_visibility="collapsed", key="q3")
-        
         st.markdown("<br>", unsafe_allow_html=True)
-        submitted = st.form_submit_button("Analyze My Profile ➤", type="primary")
-        
-        if submitted:
+        if st.form_submit_button("Analyze My Profile ➤", type="primary"):
             with st.spinner("Mapping Neural Pathways..."):
                 time.sleep(1.5)
-            
-            # LOGIC
+            # Logic
             if "Idea" in q1: st.session_state.user_profile = "Creator"
             elif "Presenter" in q1: st.session_state.user_profile = "Influencer"
             elif "Organizer" in q1: st.session_state.user_profile = "Catalyst"
             else: st.session_state.user_profile = "Analyst"
-            
             st.session_state.page = 'Result'
             st.rerun()
 
-def page_result():
+# --- 9. PAGE: RESULT (GATED) ---
+def render_result():
     profile = st.session_state.user_profile
     if not profile:
-        st.warning("Please take the assessment first.")
-        if st.button("Go to Assessment"): st.session_state.page = 'Assessment'; st.rerun()
-        return
+        st.warning("Take assessment first!"); st.stop()
 
     st.balloons()
-    
-    # HEADER
     st.markdown(f"""
     <div style="text-align:center; padding:3rem; background:#F0F9FF; border-radius:20px; border:1px solid #BAE6FD; margin-bottom:3rem;">
         <div style="color:#0077B6; font-weight:700; letter-spacing:2px;">PRIMARY ARCHETYPE DETECTED</div>
@@ -357,79 +262,74 @@ def page_result():
     """, unsafe_allow_html=True)
 
     c1, c2 = st.columns(2)
-
-    # LEFT: MATCHES
     with c1:
         st.markdown("### 🎯 Top University Matches")
-        matches = [u for u in UNIVERSITY_DB if u['type'] == profile]
-        
-        if matches:
-            for u in matches:
-                st.markdown(f"""
-                <div class="veteran-card" style="margin-bottom:1rem; padding:1.5rem;">
-                    <div style="display:flex; justify-content:space-between;">
-                        <h4 style="margin:0;">{u['name']}</h4>
-                        <span style="background:#E0F2FE; color:#0077B6; padding:4px 8px; border-radius:6px; font-weight:bold;">{u['match']}% Match</span>
-                    </div>
-                    <p style="font-size:0.9rem; margin-top:5px;"><b>Program:</b> {u['program']}</p>
-                    <p style="font-size:0.9rem; color:green;">✅ {u['desc']}</p>
+        matches = df[df['energy'] == profile]
+        for idx, row in matches.iterrows():
+             st.markdown(f"""
+            <div class="d-card" style="margin-bottom:1rem; padding:1.5rem;">
+                <div style="display:flex; justify-content:space-between;">
+                    <h4 style="margin:0;">{row['name']}</h4>
+                    <span style="background:#E0F2FE; color:#0077B6; padding:4px 8px; border-radius:6px;">94% Match</span>
                 </div>
-                """, unsafe_allow_html=True)
-        else:
-            st.info("We are finding custom matches for you. Book a call.")
-
-    # RIGHT: ROADMAP (LOCKED)
-    with c2:
-        st.markdown("### 🗺️ Strategic Career Roadmap")
-        
-        st.markdown("""
-        <div class="blur-container">
-            <div class="blur-content">
-                <div class="veteran-card" style="margin-bottom:1rem;">
-                    <h4>Year 1: Foundation Strategy</h4>
-                    <p>Focus on the core skills of innovation. Avoid rigid structures...</p>
-                </div>
-                <div class="veteran-card">
-                    <h4>The "Efficiency Trap" Warning</h4>
-                    <p>Your biggest weakness is detailed execution. To fix this...</p>
-                </div>
-            </div>
-            
-            <div class="lock-badge">
-                <div style="font-size:3rem; margin-bottom:10px;">🔒</div>
-                <h3>Unlock Full Report</h3>
-                <p>Get your 15-Page Strategy + 1:1 Session</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-        with st.form("lead_gen"):
-            st.text_input("Full Name")
-            email = st.text_input("Email Address", placeholder="student@gmail.com")
-            
-            st.markdown("""
-            <div style="background:#F0F9FF; padding:15px; border-radius:8px; border:1px solid #0077B6; margin-bottom:15px; font-size:0.9rem;">
-                💎 <b>Strategic Session (₹499)</b><br>
-                Includes: Full Report, University List, Mentorship Call.
+                <p style="margin-top:10px;">✅ High Alignment with {profile} Energy</p>
             </div>
             """, unsafe_allow_html=True)
             
-            if st.form_submit_button("Unlock Now - Pay ₹499", use_container_width=True):
-                if "@" in email:
-                    st.success("Redirecting to Payment Gateway...")
-                else:
-                    st.error("Please enter a valid email.")
+    with c2:
+        st.markdown("### 🗺️ Your Strategic Roadmap")
+        st.markdown("""
+        <div style="position:relative; filter:blur(8px); opacity:0.5;">
+            <div class="d-card"><h4>Year 1: Foundation</h4><p>Focus on core skills...</p></div>
+            <div class="d-card"><h4>The Efficiency Trap</h4><p>Your weakness is details...</p></div>
+        </div>
+        <div style="position:absolute; top:60%; left:75%; transform:translate(-50%, -50%); background:white; padding:2rem; border-radius:16px; box-shadow:0 20px 40px rgba(0,0,0,0.1); text-align:center; width:300px;">
+            <div style="font-size:3rem;">🔒</div>
+            <h3>Unlock Full Report</h3>
+            <p>Get your 15-Page Strategy + 1:1 Session</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.form("lead"):
+            email = st.text_input("Enter Email to Unlock")
+            if st.form_submit_button("Unlock Now - ₹499", use_container_width=True):
+                st.success("Redirecting to Payment...")
 
-# --- 7. MAIN ROUTER (CRITICAL FIX: Defined AFTER functions) ---
+# --- 10. PAGE: ABOUT & FAQ ---
+def render_about():
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown("## The Distoversity Story")
+        st.markdown("""
+        <div class="timeline-item">
+            <h4>2019: The Struggle</h4>
+            <p>Arrived in Delhi. Middle-class background. Zero guidance.</p>
+        </div>
+        <div class="timeline-item">
+            <h4>The Factory Floor (Yazaki & Oppo)</h4>
+            <p>Worked in SMT/Electrical depts. Saw brilliant engineers failing because of misalignment.</p>
+        </div>
+        <div class="timeline-item">
+            <h4>The Solution</h4>
+            <p>Founded Distoversity to combine Wealth Dynamics + AI to fix Career Misalignment.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    with c2:
+        st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
+
+def render_faq():
+    st.markdown("## Frequently Asked Questions")
+    with st.expander("❓ How is this different from regular counseling?"):
+        st.write("We use Energy Profiling, not just marks. We align you with your nature.")
+    with st.expander("❓ Do you guarantee jobs?"):
+        st.write("We guarantee alignment. When you are in flow, success is inevitable.")
+
+# --- 11. MAIN ROUTER ---
 navbar()
 
-if st.session_state.page == 'Home':
-    page_home()
-elif st.session_state.page == 'About':
-    page_about()
-elif st.session_state.page == 'Services':
-    page_services()
-elif st.session_state.page == 'Assessment':
-    page_assessment()
-elif st.session_state.page == 'Result':
-    page_result()
+if st.session_state.page == 'Home': render_home()
+elif st.session_state.page == 'About': render_about()
+elif st.session_state.page == 'Explorer': render_explorer()
+elif st.session_state.page == 'FAQ': render_faq()
+elif st.session_state.page == 'Assessment': render_assessment()
+elif st.session_state.page == 'Result': render_result()
