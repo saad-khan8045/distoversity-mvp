@@ -14,7 +14,7 @@ st.set_page_config(
 # --- 2. PROFESSIONAL DESIGN SYSTEM (CSS) ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     :root {
         --primary: #0077B6;       /* Deep Sky Blue */
@@ -125,15 +125,15 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. PARTNER DATA ENGINE (ENHANCED) ---
+# --- 3. PARTNER DATA ENGINE (UPDATED NAMES) ---
 UNIVERSITY_DATA = [
-    {"name": "Jain University Online", "location": "Bangalore", "naac": "A++", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
-    {"name": "Manipal University Jaipur", "location": "Online", "naac": "A+", "fees": 175000, "program": "MCA Data Science", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
+    {"name": "Jain Online", "location": "Bangalore", "naac": "A++", "fees": 210000, "program": "MBA Marketing", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/8/86/Jain_University_logo.png"},
+    {"name": "Manipal University Online", "location": "Jaipur", "naac": "A+", "fees": 175000, "program": "MCA Data Science", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/2/2e/Manipal_University_logo.svg/1200px-Manipal_University_logo.svg.png"},
     {"name": "Amity University Online", "location": "Global", "naac": "A+", "fees": 345000, "program": "BCA Cloud Security", "energy": "Creator", "type": "Online Degree", "approvals": "UGC-DEB, WES", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/e4/Amity_University_logo.png/220px-Amity_University_logo.png"},
     {"name": "LPU Online", "location": "Global", "naac": "A++", "fees": 160000, "program": "MBA Operations", "energy": "Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"},
     {"name": "Chandigarh University", "location": "Online", "naac": "A+", "fees": 180000, "program": "MBA General", "energy": "Influencer", "type": "Online Degree", "approvals": "UGC-DEB", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"},
     {"name": "UPES Online", "location": "Global", "naac": "A", "fees": 150000, "program": "BBA Analytics", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC, NAAC", "img": "https://www.upes.ac.in/media/1003/upes-logo.png"},
-    {"name": "NMIMS Global", "location": "Online", "naac": "A+", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
+    {"name": "NMIMS CDOL", "location": "Online", "naac": "A+", "fees": 400000, "program": "MBA Finance", "energy": "Analyst", "type": "Online Degree", "approvals": "UGC-DEB, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/e/ec/NMIMS_University_logo.png/220px-NMIMS_University_logo.png"},
     {"name": "DY Patil Online", "location": "Pune", "naac": "A++", "fees": 120000, "program": "BBA General", "energy": "Catalyst", "type": "Online Degree", "approvals": "UGC, AICTE", "img": "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Dr._D._Y._Patil_Vidyapeeth_logo.png/220px-Dr._D._Y._Patil_Vidyapeeth_logo.png"}
 ]
 df = pd.DataFrame(UNIVERSITY_DATA)
@@ -172,16 +172,20 @@ def render_home():
     # Centered CTA Button
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
-        # Using a custom markdown button for perfect centering if needed, but Streamlit columns work well
         if st.button("🚀 Discover Your Career Energy (Free)", key="home_cta", use_container_width=True):
             st.session_state.page = 'Assessment'
             st.rerun()
 
-    # Partners (Refined Messaging)
+    # Partners (UPDATED: Official Names, Black Font)
     st.markdown("<br><p style='text-align:center; font-weight:600; color:#94A3B8; letter-spacing: 1px;'>TRUSTED BY STUDENTS OF TOP UNIVERSITIES</p>", unsafe_allow_html=True)
+    
+    # Defining the list of names exactly as requested
+    partner_list = ["Amity University Online", "Manipal University Online", "Jain Online", "NMIMS CDOL", "LPU Online"]
+    
     cols = st.columns(5)
-    for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS", "LPU ONLINE"]):
-        cols[i].markdown(f"<h3 style='text-align:center; color:#CBD5E1; font-size:1.4rem;'>{p}</h3>", unsafe_allow_html=True)
+    for i, p in enumerate(partner_list):
+        # Styled with Black (#000000), Bold (800), and decent size
+        cols[i].markdown(f"<h3 style='text-align:center; color:#000000; font-weight:800; font-size:1.3rem; line-height:1.4;'>{p}</h3>", unsafe_allow_html=True)
 
     # Value Prop (Enhanced Graphics)
     st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
