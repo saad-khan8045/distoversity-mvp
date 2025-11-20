@@ -39,6 +39,12 @@ st.markdown("""
     h1, h2, h3 { font-family: 'Outfit', sans-serif; color: var(--primary-dark); font-weight: 800; }
     h1 { font-size: 4rem !important; letter-spacing: -2px; line-height: 1.1; }
     
+    /* MOBILE ADJUSTMENT FOR HEADERS */
+    @media (max-width: 768px) {
+        h1 { font-size: 2.5rem !important; }
+        .nav-logo { font-size: 1.5rem !important; }
+    }
+
     /* COMPONENT: PREMIUM GLASS CARD */
     .d-card {
         background: #FFFFFF;
@@ -56,6 +62,14 @@ st.markdown("""
         box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
     }
+    
+    /* CUSTOM SCROLLABLE CHAT CONTAINER STYLE */
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background: #FFFFFF;
+        border-radius: 24px;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    }
 
     /* COMPONENT: AI REPORT CARD (Inside Modal) */
     .ai-report-box {
@@ -63,7 +77,7 @@ st.markdown("""
         border-left: 5px solid #0EA5E9;
         padding: 20px;
         margin-bottom: 20px;
-        font-family: 'Courier New', monospace; /* Tech/AI feel */
+        font-family: 'Courier New', monospace;
         font-size: 0.95rem;
     }
     
@@ -99,17 +113,28 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
 
-    /* COMPONENT: STICKY NAV */
-    div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stHorizontalBlock"]) {
-        position: sticky;
-        top: 0;
-        background-color: rgba(255, 255, 255, 0.98);
-        z-index: 999;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid #F1F5F9;
+    /* NAVIGATION STYLING (HORIZONTAL SCROLL) */
+    div[role="radiogroup"] {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        justify-content: center;
     }
-    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 1.8rem; color: var(--primary-dark); }
+    div[role="radiogroup"] label {
+        background-color: #F8FAFC;
+        padding: 10px 20px;
+        border-radius: 30px;
+        margin: 0 5px;
+        border: 1px solid #E2E8F0;
+        transition: all 0.3s;
+    }
+    div[role="radiogroup"] label:hover {
+        border-color: #0077B6;
+        color: #0077B6;
+    }
+    .nav-logo { font-family: 'Outfit'; font-weight: 800; font-size: 2rem; color: var(--primary-dark); margin-bottom: 10px; text-align: center;}
     
     /* COMPONENT: BUTTONS */
     .stButton>button {
@@ -141,37 +166,6 @@ st.markdown("""
         font-size: 1.8rem; margin: 0 auto 1rem auto; color: var(--primary);
     }
 
-    /* --- MOBILE OPTIMIZATIONS --- */
-    @media (max-width: 850px) {
-        h1 { font-size: 2.5rem !important; }
-        .hero-section { padding: 2rem 1rem !important; }
-        .stButton>button { width: 100% !important; margin-bottom: 5px !important; }
-        .sticky-cta { display: block !important; } /* Show sticky button on mobile */
-    }
-    
-    /* STICKY BUTTON (Hidden on Desktop) */
-    .sticky-cta {
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 9999;
-        width: 90%;
-        text-align: center;
-    }
-    .sticky-btn {
-        display: inline-block;
-        background: linear-gradient(90deg, #0077B6 0%, #023E8A 100%);
-        color: white;
-        padding: 15px 30px;
-        border-radius: 50px;
-        font-weight: bold;
-        text-decoration: none;
-        box-shadow: 0 10px 25px rgba(0, 119, 182, 0.4);
-        width: 100%;
-    }
-
     #MainMenu {visibility: hidden;} footer {visibility: hidden;} header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
@@ -192,11 +186,10 @@ df = pd.DataFrame(UNIVERSITY_DATA)
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
-if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile."}]
+if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
 
-# --- 5. AI GENERATION LOGIC & POPUP ---
+# --- 5. AI GENERATION LOGIC ---
 def generate_report_text(profile, scores):
-    """Generates the text for the report based on the specific profile."""
     core_type = profile.replace("Distoversity ", "")
     pain_point = ""
     achilles_heel = ""
@@ -238,35 +231,43 @@ def show_popup_report(profile, scores):
     st.markdown("""<div class="cta-box"><h3>🚀 The Final Decision</h3><p>Step into clarity.</p></div>""", unsafe_allow_html=True)
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
-        st.success("Request Received! Our Chief Genius Officer will contact you within 2 hours.")
+        st.success("Request Received!")
         time.sleep(2)
         st.rerun()
 
 # --- 6. NAVIGATION SYSTEM ---
 def navbar():
-    with st.container():
-        # ADDED: Eduveer Button to the navbar
-        c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.5, 0.8, 0.8, 0.8, 0.8, 0.8, 1, 1.5])
-        with c1:
-            st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
-        
-        if c2.button("Home", use_container_width=True): st.session_state.page = 'Home'; st.rerun()
-        if c3.button("About", use_container_width=True): st.session_state.page = 'About'; st.rerun()
-        if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
-        if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
-        if c6.button("Partners", use_container_width=True): st.session_state.page = 'Institutions'; st.rerun()
-        if c7.button("🤖 Eduveer", use_container_width=True): st.session_state.page = 'Eduveer'; st.rerun()
-        if c8.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
+    # 1. Logo Title
+    st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
+    
+    # 2. Horizontal Navigation (User Friendly on Mobile)
+    selected_page = st.radio(
+        "Nav", 
+        ["Home", "Explorer", "Eduveer AI", "Assessment", "FAQ", "Partners"], 
+        horizontal=True, 
+        label_visibility="collapsed",
+        key="nav_radio"
+    )
+    
+    # 3. Routing Logic
+    if selected_page == "Home": st.session_state.page = 'Home'
+    elif selected_page == "Explorer": st.session_state.page = 'Explorer'
+    elif selected_page == "Eduveer AI": st.session_state.page = 'Eduveer'
+    elif selected_page == "Assessment": st.session_state.page = 'Assessment'
+    elif selected_page == "FAQ": st.session_state.page = 'FAQ'
+    elif selected_page == "Partners": st.session_state.page = 'Institutions'
+    
+    if st.session_state.page != selected_page:
+        st.rerun()
 
-# --- 7. PAGES ---
+# --- 7. PAGE RENDERERS ---
 
 def render_home():
     st.markdown("""
     <div class="hero-section">
         <div class="hero-badge" style="background:rgba(0,119,182,0.1); color:#0077B6; padding:8px 20px; border-radius:30px; display:inline-block; font-weight:700; font-size:0.9rem; margin-bottom:20px;">CAREER ARCHITECTURE FOR PROFESSIONALS</div>
-        <h1 style="margin-bottom:20px; font-size:4.5rem; background:-webkit-linear-gradient(45deg, #0077B6, #00B4D8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
+        <h1 style="margin-bottom:20px; color:#023E8A;">Don't Just Upgrade Your Degree.<br>Upgrade Your Identity.</h1>
         <p style="max-width:800px; margin:0 auto 40px auto; font-size:1.3rem; color:#475569;">
-            Whether you are a student or a working professional, alignment is everything.<br>
             We match your <b>Core Professional Identity</b> to India's Top Online Universities.
         </p>
     </div>
@@ -356,31 +357,36 @@ def render_assessment():
     c1, c2, c3 = st.columns([1, 2, 1])
     with c2:
         with st.form("assessment_form"):
+            # FIX: Added index=None to all radio buttons to prevent pre-selection
             st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
-            q1 = st.radio("q1_select", ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"], label_visibility="collapsed")
+            q1 = st.radio("q1_select", ["Generate multiple creative solutions (Creator)", "Discuss with others to find consensus (Influencer)", "Follow proven step-by-step methods (Catalyst)", "Analyze data and metrics first (Analyst)"], label_visibility="collapsed", index=None)
             st.markdown('<p class="question-text">2. Your ideal work environment involves:</p>', unsafe_allow_html=True)
-            q2 = st.radio("q2_select", ["Freedom to experiment and innovate", "Collaborative team settings", "Structured processes and clear timelines", "Quiet space for deep analytical work"], label_visibility="collapsed")
+            q2 = st.radio("q2_select", ["Freedom to experiment and innovate", "Collaborative team settings", "Structured processes and clear timelines", "Quiet space for deep analytical work"], label_visibility="collapsed", index=None)
             st.markdown('<p class="question-text">3. You feel most energized when:</p>', unsafe_allow_html=True)
-            q3 = st.radio("q3_select", ["Creating something new from scratch", "Presenting ideas and influencing outcomes", "Completing tasks on schedule", "Perfecting systems and solving puzzles"], label_visibility="collapsed")
+            q3 = st.radio("q3_select", ["Creating something new from scratch", "Presenting ideas and influencing outcomes", "Completing tasks on schedule", "Perfecting systems and solving puzzles"], label_visibility="collapsed", index=None)
             st.markdown('<p class="question-text">4. Your decision-making style is:</p>', unsafe_allow_html=True)
-            q4 = st.radio("q4_select", ["Intuitive and pattern-based", "People-focused and consensus-driven", "Experience-based and practical", "Data-driven and logical"], label_visibility="collapsed")
+            q4 = st.radio("q4_select", ["Intuitive and pattern-based", "People-focused and consensus-driven", "Experience-based and practical", "Data-driven and logical"], label_visibility="collapsed", index=None)
             st.markdown('<p class="question-text">5. In group settings, you naturally:</p>', unsafe_allow_html=True)
-            q5 = st.radio("q5_select", ["Share innovative concepts and possibilities", "Build relationships and network actively", "Organize action items and ensure follow-through", "Provide data-backed insights and analysis"], label_visibility="collapsed")
+            q5 = st.radio("q5_select", ["Share innovative concepts and possibilities", "Build relationships and network actively", "Organize action items and ensure follow-through", "Provide data-backed insights and analysis"], label_visibility="collapsed", index=None)
             st.markdown("<br>", unsafe_allow_html=True)
             if st.form_submit_button("Reveal My Spark ➤", type="primary", use_container_width=True):
-                with st.spinner("Analyzing your Energy Profile..."):
-                    time.sleep(1.5)
-                    counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
-                    for a in [q1, q2, q3, q4, q5]:
-                        if "Creator" in a or "innovate" in a: counts["Distoversity Creator"] += 1
-                        elif "Influencer" in a or "Collaborative" in a: counts["Distoversity Influencer"] += 1
-                        elif "Catalyst" in a or "Structured" in a: counts["Distoversity Catalyst"] += 1
-                        else: counts["Distoversity Analyst"] += 1
-                    scores = {k: (v/5)*100 for k,v in counts.items()}
-                    st.session_state.user_profile = max(counts, key=counts.get)
-                    st.session_state.user_scores = scores
-                    st.session_state.page = 'Result'
-                    st.rerun()
+                if None in [q1, q2, q3, q4, q5]:
+                    st.warning("Please answer all questions.")
+                else:
+                    with st.spinner("Analyzing your Energy Profile..."):
+                        time.sleep(1.5)
+                        answers = [q1, q2, q3, q4, q5]
+                        counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
+                        for a in answers:
+                            if "Creator" in a or "innovate" in a: counts["Distoversity Creator"] += 1
+                            elif "Influencer" in a or "Collaborative" in a: counts["Distoversity Influencer"] += 1
+                            elif "Catalyst" in a or "Structured" in a: counts["Distoversity Catalyst"] += 1
+                            else: counts["Distoversity Analyst"] += 1
+                        scores = {k: (v/5)*100 for k,v in counts.items()}
+                        st.session_state.user_profile = max(counts, key=counts.get)
+                        st.session_state.user_scores = scores
+                        st.session_state.page = 'Result'
+                        st.rerun()
 
 def render_result():
     profile = st.session_state.user_profile
@@ -407,13 +413,13 @@ def render_about():
     c1, c2 = st.columns(2)
     with c1:
         st.markdown("## The Distoversity Story")
-        st.write("Founded to fix Career Misalignment using Wealth Dynamics + AI.")
+        st.markdown("""<div class="timeline-item"><h4>2019: The Struggle</h4><p>Arrived in Delhi. Middle-class background. Zero guidance.</p></div><div class="timeline-item"><h4>The Factory Floor (Yazaki & Oppo)</h4><p>Worked in SMT/Electrical depts. Saw brilliant engineers failing because of misalignment.</p></div><div class="timeline-item"><h4>The Solution</h4><p>Founded Distoversity to combine Wealth Dynamics + AI to fix Career Misalignment.</p></div>""", unsafe_allow_html=True)
     with c2:
         st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
 
 def render_faq():
     st.title("❓ Frequently Asked Questions")
-    with st.expander("❓ I'm confused about my career path."): st.write("We help you discover your 'Genius Profile'.")
+    with st.expander("❓ I'm confused about my career path."): st.write("We help you discover your 'Genius Profile' via AI.")
 
 def render_institutions():
     st.markdown("""<div class="hero-section"><h1>Recruit Students Aligned With Your Institutional DNA</h1></div>""", unsafe_allow_html=True)
@@ -421,23 +427,21 @@ def render_institutions():
     with c1: st.image("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
     with c2: st.markdown("### Why Partner With Us?"); st.button("Request Partnership Demo")
 
-# --- ADDED: EDUVEER FUNCTIONALITY ---
+# --- FIX: SCROLLABLE CHAT ---
 def render_eduveer():
     st.markdown("""<div style="text-align:center; padding-bottom: 20px;"><h1>Chat with <span style="color:#00B4D8">Eduveer AI</span></h1></div>""", unsafe_allow_html=True)
-    with st.container():
-        st.markdown('<div class="d-card" style="min-height: 500px; display: flex; flex-direction: column;">', unsafe_allow_html=True)
+    
+    # Replaced raw HTML wrapper with st.container(height=600) to fix scrolling
+    with st.container(height=600, border=True):
         for message in st.session_state.messages:
             with st.chat_message(message["role"]): st.markdown(message["content"])
+            
         if prompt := st.chat_input("Ask Eduveer..."):
             st.session_state.messages.append({"role": "user", "content": prompt})
             with st.chat_message("user"): st.markdown(prompt)
             response_text = "I recommend looking at our Explorer tab for detailed fees."
             st.session_state.messages.append({"role": "assistant", "content": response_text})
             with st.chat_message("assistant"): st.markdown(response_text)
-        st.markdown('</div>', unsafe_allow_html=True)
-
-# --- ADDED: STICKY MOBILE BUTTON ---
-st.markdown("""<div class="sticky-cta"><a href="#" class="sticky-btn">🚀 Book Career Advice</a></div>""", unsafe_allow_html=True)
 
 # --- 12. MAIN ROUTER ---
 navbar()
