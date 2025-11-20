@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import time
-import plotly.express as px
 import random
 
 # --- 1. SYSTEM CONFIGURATION ---
@@ -55,6 +54,14 @@ st.markdown("""
         transform: translateY(-5px);
         box-shadow: 0 20px 50px -10px rgba(0, 119, 182, 0.15);
         border-color: var(--accent);
+    }
+
+    /* COMPONENT: CHAT INTERFACE */
+    .stChatMessage {
+        background-color: #F8FAFC;
+        border: 1px solid #E2E8F0;
+        border-radius: 15px;
+        padding: 1rem;
     }
 
     /* COMPONENT: AI REPORT CARD (Inside Modal) */
@@ -134,16 +141,6 @@ st.markdown("""
         border-bottom: 1px solid #E0F2FE;
     }
 
-    /* ALISON */
-    .alison-section {
-        background: linear-gradient(135deg, #FFF7ED 0%, #FFFFFF 100%);
-        border: 1px solid #FFEDD5;
-        border-radius: 24px;
-        padding: 3rem;
-        text-align: center;
-        margin-top: 5rem;
-    }
-    
     /* UTILS */
     .icon-circle {
         width: 60px; height: 60px; background: #F0F9FF; border-radius: 50%; 
@@ -156,7 +153,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- 3. ENRICHED PARTNER DATA ---
-# Note: 'energy' field values must match the new profile names
 UNIVERSITY_DATA = [
     {
         "name": "Jain Online", 
@@ -223,22 +219,6 @@ UNIVERSITY_DATA = [
         "img": "https://upload.wikimedia.org/wikipedia/en/d/d4/Lovely_Professional_University_logo.png"
     },
     {
-        "name": "Chandigarh University", 
-        "location": "Online", 
-        "naac": "A+", 
-        "nirf": "Rank 29",
-        "fees": 180000, 
-        "program": "MBA General", 
-        "energy": "Distoversity Influencer", 
-        "type": "Online Degree", 
-        "approvals": "UGC-DEB", 
-        "placement": "89%",
-        "avg_pkg": "5.2 LPA",
-        "highest_pkg": "28 LPA",
-        "highlights": "Flexible Exams, Case Studies",
-        "img": "https://upload.wikimedia.org/wikipedia/en/thumb/9/96/Chandigarh_University_logo.png/220px-Chandigarh_University_logo.png"
-    },
-    {
         "name": "NMIMS CDOL", 
         "location": "Online", 
         "naac": "A+", 
@@ -277,98 +257,73 @@ df = pd.DataFrame(UNIVERSITY_DATA)
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'user_scores' not in st.session_state: st.session_state.user_scores = {}
+if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hello! I am Eduveer. I can help you find the perfect university based on your Genius Profile. What's on your mind?"}]
 
-# --- 5. AI GENERATION LOGIC & POPUP ---
+# --- 5. AI GENERATION LOGIC (Assessment Report) ---
 def generate_report_text(profile, scores):
-    """Generates the text for the report based on the specific profile."""
-    
-    # Mapping Short Logic to Full Logic
+    core_type = profile.replace("Distoversity ", "")
     pain_point = ""
     achilles_heel = ""
     skills = []
     
-    # Extract just the type for logic (Creator, Influencer, etc.)
-    core_type = profile.replace("Distoversity ", "")
-
     if core_type == "Creator":
-        pain_point = "You despise routine, bureaucracy, and being told 'that's how we've always done it.' Ambiguity is your playground, but execution is your prison."
-        achilles_heel = "The 'Idea Junkie' Syndrome. You start 50 projects and finish zero. Without structure, you risk becoming a dreamer who never ships."
-        skills = ["Systems Thinking (to ground your ideas)", "Project Management (to finish what you start)", "Strategic Leadership"]
+        pain_point = "You despise routine. Ambiguity is your playground, but execution is your prison."
+        achilles_heel = "The 'Idea Junkie' Syndrome."
+        skills = ["Systems Thinking", "Project Management", "Strategic Leadership"]
     elif core_type == "Influencer":
-        pain_point = "You hate isolation and spreadsheets. You thrive on energy, yet you feel drained when forced to work in a silo without human connection."
-        achilles_heel = "The 'Surface Level' Trap. You can sell anything, but if you lack depth, you risk being seen as 'all talk, no action'."
-        skills = ["Data Analytics (to back your pitch)", "Financial Literacy", "Operational Execution"]
+        pain_point = "You hate isolation. You thrive on energy, but struggle in silos."
+        achilles_heel = "The 'Surface Level' Trap."
+        skills = ["Data Analytics", "Financial Literacy", "Operational Execution"]
     elif core_type == "Catalyst":
-        pain_point = "You hate chaos and vague instructions. You want a clear target, but you feel undervalued when 'creative types' get all the glory."
-        achilles_heel = "The 'Cog in the Wheel' Risk. You are so good at execution you risk getting stuck in middle management forever."
-        skills = ["Innovation Strategy (to see the big picture)", "Public Speaking", "Agile Leadership"]
+        pain_point = "You hate chaos. You want a clear target and undervalued when 'creatives' get glory."
+        achilles_heel = "The 'Cog in the Wheel' Risk."
+        skills = ["Innovation Strategy", "Public Speaking", "Agile Leadership"]
     elif core_type == "Analyst":
-        pain_point = "You hate hype and emotional decision making. You want the data, but you feel frustrated when others ignore the facts for a 'good story'."
-        achilles_heel = "Analysis Paralysis. You risk waiting for 100% certainty before moving, missing every major opportunity."
-        skills = ["Persuasive Communication (to sell your data)", "Team Management", "Creative Problem Solving"]
+        pain_point = "You hate hype. You want the data, not a good story."
+        achilles_heel = "Analysis Paralysis."
+        skills = ["Persuasive Communication", "Team Management", "Creative Problem Solving"]
 
-    # The Report Text
     report = f"""
-    ### SECTION 1: YOUR CORE GENIUS REVEAL (The Instant Validation)
+    ### SECTION 1: YOUR CORE GENIUS REVEAL
     **Archetype: {profile} ({int(scores.get(profile, 0))}% Match)**
     
     Listen closely: Your brain is wired differently. {pain_point}
     
-    You don't need 'fixing'. You need alignment. The world tries to force you into a box, but your energy spectrum proves you were built for something else.
-
     ---
-    
-    ### SECTION 2: YOUR CRITICAL WEAK POINT (The Urgency)
+    ### SECTION 2: YOUR CRITICAL WEAK POINT
     **The Danger Zone: {achilles_heel}**
     
-    Here is the hard truth: Talent without leverage is just a hobby. If you do not develop the specific counter-skills to balance your energy, you will hit a ceiling. You risk watching less talented people overtake you simply because they mastered the things you ignore.
-    
-    Don't let your greatest strength become your single point of failure.
-
     ---
-
-    ### SECTION 3: YOUR STRATEGIC ROADMAP (The High Value Path)
+    ### SECTION 3: YOUR STRATEGIC ROADMAP
     **The Solution: Your Next Move**
-    
-    To unlock your full potential, you don't need 'more education'. You need *strategic* upskilling. Based on your profile, you must master these three high-impact skills immediately:
-    
     1. **{skills[0]}**
     2. **{skills[1]}**
     3. **{skills[2]}**
-    
-    This is not about changing who you are. It's about arming yourself with the weapons you lack.
     """
     return report
 
 @st.dialog("⚡ CHIEF GENIUS OFFICER REPORT")
 def show_popup_report(profile, scores):
     report_content = generate_report_text(profile, scores)
+    st.markdown(f"""<div class="ai-report-box">{report_content}</div>""", unsafe_allow_html=True)
     
-    st.markdown(f"""
-    <div class="ai-report-box">
-        {report_content}
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # SECTION 4: THE CLOSING PITCH (The Irresistible Offer)
     st.markdown("""
     <div class="cta-box">
         <h3>🚀 The Final Decision</h3>
-        <p>You are standing at a crossroads. You can go back to ambiguity, or you can step into clarity.</p>
-        <p style="font-size:0.9rem; opacity:0.9;">We have curated a specific roadmap that bridges your gap.</p>
+        <p>You are standing at a crossroads. Step into clarity.</p>
     </div>
     """, unsafe_allow_html=True)
-    
     st.markdown("<br>", unsafe_allow_html=True)
     if st.button("📞 Book My Career Advice Call Now", type="primary", use_container_width=True):
-        st.success("Request Received! Our Chief Genius Officer will contact you within 2 hours.")
+        st.success("Request Received!")
         time.sleep(2)
         st.rerun()
 
 # --- 6. NAVIGATION SYSTEM ---
 def navbar():
     with st.container():
-        c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1, 1, 1, 1, 1, 1.5])
+        # Modified columns to fit Eduveer Chatbot button
+        c1, c2, c3, c4, c5, c6, c7, c8 = st.columns([1.5, 0.8, 0.8, 0.8, 0.8, 1, 1, 1.5])
         with c1:
             st.markdown("<div class='nav-logo'>Distoversity<span style='color:#0EA5E9'>.</span></div>", unsafe_allow_html=True)
         
@@ -377,9 +332,13 @@ def navbar():
         if c4.button("Explorer", use_container_width=True): st.session_state.page = 'Explorer'; st.rerun()
         if c5.button("FAQ", use_container_width=True): st.session_state.page = 'FAQ'; st.rerun()
         if c6.button("Partners", use_container_width=True): st.session_state.page = 'Institutions'; st.rerun()
-        if c7.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
+        
+        # EDUVEER BUTTON ADDED HERE
+        if c7.button("🤖 Eduveer", use_container_width=True): st.session_state.page = 'Eduveer'; st.rerun()
+        
+        if c8.button("Take Assessment", type="primary", use_container_width=True): st.session_state.page = 'Assessment'; st.rerun()
 
-# --- 7. PAGES ---
+# --- 7. PAGE RENDER FUNCTIONS ---
 
 def render_home():
     st.markdown("""
@@ -404,7 +363,6 @@ def render_home():
     for i, p in enumerate(["AMITY ONLINE", "MANIPAL", "JAIN ONLINE", "NMIMS CDOL", "LPU ONLINE"]):
         cols[i].markdown(f"<h3 style='text-align:center; color:#0F172A; opacity:0.8; font-size:1.1rem;'>{p}</h3>", unsafe_allow_html=True)
 
-    # Features
     st.markdown("<br><br><h2 style='text-align:center;'>Why Professionals Choose Us</h2>", unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3)
     with c1:
@@ -418,7 +376,6 @@ def render_explorer():
     st.markdown("## 🏫 University Power Explorer")
     st.markdown("Use our advanced data engine to compare top online universities. **All listed are UGC/AICTE Approved.**")
     
-    # 1. COMPARISON WIDGET
     st.markdown("###⚖️ Compare Universities")
     compare_list = st.multiselect("Select up to 3 universities to compare side-by-side:", df['name'].tolist(), max_selections=3)
     
@@ -429,33 +386,20 @@ def render_explorer():
         st.dataframe(comp_df[display_cols].style.format(thousands=","), use_container_width=True)
         st.markdown("<br>", unsafe_allow_html=True)
 
-    # 2. ADVANCED FILTERS
     st.markdown("### 🔍 Find Your Match")
     c1, c2, c3, c4 = st.columns(4)
-    with c1:
-        max_fee = st.slider("Max Budget (₹)", 50000, 500000, 350000, 50000)
-    with c2:
-        energy_filter = st.multiselect("Energy Fit", ["Distoversity Creator", "Distoversity Influencer", "Distoversity Catalyst", "Distoversity Analyst"], default=["Distoversity Creator", "Distoversity Analyst", "Distoversity Influencer", "Distoversity Catalyst"])
-    with c3:
-        sort_by = st.selectbox("Sort By", ["Lowest Fees", "Highest Placement %", "Highest Avg Package"])
-    with c4:
-        min_placement = st.slider("Min Placement %", 50, 100, 80)
+    with c1: max_fee = st.slider("Max Budget (₹)", 50000, 500000, 350000, 50000)
+    with c2: energy_filter = st.multiselect("Energy Fit", ["Distoversity Creator", "Distoversity Influencer", "Distoversity Catalyst", "Distoversity Analyst"], default=["Distoversity Creator", "Distoversity Analyst", "Distoversity Influencer", "Distoversity Catalyst"])
+    with c3: sort_by = st.selectbox("Sort By", ["Lowest Fees", "Highest Placement %", "Highest Avg Package"])
+    with c4: min_placement = st.slider("Min Placement %", 50, 100, 80)
 
-    # 3. FILTERING LOGIC
-    filtered_df = df[
-        (df['fees'] <= max_fee) & 
-        (df['energy'].isin(energy_filter)) &
-        (df['placement'].str.replace('%','').astype(int) >= min_placement)
-    ]
+    filtered_df = df[(df['fees'] <= max_fee) & (df['energy'].isin(energy_filter)) & (df['placement'].str.replace('%','').astype(int) >= min_placement)]
     
-    if sort_by == "Lowest Fees":
-        filtered_df = filtered_df.sort_values(by='fees')
-    elif sort_by == "Highest Placement %":
-        filtered_df = filtered_df.sort_values(by='placement', ascending=False)
+    if sort_by == "Lowest Fees": filtered_df = filtered_df.sort_values(by='fees')
+    elif sort_by == "Highest Placement %": filtered_df = filtered_df.sort_values(by='placement', ascending=False)
     
     st.write(f"Showing **{len(filtered_df)}** universities based on your filters:")
     
-    # 4. DISPLAY CARDS
     for idx, row in filtered_df.iterrows():
         with st.container():
             st.markdown(f"""
@@ -480,107 +424,55 @@ def render_explorer():
                             <span style="color:#16A34A; font-weight:700;">{row['placement']} Placement</span><br>
                             <span style="font-size:0.85rem; color:#64748B;">Avg Pkg: {row['avg_pkg']}</span>
                         </div>
-                        <div style="margin-top:10px;">
-                            <span class="match-tag">⚡ {row['energy']}</span>
-                        </div>
                     </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
-            
             c_btn1, c_btn2, c_space = st.columns([1, 1, 4])
-            with c_btn1:
-                 st.button(f"View Brochure", key=f"broch_{idx}")
-            with c_btn2:
-                 st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
+            with c_btn1: st.button(f"View Brochure", key=f"broch_{idx}")
+            with c_btn2: st.button(f"Apply Now", key=f"apply_{idx}", type="primary")
 
 def render_assessment():
-    st.markdown("""
-    <div style="text-align:center; margin-bottom:40px;">
-        <h2 style="font-size:2.5rem; color:#0077B6; margin-bottom:10px;">Discover Your Spark</h2>
-        <p style="color:#64748B; font-size:1.1rem;">Answer these 5 questions to find your core energy type.</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
+    st.markdown("""<div style="text-align:center; margin-bottom:40px;"><h2 style="font-size:2.5rem; color:#0077B6;">Discover Your Spark</h2><p style="color:#64748B;">Answer these 5 questions to find your core energy type.</p></div>""", unsafe_allow_html=True)
     c1, c2, c3 = st.columns([1, 2, 1])
-    
     with c2:
         with st.form("assessment_form"):
-            # Q1
             st.markdown('<p class="question-text">1. When solving a problem, you naturally:</p>', unsafe_allow_html=True)
-            q1 = st.radio("q1_select", [
-                "Generate multiple creative solutions (Creator)",
-                "Discuss with others to find consensus (Influencer)",
-                "Follow proven step-by-step methods (Catalyst)",
-                "Analyze data and metrics first (Analyst)"
-            ], label_visibility="collapsed")
+            q1 = st.radio("q1", ["Generate multiple creative solutions (Creator)", "Discuss with others (Influencer)", "Follow proven steps (Catalyst)", "Analyze data (Analyst)"], label_visibility="collapsed")
             
-            # Q2
-            st.markdown('<p class="question-text">2. Your ideal work environment involves:</p>', unsafe_allow_html=True)
-            q2 = st.radio("q2_select", [
-                "Freedom to experiment and innovate",
-                "Collaborative team settings",
-                "Structured processes and clear timelines",
-                "Quiet space for deep analytical work"
-            ], label_visibility="collapsed")
+            st.markdown('<p class="question-text">2. Your ideal work environment:</p>', unsafe_allow_html=True)
+            q2 = st.radio("q2", ["Freedom to experiment", "Collaborative team", "Structured processes", "Quiet analysis"], label_visibility="collapsed")
             
-            # Q3
-            st.markdown('<p class="question-text">3. You feel most energized when:</p>', unsafe_allow_html=True)
-            q3 = st.radio("q3_select", [
-                "Creating something new from scratch",
-                "Presenting ideas and influencing outcomes",
-                "Completing tasks on schedule",
-                "Perfecting systems and solving puzzles"
-            ], label_visibility="collapsed")
-
-            # Q4
-            st.markdown('<p class="question-text">4. Your decision-making style is:</p>', unsafe_allow_html=True)
-            q4 = st.radio("q4_select", [
-                "Intuitive and pattern-based",
-                "People-focused and consensus-driven",
-                "Experience-based and practical",
-                "Data-driven and logical"
-            ], label_visibility="collapsed")
-
-            # Q5
-            st.markdown('<p class="question-text">5. In group settings, you naturally:</p>', unsafe_allow_html=True)
-            q5 = st.radio("q5_select", [
-                "Share innovative concepts and possibilities",
-                "Build relationships and network actively",
-                "Organize action items and ensure follow-through",
-                "Provide data-backed insights and analysis"
-            ], label_visibility="collapsed")
+            st.markdown('<p class="question-text">3. Most energized when:</p>', unsafe_allow_html=True)
+            q3 = st.radio("q3", ["Creating something new", "Presenting ideas", "Completing tasks", "Solving puzzles"], label_visibility="collapsed")
+            
+            st.markdown('<p class="question-text">4. Decision-making style:</p>', unsafe_allow_html=True)
+            q4 = st.radio("q4", ["Intuitive", "People-focused", "Experience-based", "Data-driven"], label_visibility="collapsed")
+            
+            st.markdown('<p class="question-text">5. In groups, you:</p>', unsafe_allow_html=True)
+            q5 = st.radio("q5", ["Share innovative concepts", "Network actively", "Organize action items", "Provide data insights"], label_visibility="collapsed")
             
             st.markdown("<br>", unsafe_allow_html=True)
-            
             if st.form_submit_button("Reveal My Spark ➤", type="primary", use_container_width=True):
                 with st.spinner("Analyzing your Energy Profile..."):
                     time.sleep(1.5)
-                
-                # Logic: Calculate % Distribution
-                answers = [q1, q2, q3, q4, q5]
-                counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
-                
-                for a in answers:
-                    if "Creator" in a or "innovate" in a or "scratch" in a or "Intuitive" in a or "concepts" in a: counts["Distoversity Creator"] += 1
-                    elif "Influencer" in a or "Collaborative" in a or "Presenting" in a or "People" in a or "relationships" in a: counts["Distoversity Influencer"] += 1
-                    elif "Catalyst" in a or "Structured" in a or "schedule" in a or "Experience" in a or "Organize" in a: counts["Distoversity Catalyst"] += 1
-                    else: counts["Distoversity Analyst"] += 1
-                
-                # Calculate Percentages
-                total = 5
-                scores = {k: (v/total)*100 for k,v in counts.items()}
-                
-                winner = max(counts, key=counts.get)
-                st.session_state.user_profile = winner
-                st.session_state.user_scores = scores
-                st.session_state.page = 'Result'
-                st.rerun()
+                    answers = [q1, q2, q3, q4, q5]
+                    counts = {"Distoversity Creator": 0, "Distoversity Influencer": 0, "Distoversity Catalyst": 0, "Distoversity Analyst": 0}
+                    for a in answers:
+                        if "Creator" in a or "innovate" in a or "new" in a or "Intuitive" in a: counts["Distoversity Creator"] += 1
+                        elif "Influencer" in a or "Collaborative" in a or "Presenting" in a or "People" in a: counts["Distoversity Influencer"] += 1
+                        elif "Catalyst" in a or "Structured" in a or "tasks" in a or "Experience" in a: counts["Distoversity Catalyst"] += 1
+                        else: counts["Distoversity Analyst"] += 1
+                    
+                    scores = {k: (v/5)*100 for k,v in counts.items()}
+                    st.session_state.user_profile = max(counts, key=counts.get)
+                    st.session_state.user_scores = scores
+                    st.session_state.page = 'Result'
+                    st.rerun()
 
 def render_result():
     profile = st.session_state.user_profile
     scores = st.session_state.user_scores
-    
     if not profile: st.warning("Take assessment first!"); st.stop()
 
     st.balloons()
@@ -603,98 +495,76 @@ def render_result():
         st.markdown("### 🎯 Potential University Matches")
         matches = df[df['energy'] == profile]
         for idx, row in matches.iterrows():
-             st.markdown(f"""
-            <div class="d-card" style="margin-bottom:1rem; padding:1.5rem;">
-                <div style="display:flex; justify-content:space-between;">
-                    <h4 style="margin:0;">{row['name']}</h4>
-                    <span class="match-tag">Potential Fit</span>
-                </div>
-                <p style="margin-top:10px;">✅ Aligns with {profile} learning style</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
+             st.markdown(f"""<div class="d-card" style="margin-bottom:1rem; padding:1.5rem;"><h4>{row['name']}</h4><p style="margin-top:10px;">✅ Aligns with {profile} learning style</p></div>""", unsafe_allow_html=True)
     with c2:
         st.markdown("### 🗺️ Your Full Genius Profile")
-        
-        # Locked State with Trigger
-        st.markdown("""
-        <div class="d-card" style="margin-bottom:1rem;">
-                <h4>Your Superpowers</h4>
-                <p class="blur-content">Innovation, Big Picture Thinking...</p>
-                <h4>Your Blind Spots</h4>
-                <p class="blur-content">Routine tasks, detailed follow-through...</p>
-        </div>
-        <div style="position:relative;">
-            <div class="d-card"><h4>4-Year Strategic Roadmap</h4><p class="blur-content">Year 1: Foundation...</p></div>
-            <div class="lock-badge">
-                <div style="font-size:3rem;">🔒</div>
-                <h3>Unlock Full Genius Profile</h3>
-                <p>Enter your email to generate your 15-Page Report via Llama AI</p>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Input to Trigger Modal
+        st.markdown("""<div class="d-card"><h4>4-Year Strategic Roadmap</h4><p>Year 1: Foundation...</p></div><br>""", unsafe_allow_html=True)
         email = st.text_input("Enter Email to Unlock Full Results", key="email_input")
-        st.caption("🔒 We use Llama-3 AI to generate a personalized report based on your 5-point data profile.")
-        
         if st.button("Generate My AI Report Now", use_container_width=True):
             if email:
-                with st.spinner("Connecting to AI Neural Network... analyzing 5 data points..."):
-                    time.sleep(2) # UX Wait
-                    show_popup_report(profile, scores) # Trigger the Modal
-            else:
-                st.error("Please enter a valid email.")
+                with st.spinner("Connecting to AI Neural Network..."):
+                    time.sleep(2)
+                    show_popup_report(profile, scores)
+
+def render_eduveer():
+    st.markdown("""
+    <div class="hero-section" style="padding-bottom: 2rem; margin-bottom: 2rem;">
+        <h1>Chat with <span style="color:#00B4D8">Eduveer AI</span></h1>
+        <p style="color:#475569;">Your 24/7 Academic Counselor.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    with st.container():
+        st.markdown('<div class="d-card" style="min-height: 500px; display: flex; flex-direction: column;">', unsafe_allow_html=True)
+        
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        if prompt := st.chat_input("Ask Eduveer about MBA fees, courses..."):
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                
+                # SIMULATED INTELLIGENCE
+                if "fee" in prompt.lower(): response_text = "Based on our data, MBA fees range from ₹1.2L (DY Patil) to ₹4L (NMIMS)."
+                elif "placement" in prompt.lower(): response_text = "Most partners offer 90%+ placement assistance."
+                elif "profile" in prompt.lower(): 
+                    prof = st.session_state.user_profile if st.session_state.user_profile else "Unknown"
+                    response_text = f"Your profile is {prof}."
+                else: response_text = "That is an interesting question. I can help compare universities or explain your career path."
+
+                for chunk in response_text.split():
+                    full_response += chunk + " "
+                    time.sleep(0.05)
+                    message_placeholder.markdown(full_response + "▌")
+                message_placeholder.markdown(full_response)
+            
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+        st.markdown('</div>', unsafe_allow_html=True)
 
 def render_about():
     c1, c2 = st.columns(2)
     with c1:
         st.markdown("## The Distoversity Story")
-        st.markdown("""
-        <div class="timeline-item">
-            <h4>2019: The Struggle</h4>
-            <p>Arrived in Delhi. Middle-class background. Zero guidance.</p>
-        </div>
-        <div class="timeline-item">
-            <h4>The Factory Floor (Yazaki & Oppo)</h4>
-            <p>Worked in SMT/Electrical depts. Saw brilliant engineers failing because of misalignment.</p>
-        </div>
-        <div class="timeline-item">
-            <h4>The Solution</h4>
-            <p>Founded Distoversity to combine Wealth Dynamics + AI to fix Career Misalignment.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.write("Founded to fix Career Misalignment using Wealth Dynamics + AI.")
     with c2:
         st.image("https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
 
 def render_faq():
     st.title("❓ Frequently Asked Questions")
-    tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
-    with tab1:
-        st.header("General Education & Career")
-        with st.expander("❓ I'm confused about my career path after high school. How can Distoversity help?"):
-            st.write("We help you discover your 'Genius Profile' (natural strengths) via AI, guiding you to academic fields and careers that truly fit you.")
-        with st.expander("❓ Is the Distoversity 'Genius Profile' a psychological test or a definitive career predictor?"):
-            st.write("It's a self-discovery and guidance tool based on Wealth Dynamics, not a psychological diagnostic test or guarantee.")
-            
-def render_institutions():
-    st.markdown("""
-    <div class="hero-section">
-        <h1>Recruit Students Aligned With Your <span style="color:#00B4D8">Institutional DNA</span></h1>
-        <p style="max-width:700px; margin:20px auto; font-size:1.3rem; color:#475569;">
-            Stop sorting résumés; start welcoming students who fit. Distoversity uses proprietary AI to match students' Genius Profiles to institutions where they'll thrive.
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    with c1:
-        st.image("https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80")
-    with c2:
-        st.markdown("### Why Partner With Us?")
-        st.markdown("- **Targeted Recruitment:** Recruit based on personality alignment.")
-        st.button("Request Partnership Demo")
+    with st.expander("❓ I'm confused about my career path."):
+        st.write("We help you discover your 'Genius Profile' via AI.")
 
-# --- 12. MAIN ROUTER ---
+def render_institutions():
+    st.title("Partner With Us")
+    st.write("Recruit students aligned with your institutional DNA.")
+
+# --- 8. MAIN ROUTER ---
 navbar()
 
 if st.session_state.page == 'Home': render_home()
@@ -704,3 +574,4 @@ elif st.session_state.page == 'FAQ': render_faq()
 elif st.session_state.page == 'Institutions': render_institutions()
 elif st.session_state.page == 'Assessment': render_assessment()
 elif st.session_state.page == 'Result': render_result()
+elif st.session_state.page == 'Eduveer': render_eduveer()
