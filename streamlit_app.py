@@ -61,8 +61,11 @@ div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Deskt
 
 # --- 3. DATA & STATE (Data and Helper Functions) ---
 @st.cache_data
+@st.cache_data
 def load_data():
-return pd.DataFrame([
+return pd.DataFrame([ # <--- ERROR: This line is not indented.
+    # ... all the data is here ...
+])
 {"name": "Amity Online", "fees": 350000, "type": "Distoversity Analyst", "badge": "Top Ranked"},
 {"name": "Manipal Jaipur", "fees": 175000, "type": "Distoversity Creator", "badge": "NAAC A+"},
 {"name": "LPU Online", "fees": 160000, "type": "Distoversity Catalyst", "badge": "Affordable"},
