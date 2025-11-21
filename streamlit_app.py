@@ -3,68 +3,63 @@ import pandas as pd
 import time
 import random
 import os
-import textwrap
-from groq import Groq # Required for Llama 3 integration
 
 # --- 1. CONFIGURATION ---
 st.set_page_config(
-    page_title="Distoversity | Ethical Career Architecture",
+    page_title="Distoversity | Scientific Career Guidance",
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- GROQ/AI SETUP ---
-try:
-    # Safely load the key from Streamlit Secrets (Crucial for security)
-    GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
-    client = Groq(api_key=GROQ_API_KEY)
-    GROQ_AVAILABLE = True
-except Exception:
-    GROQ_AVAILABLE = False
-    
-# --- SYSTEM PROMPT (The Eduveer Personality - From Blueprint) ---
-SYSTEM_PROMPT = """
-You are Eduveer, an empathetic and highly professional Career Data Architect for Distoversity.
-Your goal is to guide the user towards a science-backed career path by understanding their primary energy (Creator, Influencer, Analyst, Catalyst).
-Your tone must be authoritative, transparent, and empathetic (acknowledging the user's struggle).
-NEVER give a generic 'search engine' answer. Always relate advice back to the user's identity and the importance of alignment (Path of Least Resistance).
-You have access to the following Knowledge Base (KB) for specific facts. Use this KB data when answering factual questions.
-
-KB:
-- UGC/NAAC Validity: All universities listed by Distoversity are UGC-DEB approved and NAAC A+ rated.
-- Placement Reality: Top packages range from 20-45 LPA, but results depend 80% on student skills and 20% on the college brand.
-- Financial Advice: EMI options start as low as 2500 INR/month.
-"""
-
-# --- 2. NUCLEAR CSS (Ultimate UI & Mobile Fix) ---
+# --- 2. NUCLEAR CSS (Premium UI + Mobile Fix) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
     /* --- GLOBAL LAYOUT FIXES (CRITICAL FOR VISIBILITY) --- */
-    :root { --primary: #0077B6; --primary-dark: #023E8A; --text-main: #0F172A; --bg-light: #F4F9FD; --gold: #D97706; }
-    [data-testid="stAppViewContainer"], .stApp, header, footer { background-color: var(--bg-light) !important; color: var(--text-main) !important; }
-    h1, h2, h3 { font-family: 'Outfit', sans-serif !important; color: #003366 !important; -webkit-text-fill-color: #003366 !important; }
-    .d-card { background: #FFFFFF !important; border-radius: 16px !important; box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important; margin-bottom: 1rem !important; }
-    
-    /* --- CHAT OVERHAUL (For Eduveer AI) --- */
-    .stChatMessage.assistant div[data-testid="stMarkdownContainer"] {
-        background: white; border: 1px solid #E2E8F0; border-radius: 12px 12px 12px 0; padding: 15px 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-right: 15%;
-    }
-    .stChatMessage.user div[data-testid="stMarkdownContainer"] {
-        background: #E0F2FE; border: 1px solid #BAE6FD; border-radius: 12px 0 12px 12px; padding: 15px 20px;
-        margin-left: 15%;
+    :root {
+        --primary: #0077B6;
+        --primary-dark: #023E8A;
+        --text-main: #0F172A;
+        --bg-light: #F4F9FD;
+        --gold: #D97706;
     }
 
-    /* Structural Fix for Visible Buttons (MUST BE AT THE END) */
-    #hidden-nav-buttons-container { display: none !important; visibility: hidden !important; }
-    .block-container { max-width: 1200px !important; padding-left: 5rem; padding-right: 5rem; }
+    [data-testid="stAppViewContainer"], .stApp, header, footer {
+        background-color: var(--bg-light) !important;
+        color: var(--text-main) !important;
+    }
+    
+    /* Global Text and Headers */
+    h1, h2, h3 { font-family: 'Outfit', sans-serif !important; color: #003366 !important; -webkit-text-fill-color: #003366 !important; }
+
+    /* WIDER LAYOUT FIX */
+    .block-container {
+        max-width: 1200px !important;
+        /* HEADER GAP FIX: Reduced vertical padding */
+        padding-top: 1rem; 
+        padding-bottom: 5rem;
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+    
+    /* --- BUG FIX: HIDING THE JS BUTTONS --- */
+    #hidden-nav-buttons-container { 
+        display: none !important; 
+        visibility: hidden !important;
+    }
+
+    /* Mobile Specifics */
+    @media (max-width: 768px) {
+        .block-container { padding-left: 1rem !important; padding-right: 1rem !important; }
+        h1 { font-size: 2rem !important; }
+        div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA & STATE ---
+# --- 3. DATA & STATE (Data and Helper Functions) ---
 @st.cache_data
 def load_data():
     return pd.DataFrame([
@@ -77,12 +72,9 @@ def load_data():
 
 df = load_data()
 
-# --- STATE MANAGEMENT (Corrected Syntax) ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'lead_captured' not in st.session_state: st.session_state.lead_captured = False
-if 'user_profile' not in st.session_state: st.session_state.user_profile = None # Fixed Syntax Error
-if 'q_index' not in st.session_state: st.session_state.q_index = 0
-if 'scores' not in st.session_state: st.session_state.scores = {"Creator": 0, "Influencer": 0, "Catalyst": 0, "Analyst": 0}
+if 'user_profile' not in st.session_state: st.session_state.user_profile = None
 if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hi! I am Eduveer. I can guide you to the right career path."}]
 
 def get_superpower(prof):
@@ -91,10 +83,16 @@ def get_superpower(prof):
     if "Catalyst" in prof: return "Execution & Timing"
     return "Data & Systems"
 
-# --- 4. NAVIGATION & HELPER FUNCTIONS ---
+def get_bot_response_smart(user_query):
+    q = user_query.lower()
+    if "fee" in q or "cost" in q or "emi" in q: return f"Fees are competitive. We have options starting from ₹98,000 up to ₹400,000. Check the Explorer tab for your exact budget."
+    if "placement" in q or "job" in q or "roi" in q: return "High placement stats are critical! NMIMS recorded a highest package of ₹24 LPA. We track ROI, check the Explorer for more."
+    if "valid" in q or "ugc" in q: return "100% valid. All universities we list are UGC-DEB/NAAC accredited."
+    return "That's a great question! Check out the Explorer tab for quick data or consider the Premium Session for detailed comparison."
+
+# --- 4. NAVIGATION & JS TRIGGERS ---
 
 def desktop_navbar():
-    # Final Desktop Nav (Visible only on desktop)
     with st.container():
         c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1, 1, 1, 1, 1, 1])
         with c1:
@@ -109,7 +107,6 @@ def desktop_navbar():
     st.markdown("---")
 
 def mobile_bottom_nav():
-    # Sticky Bottom Nav (Mobile)
     st.markdown("""
     <div style="position:fixed; bottom:0; left:0; width:100%; background:white; border-top:1px solid #E2E8F0; padding:10px 0; z-index:9999; display:flex; justify-content:space-around; text-align:center;">
         <a onclick="document.getElementById('home_btn_trigger').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🏠<br>Home</a>
@@ -118,24 +115,7 @@ def mobile_bottom_nav():
     </div>
     """, unsafe_allow_html=True)
 
-def get_bot_response_smart(user_query):
-    # This function is now the MOCK fallback logic
-    q = user_query.lower()
-    
-    if "fee" in q or "cost" in q or "emi" in q:
-        max_fee = df['fees'].max()
-        return f"Fees are competitive. We have options starting from ₹98,000 up to ₹{max_fee:,}. Check the Explorer tab for your exact budget."
-        
-    if "placement" in q or "job" in q or "roi" in q:
-        top_uni = df.loc[df['fees'].idxmax()]
-        return f"High placement stats are critical! NMIMS recorded a highest package of ₹24 LPA. We track ROI, check the Explorer for more."
-        
-    if "valid" in q or "ugc" in q:
-        return "100% valid. All universities we list are UGC-DEB/NAAC accredited. We only deal in approved degrees."
-
-    return "That's a great question! Check out the Explorer tab for quick data or consider the Premium Session for detailed comparison."
-
-# --- 5. PAGES ---
+# --- 5. PAGES (Content Refined for Strategy) ---
 
 def render_home():
     st.markdown("""
@@ -152,7 +132,6 @@ def render_home():
     with c2:
         if st.button("🧬 Decode My Career DNA (Free)", type="primary", use_container_width=True):
             st.session_state.page = 'Assessment'; st.rerun()
-        st.markdown("<div style='text-align:center; font-size:0.85rem; color:#64748B; margin-top:8px;'>✅ 98% Accuracy • ⏱️ Takes 2 Minutes • 🔒 Private</div>", unsafe_allow_html=True)
 
     st.markdown("---")
     col1, col2 = st.columns([3, 1])
@@ -320,11 +299,15 @@ desktop_navbar()
 mobile_bottom_nav()
 
 # --- FINAL STRUCTURAL FIX FOR VISIBLE BUTTONS ---
+# This block uses st.empty() to suppress the visual output of the buttons
 st_hide_slot = st.empty() 
 with st_hide_slot.container():
     if st.button("Home_Trigger", key="home_btn_trigger"): st.session_state.page = "Home"; st.rerun()
     if st.button("Quiz_Trigger", key="quiz_btn_trigger"): st.session_state.page = "Assessment"; st.rerun()
     if st.button("Bot_Trigger", key="bot_btn_trigger"): st.session_state.page = "Eduveer"; st.rerun()
+# CSS to Hide the entire container block forcefully on desktop
+st.markdown("""<style>div[data-testid="stVerticalBlock"] > div:has(div[data-testid="stButton"]) {display: none !important;}</style>""", unsafe_allow_html=True)
+
 
 # Main Logic Router
 if st.session_state.page == 'Home': render_home()
