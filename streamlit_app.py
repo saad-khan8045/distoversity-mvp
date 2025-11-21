@@ -3,7 +3,18 @@ import pandas as pd
 import time
 import random
 
-# --- 1. CONFIGURATION (Mobile Optimized) ---
+# --- 0. SEO METADATA INJECTION (CRITICAL FOR SEARCH) ---
+# This tells Google and social media exactly what your site is about.
+st.markdown("""
+    <head>
+        <meta name="description" content="Distoversity offers scientific, AI-powered career guidance using the 4-Genius framework, helping Indian students avoid sales pitches and find their perfect university and career path.">
+        <meta property="og:title" content="Distoversity: Scientific Career Architecture | End Sales Pitches">
+        <meta property="og:description" content="The only platform using the 4-Genius framework and AI to match your DNA to your perfect online degree and career path.">
+        <meta property="og:type" content="website">
+    </head>
+""", unsafe_allow_html=True)
+
+# --- 1. PAGE CONFIGURATION ---
 st.set_page_config(
     page_title="Distoversity | Scientific Career Guidance",
     page_icon="🧬",
@@ -39,6 +50,13 @@ st.markdown("""
     }
     h1, h2, h3 { font-family: 'Outfit', sans-serif !important; color: #003366 !important; -webkit-text-fill-color: #003366 !important; }
 
+    /* Fix Inputs */
+    input, textarea, select, div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #CBD5E1 !important;
+    }
+
     /* Premium Cards */
     .d-card {
         background: #FFFFFF !important;
@@ -60,7 +78,7 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3) !important;
     }
     
-    /* Mobile Fixes */
+    /* Mobile Specifics */
     @media (max-width: 768px) {
         .block-container { padding-top: 1rem !important; padding-bottom: 5rem !important; }
         h1 { font-size: 2rem !important; }
@@ -92,7 +110,6 @@ if 'messages' not in st.session_state: st.session_state.messages = [{"role": "as
 # --- 4. NAVIGATION & HELPER FUNCTIONS ---
 
 def desktop_navbar():
-    # Desktop Nav (Visible only on desktop)
     with st.container():
         c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1])
         with c1:
@@ -106,7 +123,6 @@ def desktop_navbar():
     st.markdown("---")
 
 def mobile_bottom_nav():
-    # Sticky Bottom Nav (Mobile)
     st.markdown("""
     <div style="position:fixed; bottom:0; left:0; width:100%; background:white; border-top:1px solid #E2E8F0; padding:10px 0; z-index:9999; display:flex; justify-content:space-around; text-align:center;">
         <a onclick="document.getElementById('home_btn').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🏠<br>Home</a>
@@ -124,10 +140,11 @@ def get_superpower(prof):
 # --- 5. PAGES ---
 
 def render_home():
+    # H1 optimized for SEO (Online Career, AI)
     st.markdown("""
     <div style="text-align:center; padding: 2rem 0;">
         <span style="background:#E0F2FE; color:#0077B6; padding:6px 16px; border-radius:20px; font-size:0.85rem; font-weight:700; letter-spacing: 1px;">🚫 WARNING: DON'T BE SOLD. BE GUIDED.</span>
-        <h1 style="font-size: 3.2rem; line-height:1.1; margin-top:20px; font-weight: 800;">Is Your Career Designed by <span style="color:#0077B6">Science</span>...<br>or a <span style="color:#F97316">Sales Agent?</span></h1>
+        <h1 style="font-size: 3.2rem; line-height:1.1; margin-top:20px; font-weight: 800;">Is Your Online Career Designed by <span style="color:#0077B6">Science</span>...<br>or a <span style="color:#F97316">Sales Agent?</span></h1>
         <p style="color:#475569; font-size:1.2rem; margin-top:1.5rem; max-width: 700px; margin-left:auto; margin-right:auto;">
             93% of students choose the wrong course because they trust "Free Counselors" who work for commissions.<br>
             <b>Distoversity</b> uses the <b>4-Genius Framework</b> to match your DNA to the Degree.
@@ -143,8 +160,6 @@ def render_home():
         st.markdown("<div style='text-align:center; font-size:0.85rem; color:#64748B; margin-top:8px;'>✅ 98% Accuracy • ⏱️ Takes 2 Minutes • 🔒 Private</div>", unsafe_allow_html=True)
 
     st.markdown("<br><br>", unsafe_allow_html=True)
-    
-    # Trust Section
     st.markdown("<p style='text-align:center; font-weight:bold; color:#94A3B8; letter-spacing:1px;'>WE GUIDE STUDENTS TO TOP UNIVERSITIES</p>", unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
     c1.info("AMITY")
@@ -169,7 +184,7 @@ def render_about():
         <div class="d-card" style="border-left: 5px solid #F97316 !important;">
             <h3>🏭 2019: The Factory Floor</h3>
             <p>My career didn't start in a boardroom. It started at <b>Oppo & Yazaki</b>. 
-            I worked 12-hour shifts. I saw thousands of hardworking Indians working like machines simply because they lacked <b>Guidance</b>.</p>
+            I worked 12-hour shifts. I saw hardworking Indians working like machines simply because they lacked <b>Guidance</b>.</p>
         </div>
         <div class="d-card" style="border-left: 5px solid #0077B6 !important;">
             <h3>📞 2021: The Sales Trap</h3>
@@ -201,10 +216,9 @@ def render_assessment():
         if st.form_submit_button("Analyze My Energy ➤", type="primary", use_container_width=True):
             with st.spinner("Mapping Neural Patterns..."):
                 time.sleep(1.5)
-                # Simple Logic Mapping
                 if "Create" in q1: st.session_state.user_profile = "Distoversity Creator"
                 elif "Talk" in q1: st.session_state.user_profile = "Distoversity Influencer"
-                elif "Act" in q1: st.session_state.user_profile = "Distoversity Catalyst"
+                elif "Start" in q1: st.session_state.user_profile = "Distoversity Catalyst"
                 else: st.session_state.user_profile = "Distoversity Analyst"
                 
                 st.session_state.page = 'Result'
@@ -222,14 +236,13 @@ def render_result():
             <p style="font-size:1.2rem;">Your Core Energy Type is: <b>{profile.split()[1]}</b></p>
             <hr>
             <p>To unlock your <b>Career Roadmap</b>, <b>University Matches</b>, and <b>Salary Prediction</b>, please verify your details.</p>
-            <p style="font-size:0.8rem; color:gray;">(We respect your privacy. No spam.)</p>
         </div>
         """, unsafe_allow_html=True)
         
         with st.form("lead_gen"):
             name = st.text_input("Your Name")
             phone = st.text_input("WhatsApp Number")
-            if st.form_submit_button("🔓 Unlock Report Now"):
+            if st.form_submit_button("🔓 Unlock My Full Report"):
                 if name and len(phone) > 9:
                     st.session_state.lead_captured = True
                     st.rerun()
@@ -269,7 +282,6 @@ def render_explorer():
     st.title("University Explorer")
     budget = st.slider("Max Budget", 50000, 500000, 200000)
     filtered = df[df['fees'] <= budget]
-    
     for idx, row in filtered.iterrows():
         wa_link = f"https://wa.me/919118231052?text=I am interested in {row['name']}."
         st.markdown(f"""
@@ -300,7 +312,8 @@ def render_eduveer():
             st.rerun()
 
 # --- 6. MAIN ROUTER ---
-desktop_navbar() # Desktop Menu
+desktop_navbar()
+mobile_bottom_nav()
 
 # Hidden buttons for mobile nav trigger
 if st.button("Home_Hidden", key="home_btn"): st.session_state.page = "Home"; st.rerun()
@@ -310,8 +323,8 @@ if st.button("Bot_Hidden", key="bot_btn"): st.session_state.page = "Eduveer"; st
 # CSS to Hide Triggers
 st.markdown("""<style>div[data-testid="stButton"] > button[key*="_btn"] {display: none;}</style>""", unsafe_allow_html=True)
 
-# CSS for Mobile Bottom Nav
-mobile_bottom_nav() 
+# CSS for Mobile Bottom Nav (Hides the redundant buttons from the top)
+st.markdown("""<style>div[data-testid="stButton"] > button[key*="_btn"] {display: none;}</style>""", unsafe_allow_html=True)
 
 # Main Logic Router
 if st.session_state.page == 'Home': render_home()
@@ -320,6 +333,3 @@ elif st.session_state.page == 'Assessment': render_assessment()
 elif st.session_state.page == 'Result': render_result()
 elif st.session_state.page == 'Explorer': render_explorer()
 elif st.session_state.page == 'Eduveer': render_eduveer()
-
-# CSS to Hide the trigger buttons from the screen
-st.markdown("""<style>div[data-testid="stButton"] > button[key*="_btn"] {display: none;}</style>""", unsafe_allow_html=True)
