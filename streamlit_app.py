@@ -86,6 +86,13 @@ st.markdown("""
         section[data-testid="stSidebar"] { display: none; }
         div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
     }
+    /* --- WIDER LAYOUT FIX (Desktop) --- */
+    /* Target the main content wrapper globally and set a wider limit */
+    .block-container {
+        max-width: 1200px !important; /* Set maximum width to 1200px */
+        padding-left: 5rem; /* Increase left padding for cleaner look */
+        padding-right: 5rem; /* Increase right padding */
+    }
     </style>
 """, unsafe_allow_html=True)
 
