@@ -72,10 +72,17 @@ def load_data():
 
 df = load_data()
 
+# --- 4. STATE MANAGEMENT (CORRECTED) ---
+
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'lead_captured' not in st.session_state: st.session_state.lead_captured = False
-if 'user_profile' not in st.session_state: st.session_state.user_profile = None
-if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hi! I am Eduveer. I can guide you to the right career path."}]
+
+# ✅ THIS LINE FIXES THE SYNTAX ERROR:
+if 'user_profile' not in st.session_state: 
+    st.session_state.user_profile = None 
+
+if 'messages' not in st.session_state: 
+    st.session_state.messages = [{"role": "assistant", "content": "Hi! I am Eduveer. I can guide you to the right career path."}]
 
 def get_superpower(prof):
     if "Creator" in prof: return "Innovation & Starting New Things"
