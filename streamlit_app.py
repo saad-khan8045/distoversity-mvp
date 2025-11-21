@@ -72,7 +72,13 @@ return pd.DataFrame([ # <--- ERROR: This line is not indented.
 {"name": "NMIMS", "fees": 400000, "type": "Distoversity Influencer", "badge": "Premium"},
 {"name": "Jain University", "fees": 210000, "type": "Distoversity Influencer", "badge": "Placement Focus"}
 ])
-
+# (Line 71-72: Last University Data Dictionary)
+    {
+        "name": "DY Patil Online",
+        # ... (rest of the data for DY Patil)
+    } 
+]) # <--- This closing parenthesis and bracket should be the end.
+# <--- Line 74 likely has an extra, unmatched ']' here.
 df = load_data()
 
 # --- 4. STATE MANAGEMENT (CORRECTED) ---
