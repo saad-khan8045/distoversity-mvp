@@ -26,7 +26,7 @@ st.markdown("""
         --gold: #D97706;
     }
 
-    /* --- FORCE LIGHT MODE (The Nuclear Fix) --- */
+    /* --- GLOBAL LAYOUT FIXES (CRITICAL FOR MOBILE/DESKTOP ALIGNMENT) --- */
     [data-testid="stAppViewContainer"], .stApp, header, footer {
         background-color: var(--bg-light) !important;
         color: var(--text-main) !important;
@@ -79,24 +79,24 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3) !important;
     }
 
-    /* Mobile Fixes */
-    @media (max-width: 768px) {
-        .block-container { padding-top: 1rem !important; padding-bottom: 5rem !important; }
-        h1 { font-size: 2rem !important; }
-        section[data-testid="stSidebar"] { display: none; }
-        div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
-    }
-    
     /* WIDER LAYOUT FIX */
     .block-container {
         max-width: 1200px !important;
         padding-left: 5rem;
         padding-right: 5rem;
     }
+    
+    /* Mobile Specifics */
+    @media (max-width: 768px) {
+        .block-container { padding-top: 1rem !important; padding-bottom: 5rem !important; }
+        h1 { font-size: 2rem !important; }
+        section[data-testid="stSidebar"] { display: none; }
+        div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA & STATE ---
+# --- 3. DATA & STATE (Data remains the same) ---
 @st.cache_data
 def load_data():
     return pd.DataFrame([
@@ -191,7 +191,7 @@ def render_about():
         </div>
         <div class="d-card" style="border-left: 5px solid #10B981 !important;">
             <h3>🧬 2024: The Birth of Distoversity</h3>
-            <p>I built a platform that uses <b>Data & Psychology</b> (The 4-Genius Framework), not sales tactics.</p>
+            <p>I built a platform that uses <b>Data & Psychology</b> (The 4-Genius Framework), not sales tactics. Our mission is to see <b>1000K students grow together</b>.</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -254,7 +254,6 @@ def render_result():
         <span style="font-size:1rem; color:#0077B6; font-weight:bold; letter-spacing:1px;">OFFICIAL DISTOVERSITY PROFILE</span>
         <h1 style="color:#0077B6 !important; font-size:2.5rem !important; margin:10px 0;">{profile.replace('Distoversity ', '')}</h1>
         <p style="color:#0F172A;"><b>Your Superpower:</b> {get_superpower(profile)}</p>
-        <p><b>Alison Courses:</b> Your profile aligns with Project Management. Check out the free course links in the Report below!</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -263,7 +262,7 @@ def render_result():
     <div class="gold-card">
         <h3 style="color:#D97706 !important;">👑 Premium Guidance</h3>
         <p>Don't risk your career on free advice. Get a <b>1:1 Deep Dive Session</b> with our Senior Career Architect.</p>
-        <h2 style="color:#D97706 !!important;">₹999 <span style="font-size:1rem; text-decoration:line-through; color:gray;">₹2,499</span></h2>
+        <h2 style="color:#D97706 !important;">₹999 <span style="font-size:1rem; text-decoration:line-through; color:gray;">₹2,499</span></h2>
         
         <a href="https://wa.me/919118231052?text=Hi, I want to book the Premium Career Session for Rs.999." target="_blank" style="text-decoration:none;">
             <button style="background:#D97706; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold; cursor:pointer;">Book Now ➤</button>
@@ -311,3 +310,48 @@ def render_eduveer():
 
 def render_faq():
     st.title("❓ Frequently Asked Questions")
+    tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
+    
+    with tab1:
+        st.header("General Education & Career")
+        with st.expander("❓ I'm confused about my career path after high school. How can Distoversity help?"):
+            st.write("We help you discover your 'Genius Profile' (natural strengths) via AI, guiding you to academic fields and careers that truly fit you.")
+        with st.expander("❓ Is the Distoversity 'Genius Profile' a psychological test?"):
+            st.write("No, it is a self-discovery and guidance tool based on Wealth Dynamics, not a psychological diagnostic test.")
+        with st.expander("❓ What do Dynamo, Blaze, Tempo, and Steel mean?"):
+            st.write("Dynamo = Ideas (Creator), Blaze = People (Influencer), Tempo = Timing (Catalyst), Steel = Details (Analyst).")
+    
+    with tab2:
+        st.header("Online Education & Learning Trends")
+        with st.expander("❓ Is online education a good option?"):
+            st.write("Yes! Your profile determines your online fit. We match you to programs that suit your learning style.")
+
+    with tab3:
+        st.header("Universities & Admissions")
+        with st.expander("❓ Which universities partner with Distoversity?"):
+            st.write("We partner only with NAAC A+ and A++ accredited universities like Amity, Manipal, Jain, and NMIMS.")
+        with st.expander("❓ How do I apply?"):
+            st.write("Once you find your match, you can request a brochure or book a call. Our counselors will guide you through the application process.")
+        
+# --- 6. MAIN ROUTER ---
+desktop_navbar()
+mobile_bottom_nav()
+
+# Hidden buttons for mobile nav trigger
+st.markdown('<div id="hidden-nav-buttons-container">', unsafe_allow_html=True)
+if st.button("Home_Trigger", key="home_btn_trigger"): st.session_state.page = "Home"; st.rerun()
+if st.button("Quiz_Trigger", key="quiz_btn_trigger"): st.session_state.page = "Assessment"; st.rerun()
+if st.button("Bot_Trigger", key="bot_btn_trigger"): st.session_state.page = "Eduveer"; st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
+
+# CSS to Hide Triggers
+st.markdown("""<style>#hidden-nav-buttons-container { display: none !important; visibility: hidden !important; }</style>""", unsafe_allow_html=True)
+
+# Main Logic Router
+if st.session_state.page == 'Home': render_home()
+elif st.session_state.page == 'About': render_about()
+elif st.session_state.page == 'Assessment': render_assessment()
+elif st.session_state.page == 'Result': render_result()
+elif st.session_state.page == 'Explorer': render_explorer()
+elif st.session_state.page == 'Eduveer': render_eduveer()
+elif st.session_state.page == 'FAQ': render_faq()
