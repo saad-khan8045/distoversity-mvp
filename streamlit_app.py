@@ -8,51 +8,144 @@ st.set_page_config(
     layout="wide"
 )
 st.markdown("""
-<meta name="description" content="Distoversity – Know your counsellor, get ethical career advice and take the 4D Assessment. Senior advisor Mohd Saad gives students consultative onboarding and post-admission success. Join Distoversity's transparent community—every career, every student, impact-first.">
+    <meta name="description" content="Distoversity – Take the 4D Assessment to discover your four career energies, compare top Indian universities, join Alison's global community, and get ethical, mentor-led career advice.">
 """, unsafe_allow_html=True)
 
-# --- CSS / FONT / DESIGN SYSTEM ---
-# ...[your existing CSS block, unchanged]...
+# --- MODERN DESIGN / COLOR / FONT ---
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;700&display=swap');
+html,body,[class*="css"]{
+    font-family:'Inter',sans-serif!important;
+    background:#f4f9fd!important;
+    color:#19315B;
+}
+h1,h2,h3{
+    font-family:'Montserrat',sans-serif!important;
+    font-weight:900!important;letter-spacing:-1.1px;
+    color:#003366!important;
+}
+.nav-logo{
+    font-family:'Montserrat',sans-serif;font-size:2.18rem;font-weight:900!important;
+    color:#003366!important;display:inline;margin-right:7px;letter-spacing:-2px;
+}
+.empower-small{
+    font-family:'Montserrat',sans-serif!important;
+    font-size:1rem;
+    color:#1376d4!important;
+    font-weight:700!important;display:inline-block;margin-top:2px;margin-left:2px;
+}
+.nav-flag{
+    font-size:1.3rem;display:inline;vertical-align:middle;margin-left:3px;
+}
+.stButton>button{
+    background:#1376d4!important;
+    color:#fff!important;
+    font-family:'Montserrat',sans-serif!important;
+    font-weight:800;
+    font-size:1.09rem;
+    border:none;
+    border-radius:32px;
+    padding:0.60rem 1.6rem;
+    box-shadow:0 2px 14px #1ab6ed21;
+}
+.d-card{
+    background:linear-gradient(95deg,#fff 88%,#e6f3fe 100%);
+    border:1.3px solid #daecfa;
+    border-radius:18px;
+    padding:1.25rem 1.3rem 1.1rem;
+    margin:1.1rem 0;
+    box-shadow:0 3px 11px #98d4fb22;
+}
+.hero-section,.about-box{
+    background:linear-gradient(97deg,#e7f1fb 85%,#fff 100%);
+    border-radius:24px;
+    margin-bottom:33px;
+    padding:2.15rem 2.0rem 1.35rem;
+    border:1px solid #dbe5ee;}
+label,.question-text{
+    color:#0d2e42!important;font-weight:700!important;
+    font-family:'Montserrat',sans-serif!important;
+    font-size:1.13rem;}
+.badge{
+    background:#e6f3fe;
+    color:#0077B6;
+    font-family:'Montserrat',sans-serif!important;
+    padding:7px 17px;
+    font-weight:700;border-radius:15px;
+    font-size:0.96rem;margin-right:6px;margin-bottom:4px;}
+.cta-sticky{
+    position:fixed;bottom:17px;right:17px;z-index:9188;
+    background:#0077B6!important;
+    color:white;font-family:'Montserrat',sans-serif;
+    font-weight:900;font-size:1.09rem;
+    padding:0.92rem 2.09rem;
+    border-radius:39px;
+    box-shadow:0 3px 18px #1376d41a;
+    border:none;}
+.footer-note{
+    font-size:1.01rem;text-align:center;margin:1.9rem 0 0;color:#476;}
+hr {border:none;border-top:1.6px solid #e2eaf7;margin:21px 0;}
+ul,ol{font-size:1.07rem;color:#26334c;}
+.alison-tag{
+    background:#e7f7e7;color:#38953b;
+    border-radius:9px;
+    font-size:0.94rem;
+    font-weight:700;
+    display:inline-block;
+    padding:3px 9px;
+    margin-bottom:7px;
+    margin-left:2px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # --- DATA ---
-UNIS = [...] # [insert your existing UNIS list here]
-alison_courses = {...} # [your existing profile->course dict]
+UNIS = [
+    {"name":"Jain (Online)","type":"Private","city":"Bengaluru","profile":"Creator","fee":210000,"naac":"A++","pkg":"32LPA","alison":"Innovation Management"},
+    {"name":"Manipal Online","type":"Private","city":"Jaipur","profile":"Analyst","fee":175000,"naac":"A+","pkg":"18LPA","alison":"Data Science Fundamentals"},
+    {"name":"Amity University Online","type":"Private","city":"Global","profile":"Creator","fee":345000,"naac":"A+","pkg":"15LPA","alison":"Design Thinking (Alison)"},
+    {"name":"LPU Online","type":"Private","city":"Global","profile":"Catalyst","fee":160000,"naac":"A++","pkg":"21LPA","alison":"Agile Leadership (Alison)"},
+    {"name":"Chandigarh University Online","type":"Private","city":"Online","profile":"Influencer","fee":180000,"naac":"A+","pkg":"28LPA","alison":"Social Media Marketing (Alison)"},
+    {"name":"NMIMS Global","type":"Private","city":"Online","profile":"Influencer","fee":400000,"naac":"A+","pkg":"45LPA","alison":"Public Speaking"},
+    {"name":"DY Patil Online","type":"Private","city":"Pune","profile":"Catalyst","fee":120000,"naac":"A++","pkg":"12LPA","alison":"Project Management"},
+]
+alison_courses = {
+    "Creator":["Innovation Management", "Design Thinking (Alison)"],
+    "Influencer":["Social Media Marketing (Alison)", "Public Speaking"],
+    "Catalyst":["Agile Leadership (Alison)", "Project Management"],
+    "Analyst":["Data Science Fundamentals (Alison)", "Excel Strategies"]
+}
 
+# --- SESSION STATE ---
 if "page" not in st.session_state: st.session_state.page = "Home"
 if "profile" not in st.session_state: st.session_state.profile = None
 if "scores" not in st.session_state: st.session_state.scores = None
 
+# --- FOUNDER MODAL ---
 if "founder_modal" not in st.session_state:
     st.session_state.founder_modal = True
 
 def founder_modal():
     import streamlit.components.v1 as components
     modal_code = """
-    <div id="founder-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(44,72,116,0.19);z-index:99999;display:flex;align-items:center;justify-content:center;">
-      <div style="background:#fff;max-width:440px;border-radius:24px;box-shadow:0 14px 44px #1376d434;padding:32px 29px 17px;text-align:center;position:relative;">
-        <img src='https://avatars.githubusercontent.com/u/7087942?s=400&u=860ba9126b6e8ce3fe01a8b337b836ca95a2d165&v=4' width='86' style='border-radius:22px;box-shadow:0 5px 15px #255;'>
-        <h3 style='margin:18px 0 3px 0;font-family:Montserrat, Inter;color:#003366;'>Know Your Counsellor</h3>
-        <div style='font-size:1.11rem;color:#1576d7;font-family:Montserrat;'><b>Mohd Saad, Senior Career Advisor & Founder – Distoversity 🇮🇳</b></div>
-        <div style="font-size:1.078rem;color:#124;border-radius:10px;background:#e6f3fe;padding:12px 7px;margin:19px 0 11px 0;">
-        <b>Why trust matters?</b><br>
-        My journey began on India's factory floors.<br>
-        I've advised thousands—with real answers, not sales.<br>
-        <span style="color:#1376d4;">Education is a business—but only ethics make it impactful.<br>
-        Distoversity was built so every student is truly seen, heard, and guided—even post-admission.<br>
-        Your dreams are not leads—they are lives to be built.</span>
+    <div id="founder-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,77,136,0.10);z-index:99999;display:flex;align-items:center;justify-content:center;">
+      <div style="background:white;max-width:330px;border-radius:15px;box-shadow:0 6px 24px #00336624;padding:19px 13px 10px;text-align:center;position:relative;font-family:Montserrat;">
+        <button onclick="document.getElementById('founder-modal').style.display='none';document.body.style.overflow='';"
+        style='position:absolute;top:7px;right:7px;background:#e6f3fe;font-size:1.3rem;color:#1376d4;border:none;border-radius:8px;font-weight:700;width:26px;height:26px;cursor:pointer;'>×</button>
+        <img src='https://avatars.githubusercontent.com/u/7087942?s=400' width='52' style='border-radius:14px;box-shadow:0 2px 12px #00336626;'>
+        <h4 style='margin:11px 0 6px 0;font-family:Montserrat;color:#003366;font-size:1.03rem;'>Mohd Saad</h4>
+        <div style="font-size:0.97rem;color:#1376d4;font-weight:700;">Senior Career Advisor & Founder</div>
+        <div style="font-size:0.91rem;color:#124;background:#e6f3fe;border-radius:6px;padding:5px 3px;margin:8px 0 5px;">
+            <b>Guiding you with ethics, not sales.</b><br>
+            Every student is seen, heard, and supported.<br>
         </div>
-        <div style='font-size:1.06rem;color:#003366;margin:10px 0 17px 0;'><b>
-        I am not from any university—I work only for you, and with you.<br>
-        My mission is to reshape career guidance: one student, one ethical decision at a time.</b></div>
-        <div style="margin-bottom:8px;">
-            <span style="font-size:1.07rem;color:#167;text-shadow:0 1px 0 #cae;">Distoversity counseling charge: <b>₹999</b> | All admissions welcome</span>
-        </div>
-        <a href="mailto:distoversity@gmail.com?subject=Join%20Community" style="text-decoration:none;">
-          <button style="background:#1376d4;color:#fff;font-family:Montserrat;font-weight:700;font-size:1.09rem;padding:10px 27px;border:none;border-radius:23px;margin-bottom:7px;">Connect with Me Now</button>
+        <a href="https://linkedin.com/" target="_blank" style="text-decoration:none;">
+            <button style="background:#1376d4;color:#fff;font-family:Montserrat;font-weight:700;font-size:0.97rem;padding:6px 14px;border:none;border-radius:10px;margin-bottom:5px;cursor:pointer;">LinkedIn</button>
         </a>
         <br>
-        <button onclick="document.getElementById('founder-modal').style.display='none';" style="margin-top:10px;background:#ececec;color:#003366;font-family:Inter;font-weight:700;border:none;border-radius:16px;padding:8px 22px;box-shadow:0 2px 8px #1376d412;">OK, Explore Distoversity</button>
-        <div style="font-size:0.98rem;margin-top:12px;color:#476;">You are safe here – privacy and empathy first, career ethics always.</div>
+        <button onclick="document.getElementById('founder-modal').style.display='none';document.body.style.overflow='';"
+         style="margin-top:7px;background:#ececec;color:#003366;font-family:Inter;font-weight:700;border:none;border-radius:10px;padding:6px 13px;">OK, Explore</button>
       </div>
     </div>
     <script>
@@ -62,8 +155,9 @@ def founder_modal():
     });
     </script>
     """
-    components.html(modal_code, height=490)
+    components.html(modal_code, height=310)
 
+# --- NAVBAR ---
 def navbar():
     cols = st.columns([2.4,1,1.25,1.23,1,1.46])
     with cols[0]:
@@ -92,11 +186,6 @@ def home_page():
         <li>All counseling and advice are consultative, not transactional—mentor + AI, never pushy selling</li>
         </ul>
     </div>
-    <div style='margin:20px 0 13px 0;font-size:1.12rem;color:#1376d4;background:#e6f3fe;padding:10px 15px;border-radius:13px;font-family:Montserrat'>
-    Education is a business—but only ethical businesses truly succeed.<br>
-    Distoversity puts honesty, empathy, and people first. Our advice is unbiased, our ethics are visible, and our goal is student impact—not forced sales.<br>
-    <b>If your business builds lives, your success will build forever.</b>
-    </div>
     """,unsafe_allow_html=True)
     st.button("✨ Start Your 4D Assessment",type="primary",on_click=lambda: nav("Assessment"))
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/80px-India_Flag_300.png",width=64)
@@ -107,7 +196,7 @@ def assessment_page():
     <div style='text-align:center;'>
       <span class='badge'>AI Supported | Mentor Validated | Career Science for India</span>
       <br>
-      <span style="font-size:1.07rem; color:#1376d4;"><b>Our test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
+      <span style="font-size:1.07rem; color:#1376d4;"><b>Our original test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
     </div>
     """,unsafe_allow_html=True)
     st.info("Answer 5 short questions. No right/wrong answers—just your energy flow.")
@@ -128,7 +217,6 @@ def assessment_page():
             st.session_state.profile = winner
             st.session_state.scores = tally
             nav("Result")
-
 def result_page():
     prof = st.session_state.get("profile")
     scores = st.session_state.get("scores")
@@ -208,12 +296,15 @@ def about_page():
     <p>
     <b>Consultative selling—not closing leads.</b> Distoversity is India's impact-driven career company. We are counselors + AI, never just bots; we advise, not advertise.<br>
     <br>
-    <b>Founder’s Insight:</b> From factories, real counseling, and learning with Alison, I built the 4D Assessment for every student—science, privacy, and empathy at the core.<br>
+    <b>Founder:</b> <br>
+    <img src='https://avatars.githubusercontent.com/u/7087942?s=400' width='42' style='border-radius:8px;vertical-align:middle;margin-right:6px;'><b>Mohd Saad, Senior Career Advisor & Founder</b> <br>
+    Guiding you with ethics, not sales. Every student is seen, heard, and supported. <br>
+    <a href="https://linkedin.com/" target="_blank"><button style='background:#1376d4;color:#fff;font-family:Montserrat;font-weight:700;font-size:0.89rem;padding:4px 10px;border:none;border-radius:8px;margin-top:5px;'>LinkedIn</button></a>
     <br>
     <span class='alison-tag'>Alison Community Member</span>: Bringing global skill learning free for Indians.<br>
     <br>
     <b>For partners & TFI:</b> We aspire to work with every impact-focused educator, fellow, and org. Careers change lives—let's architect India's future, together.<br>
-    <b>Contact:</b> distoversity@gmail.com | <a href="https://linkedin.com">LinkedIn</a>
+    <b>Contact:</b> distoversity@gmail.com | <a href="https://linkedin.com/">LinkedIn</a>
     </p>
     </div>
     """,unsafe_allow_html=True)
@@ -221,8 +312,14 @@ def about_page():
 def nav(p): st.session_state.page=p; st.rerun()
 
 navbar()
-page_map = {"Home": home_page, "Assessment": assessment_page, "Result": result_page,
-            "Universities": universities_page, "FAQ": faq_page, "About": about_page}
+page_map = {
+    "Home": home_page,
+    "Assessment": assessment_page,
+    "Result": result_page,
+    "Universities": universities_page,
+    "FAQ": faq_page,
+    "About": about_page,
+}
 if st.session_state.page == "Result":
     result_page()
 else:
@@ -238,4 +335,4 @@ Distoversity <span class='empower-small'>Empowering India <span class='nav-flag'
 <br>
 Privacy: Data always private. Alison Community | Copyright © 2025 Distoversity.
 </div>
-""",unsafe_allow_html=True)
+""", unsafe_allow_html=True)
