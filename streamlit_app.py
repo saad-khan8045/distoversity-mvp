@@ -145,15 +145,13 @@ def get_superpower(prof):
     return "Data & Systems"
 
 # --- 5. PAGES ---
-
 def render_home():
     st.markdown("""
     <div style="text-align:center; padding: 2rem 0;">
         <span style="background:#E0F2FE; color:#0077B6; padding:6px 16px; border-radius:20px; font-size:0.85rem; font-weight:700; letter-spacing: 1px;">🚫 WARNING: DON'T BE SOLD. BE GUIDED.</span>
         <h1 style="font-size: 3.2rem; line-height:1.1; margin-top:20px; font-weight: 800;">Is Your Online Career Designed by <span style="color:#0077B6">Science</span>...<br>or a <span style="color:#F97316">Sales Agent?</span></h1>
         <p style="color:#475569; font-size:1.2rem; margin-top:1.5rem; max-width: 700px; margin-left:auto; margin-right:auto;">
-            93% of students choose the wrong course because they trust "Free Counselors" who work for commissions.<br>
-            <b>Distoversity</b> uses the <b>4-Genius Framework</b> to match your DNA to the Degree.
+            93% of students choose the wrong course because they trust "Free Counselors." We, as industry veterans, offer the **4-Genius Framework** to match your DNA to the Degree.
         </p>
     </div>
     """, unsafe_allow_html=True)
