@@ -117,45 +117,10 @@ alison_courses = {
     "Analyst":["Data Science Fundamentals (Alison)", "Excel Strategies"]
 }
 
-# --- SESSION STATE ---
+# --- STATE ---
 if "page" not in st.session_state: st.session_state.page = "Home"
 if "profile" not in st.session_state: st.session_state.profile = None
 if "scores" not in st.session_state: st.session_state.scores = None
-
-# --- FOUNDER MODAL (paste below CSS right after data/config, before navbar) ---
-if "founder_modal" not in st.session_state:
-    st.session_state.founder_modal = True
-
-def founder_modal():
-    import streamlit.components.v1 as components
-    modal_code = """
-    <div id="founder-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,77,136,0.10);z-index:99999;display:flex;align-items:center;justify-content:center;">
-      <div style="background:white;max-width:330px;border-radius:15px;box-shadow:0 6px 24px #00336624;padding:19px 13px 10px;text-align:center;position:relative;font-family:Montserrat;">
-        <button onclick="document.getElementById('founder-modal').style.display='none';document.body.style.overflow='';"
-        style='position:absolute;top:7px;right:7px;background:#e6f3fe;font-size:1.3rem;color:#1376d4;border:none;border-radius:8px;font-weight:700;width:26px;height:26px;cursor:pointer;'>×</button>
-        <img src='https://avatars.githubusercontent.com/u/7087942?s=400' width='52' style='border-radius:14px;box-shadow:0 2px 12px #00336626;'>
-        <h4 style='margin:11px 0 6px 0;font-family:Montserrat;color:#003366;font-size:1.03rem;'>Mohd Saad</h4>
-        <div style="font-size:0.97rem;color:#1376d4;font-weight:700;">Senior Career Advisor & Founder</div>
-        <div style="font-size:0.91rem;color:#124;background:#e6f3fe;border-radius:6px;padding:5px 3px;margin:8px 0 5px;">
-            <b>Guiding you with ethics, not sales.</b><br>
-            Every student is seen, heard, and supported.<br>
-        </div>
-        <a href="https://linkedin.com/" target="_blank" style="text-decoration:none;">
-            <button style="background:#1376d4;color:#fff;font-family:Montserrat;font-weight:700;font-size:0.97rem;padding:6px 14px;border:none;border-radius:10px;margin-bottom:5px;cursor:pointer;">LinkedIn</button>
-        </a>
-        <br>
-        <button onclick="document.getElementById('founder-modal').style.display='none';document.body.style.overflow='';"
-         style="margin-top:7px;background:#ececec;color:#003366;font-family:Inter;font-weight:700;border:none;border-radius:10px;padding:6px 13px;">OK, Explore</button>
-      </div>
-    </div>
-    <script>
-    document.body.style.overflow = 'hidden';
-    document.getElementById('founder-modal').addEventListener('click', function(e) {
-      if(e.target === this) { this.style.display='none';document.body.style.overflow = ''; }
-    });
-    </script>
-    """
-    components.html(modal_code, height=310)
 
 # --- NAVBAR ---
 def navbar():
@@ -170,11 +135,8 @@ def navbar():
     if cols[5].button("About"): st.session_state.page="About";st.rerun()
     st.markdown("---")
 
+# --- PAGE ROUTES ---
 def home_page():
-    if st.session_state.page == "Home" and st.session_state.founder_modal:
-        founder_modal()
-        st.session_state.founder_modal = False
-
     st.markdown("""
     <div class="hero-section">
         <h1>Engineer Your Career Destiny <span class='nav-flag'>🇮🇳</span></h1>
@@ -192,32 +154,129 @@ def home_page():
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/80px-India_Flag_300.png",width=64)
 
 def assessment_page():
-    # ... (your normal code here) ...
+    st.markdown("<h2 style='text-align:center;'>4D Assessment – Discover Your 4 Energies</h2>",unsafe_allow_html=True)
+    st.markdown("""
+    <div style='text-align:center;'>
+      <span class='badge'>AI Supported | Mentor Validated | Career Science for India</span>
+      <br>
+      <span style="font-size:1.07rem; color:#1376d4;"><b>Our original test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
+    </div>
+    """,unsafe_allow_html=True)
+    st.info("Answer 5 short questions. No right/wrong answers—just your energy flow.")
+    with st.form("dist_assess"):
+        q1 = st.radio("Q1. Work makes you happiest when?",["Inventing new things","Inspiring/leading people","Finishing/executing big projects","Solving complex puzzles"],index=None)
+        q2 = st.radio("Q2. Friends see you as…",["The innovator","The motivator","The finisher","The analyst"],index=None)
+        q3 = st.radio("Q3. You get bored by…",["Repeating/routine work","Isolation/lack of people","Waiting/unclear targets","Hype, not facts"],index=None)
+        q4 = st.radio("Q4. If given a whole free day, you would…",["Draw 3 startup ideas","Host an event","Clear all pending tasks","Decode new trends in stocks/news"],index=None)
+        q5 = st.radio("Q5. Life goal?",["Invent something world-class","Inspire lakhs","Become Operations CEO","Crack million-dollar data puzzle"],index=None)
+        if st.form_submit_button("See My 4D Profile →"):
+            tally = {"Creator":0,"Influencer":0,"Catalyst":0,"Analyst":0}
+            for a in [q1,q2,q3,q4,q5]:
+                if "idea" in a or "Invent" in a or "innovator" in a or "draw" in a: tally["Creator"]+=1
+                elif "Inspire" in a or "people" in a or "event" in a or "motivator" in a or "lakhs" in a: tally["Influencer"]+=1
+                elif "Finish" in a or "Operations" in a or "clear" in a or "tasks" in a or "finisher" in a: tally["Catalyst"]+=1
+                else: tally["Analyst"]+=1
+            winner = max(tally, key=tally.get)
+            st.session_state.profile = winner
+            st.session_state.scores = tally
+            nav("Result")
 
 def result_page():
-    # ... (your normal code here) ...
+    prof = st.session_state.get("profile")
+    scores = st.session_state.get("scores")
+    if not prof:
+        st.warning("Complete your 4D Assessment first!"); return
+    st.markdown(f"<h2 style='color:#1376d4;text-align:center;'>You're a <span style='text-transform:uppercase;'>{prof}</span> Genius.</h2>",unsafe_allow_html=True)
+    st.markdown(f"""<div class="badge" style="margin-bottom:10px;">AI + Mentor Verified | 4D Career DNA</div>""",unsafe_allow_html=True)
+    st.markdown("""
+    <div class='d-card' style='margin-bottom:1.2rem;'>
+        <b>Your Growth Story (per Energy):</b>
+        <ul>
+        <li>Creator: Visionary, original, high-impact—but finish what you start.</li>
+        <li>Influencer: Leader, motivator, connector—avoid the all-talk trap.</li>
+        <li>Catalyst: Results-getter, ops expert—keep upskilling, avoid burnout!</li>
+        <li>Analyst: Data solver, reliable—don’t let perfection block action.</li>
+        </ul>
+    </div>
+    """,unsafe_allow_html=True)
+    st.markdown(f"<h4>Recommended Alison Upskilling</h4>",unsafe_allow_html=True)
+    st.markdown("<span class='alison-tag'>Alison Community Member | Free Skill Courses</span>",unsafe_allow_html=True)
+    for course in alison_courses[prof]:
+        st.write(f"• {course} ([See on Alison](https://alison.com/courses))")
+    st.markdown("<hr>",unsafe_allow_html=True)
+    st.markdown("<b>Top University Matches:</b>",unsafe_allow_html=True)
+    matches = [u for u in UNIS if u['profile'] == prof]
+    for u in matches:
+        st.markdown(f"""
+        <div class="d-card"><h3>{u['name']}</h3>
+        <span class="badge">{u['city']}</span> | <span class="badge">NAAC: {u['naac']}</span> | <b>Fee:</b> ₹{u['fee']:,}<br>
+        <b>Alison:</b> {u['alison']} | <b>Placement:</b> {u['pkg']}
+        </div>
+        """,unsafe_allow_html=True)
+    st.button("Compare All Universities",on_click=lambda: nav("Universities"))
 
 def universities_page():
-    # ... (your normal code here) ...
+    st.markdown("<h2>Compare India's Top Universities</h2>",unsafe_allow_html=True)
+    st.caption("Sort/filter by fee, NAAC, placement, profile fit, and city—all data transparent.")
+    df = pd.DataFrame(UNIS)
+    cols = st.columns(4)
+    sel_prof = cols[0].selectbox("Profile Filter",["All"]+list(alison_courses.keys()))
+    sel_sort = cols[1].selectbox("Sort by",["Fee (Lowest)","Fee (Highest)","Placement (Highest)"])
+    budget = cols[2].slider("Max Fee (Lakh ₹)",1,6,3)
+    naac_plus = cols[3].checkbox("NAAC A++ only",False)
+    temp = df[df['fee']<=budget*100000]
+    if naac_plus: temp=temp[temp.naac=="A++"]
+    if sel_prof!="All": temp=temp[temp.profile==sel_prof]
+    temp = temp.sort_values("fee" if "Fee" in sel_sort else "pkg", ascending="Lowest" in sel_sort)
+    st.dataframe(temp[["name","profile","fee","naac","city","pkg"]].reset_index(drop=True),use_container_width=True)
+    st.markdown("Click any university row for advice—or return to [4D Assessment](#) for your unique fit.")
 
 def faq_page():
-    # ... (your normal code here) ...
+    st.title("Distoversity FAQ")
+    faq = [
+        ("What is the 4D Assessment?",
+         "Distoversity's 4D Assessment is India's original test for discovering your four career energies (Creator, Influencer, Catalyst, Analyst). Each energy leads to unique careers, skills, and university matches."),
+        ("How is advice given?",
+         "Every match is AI supported, reviewed by real career mentors. We guide, never push sales or random leads."),
+        ("How does Alison help?",
+         "Founder is an Alison global community member. All learners get free, profile-based upskilling links."),
+        ("How is selling consultative?",
+         "We never rush decisions. Our counselors serve as architects, not 'closers'. Every step is science + empathy."),
+        ("How do you select universities?",
+         "UGC/NAAC/AICTE verified only. Stats and fit are shown with transparent filters."),
+        ("How can I contact you?",
+         "Sticky bottom button, email: distoversity@gmail.com, WhatsApp: +91-9111111111.")
+    ]
+    for q,a in faq:
+        with st.expander(q):
+            st.write(a)
 
 def about_page():
-    # ... (your normal code here, add founder block if you want extra trust) ...
+    st.markdown("""
+    <div class='about-box'>
+    <h1 style="margin-bottom:6px;">Distoversity – Ethical Career Science <span class='nav-flag'>🇮🇳</span></h1>
+    <span class='empower-small'>Empowering India</span>
+    <hr>
+    <p>
+    <b>Consultative selling—not closing leads.</b> Distoversity is India's impact-driven career company. We are counselors + AI, never just bots; we advise, not advertise.<br>
+    <br>
+    <b>Founder’s Insight:</b> From factories, real counseling, and learning with Alison, I built the 4D Assessment for every student—science, privacy, and empathy at the core.<br>
+    <br>
+    <span class='alison-tag'>Alison Community Member</span>: Bringing global skill learning free for Indians.<br>
+    <br>
+    <b>For partners & TFI:</b> We aspire to work with every impact-focused educator, fellow, and org. Careers change lives—let's architect India's future, together.<br>
+    <b>Contact:</b> distoversity@gmail.com | <a href="https://linkedin.com">LinkedIn</a>
+    </p>
+    </div>
+    """,unsafe_allow_html=True)
 
 def nav(p): st.session_state.page=p; st.rerun()
 
+# --- MAIN ROUTER ---
 navbar()
-page_map = {
-    "Home": home_page,
-    "Assessment": assessment_page,
-    "Result": result_page,
-    "Universities": universities_page,
-    "FAQ": faq_page,
-    "About": about_page,
-}
-if st.session_state.page == "Result":
+page_map={"Home":home_page,"Assessment":assessment_page,"Result":result_page,
+          "Universities":universities_page,"FAQ":faq_page,"About":about_page}
+if st.session_state.page=="Result":
     result_page()
 else:
     page_map[st.session_state.page]()
