@@ -80,12 +80,14 @@ def load_data():
     ])
 
 df = load_data()
+# --- REPLACE LINES 84-87 WITH THIS CORRECT STRUCTURE ---
 
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'lead_captured' not in st.session_state: st.session_state.lead_captured = False
-if 'user_profile' not in st.session_state.user_profile = None
+if 'user_profile' not in st.session_state: st.session_state.user_profile = None 
 if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hi! I am Eduveer. I can guide you to the right career path."}]
 
+# --- END FIX ---
 def get_superpower(prof):
     if "Creator" in prof: return "Innovation & Starting New Things"
     if "Influencer" in prof: return "People & Communication"
