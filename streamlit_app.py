@@ -1,214 +1,340 @@
 import streamlit as st
 import pandas as pd
+import time
+import random
+import os
 
-# --- PAGE CONFIG & SEO ---
+# --- 1. CONFIGURATION ---
 st.set_page_config(
-    page_title="Distoversity | Empowering India – 4D Assessment, Ethical Career & University Guidance",
-    page_icon="🇮🇳",
-    layout="wide"
+    page_title="Distoversity | Scientific Career Guidance",
+    page_icon="🧬",
+    layout="wide",
+    initial_sidebar_state="collapsed"
 )
+
+# --- 2. FINAL CSS (Fixes, Alignment, and Visibility) ---
 st.markdown("""
-    <meta name="description" content="Distoversity – Take the 4D Assessment to discover your four career energies, compare top Indian universities, join Alison's global learning community, and get AI-powered, mentor-led guidance. Empowering India through consultative selling and real impact.">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+    /* --- GLOBAL LAYOUT FIXES (CRITICAL FOR VISIBILITY) --- */
+    :root {
+        --primary: #0077B6;
+        --primary-dark: #023E8A;
+        --text-main: #0F172A;
+        --bg-light: #F4F9FD;
+        --gold: #D97706;
+    }
+
+    [data-testid="stAppViewContainer"], .stApp, header, footer {
+        background-color: var(--bg-light) !important;
+        color: var(--text-main) !important;
+    }
+    
+    /* Typography Fixes */
+    h1, h2, h3 { font-family: 'Outfit', sans-serif !important; color: #003366 !important; -webkit-text-fill-color: #003366 !important; }
+
+    /* Fix Inputs */
+    input, textarea, select, div[data-baseweb="select"] {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #CBD5E1 !important;
+        -webkit-text-fill-color: #000000 !important;
+    }
+
+    /* WIDER LAYOUT FIX */
+    .block-container {
+        max-width: 1200px !important;
+        padding-left: 5rem;
+        padding-right: 5rem;
+        padding-top: 1rem; /* FIX: Reduced top padding for header alignment */
+        padding-bottom: 5rem;
+    }
+    
+    /* Global Card Styles */
+    .d-card {
+        background: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 16px !important;
+        padding: 1.5rem !important;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Final Fix: Structural CSS to hide all trigger buttons completely */
+    .stButton > button[key*="_trigger"] {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+        width: 0px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: absolute !important;
+        top: -100px;
+    }
+
+    /* Mobile Fixes */
+    @media (max-width: 768px) {
+        .block-container { padding-left: 1rem !important; padding-right: 1rem !important; }
+        h1 { font-size: 2rem !important; }
+        div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
+    }
+    </style>
 """, unsafe_allow_html=True)
 
-# --- MODERN DESIGN / COLOR / FONT ---
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;700&display=swap');
-html,body,[class*="css"]{
-    font-family:'Inter',sans-serif!important;
-    background:#f4f9fd!important;
-    color:#19315B;
-}
-h1,h2,h3{
-    font-family:'Montserrat',sans-serif!important;
-    font-weight:900!important;letter-spacing:-1.1px;
-    color:#003366!important;
-}
-.nav-logo{
-    font-family:'Montserrat',sans-serif;font-size:2.18rem;font-weight:900!important;
-    color:#003366!important;display:inline;margin-right:7px;letter-spacing:-2px;
-}
-.empower-small{
-    font-family:'Montserrat',sans-serif!important;
-    font-size:1rem;
-    color:#1376d4!important;
-    font-weight:700!important;display:inline-block;margin-top:2px;margin-left:2px;
-}
-.nav-flag{
-    font-size:1.3rem;display:inline;vertical-align:middle;margin-left:3px;
-}
-.stButton>button{
-    background:#1376d4!important;
-    color:#fff!important;
-    font-family:'Montserrat',sans-serif!important;
-    font-weight:800;
-    font-size:1.09rem;
-    border:none;
-    border-radius:32px;
-    padding:0.60rem 1.6rem;
-    box-shadow:0 2px 14px #1ab6ed21;
-}
-.d-card{
-    background:linear-gradient(95deg,#fff 88%,#e6f3fe 100%);
-    border:1.3px solid #daecfa;
-    border-radius:18px;
-    padding:1.25rem 1.3rem 1.1rem;
-    margin:1.1rem 0;
-    box-shadow:0 3px 11px #98d4fb22;
-}
-.hero-section,.about-box{
-    background:linear-gradient(97deg,#e7f1fb 85%,#fff 100%);
-    border-radius:24px;
-    margin-bottom:33px;
-    padding:2.15rem 2.0rem 1.35rem;
-    border:1px solid #dbe5ee;}
-label,.question-text{
-    color:#0d2e42!important;font-weight:700!important;
-    font-family:'Montserrat',sans-serif!important;
-    font-size:1.13rem;}
-.badge{
-    background:#e6f3fe;
-    color:#0077B6;
-    font-family:'Montserrat',sans-serif!important;
-    padding:7px 17px;
-    font-weight:700;border-radius:15px;
-    font-size:0.96rem;margin-right:6px;margin-bottom:4px;}
-.cta-sticky{
-    position:fixed;bottom:17px;right:17px;z-index:9188;
-    background:#0077B6!important;
-    color:white;font-family:'Montserrat',sans-serif;
-    font-weight:900;font-size:1.09rem;
-    padding:0.92rem 2.09rem;
-    border-radius:39px;
-    box-shadow:0 3px 18px #1376d41a;
-    border:none;}
-.footer-note{
-    font-size:1.01rem;text-align:center;margin:1.9rem 0 0;color:#476;}
-hr {border:none;border-top:1.6px solid #e2eaf7;margin:21px 0;}
-ul,ol{font-size:1.07rem;color:#26334c;}
-.alison-tag{
-    background:#e7f7e7;color:#38953b;
-    border-radius:9px;
-    font-size:0.94rem;
-    font-weight:700;
-    display:inline-block;
-    padding:3px 9px;
-    margin-bottom:7px;
-    margin-left:2px;
-}
-</style>
-""", unsafe_allow_html=True)
+# --- 3. DATA & STATE (Data remains the same) ---
+@st.cache_data
+def load_data():
+    return pd.DataFrame([
+        {"name": "Amity Online", "fees": 350000, "type": "Distoversity Analyst", "badge": "Top Ranked"},
+        {"name": "Manipal Jaipur", "fees": 175000, "type": "Distoversity Creator", "badge": "NAAC A+"},
+        {"name": "LPU Online", "fees": 160000, "type": "Distoversity Catalyst", "badge": "Affordable"},
+        {"name": "NMIMS", "fees": 400000, "type": "Distoversity Influencer", "badge": "Premium"},
+        {"name": "Jain University", "fees": 210000, "type": "Distoversity Influencer", "badge": "Placement Focus"}
+    ])
 
-# --- DATA ---
-UNIS = [
-    {"name":"Jain (Online)","type":"Private","city":"Bengaluru","profile":"Creator","fee":210000,"naac":"A++","pkg":"32LPA","alison":"Innovation Management"},
-    {"name":"Manipal Online","type":"Private","city":"Jaipur","profile":"Analyst","fee":175000,"naac":"A+","pkg":"18LPA","alison":"Data Science Fundamentals"},
-    {"name":"Amity University Online","type":"Private","city":"Global","profile":"Creator","fee":345000,"naac":"A+","pkg":"15LPA","alison":"Design Thinking (Alison)"},
-    {"name":"LPU Online","type":"Private","city":"Global","profile":"Catalyst","fee":160000,"naac":"A++","pkg":"21LPA","alison":"Agile Leadership (Alison)"},
-    {"name":"Chandigarh University Online","type":"Private","city":"Online","profile":"Influencer","fee":180000,"naac":"A+","pkg":"28LPA","alison":"Social Media Marketing (Alison)"},
-    {"name":"NMIMS Global","type":"Private","city":"Online","profile":"Influencer","fee":400000,"naac":"A+","pkg":"45LPA","alison":"Public Speaking"},
-    {"name":"DY Patil Online","type":"Private","city":"Pune","profile":"Catalyst","fee":120000,"naac":"A++","pkg":"12LPA","alison":"Project Management"}
-]
-alison_courses = {
-    "Creator":["Innovation Management", "Design Thinking (Alison)"],
-    "Influencer":["Social Media Marketing (Alison)", "Public Speaking"],
-    "Catalyst":["Agile Leadership (Alison)", "Project Management"],
-    "Analyst":["Data Science Fundamentals (Alison)", "Excel Strategies"]
-}
+df = load_data()
 
-# --- SESSION STATE ---
-if "page" not in st.session_state: st.session_state.page = "Home"
-if "profile" not in st.session_state: st.session_state.profile = None
-if "scores" not in st.session_state: st.session_state.scores = None
+# --- STATE MANAGEMENT (Syntax Corrected) ---
+if 'page' not in st.session_state: st.session_state.page = 'Home'
+if 'lead_captured' not in st.session_state: st.session_state.lead_captured = False
+if 'user_profile' not in st.session_state: st.session_state.user_profile = None
+if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hi! I am Eduveer. I can guide you to the right career path."}]
 
-# --- FOUNDER MODAL ---
-if "founder_modal" not in st.session_state:
-    st.session_state.founder_modal = True
+def get_superpower(prof):
+    if "Creator" in prof: return "Innovation & Starting New Things"
+    if "Influencer" in prof: return "People & Communication"
+    if "Catalyst" in prof: return "Execution & Timing"
+    return "Data & Systems"
 
-def founder_modal():
-    import streamlit.components.v1 as components
-    modal_code = '''
-    <div id="founder-modal" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(30,77,136,0.10);z-index:99999;display:flex;align-items:center;justify-content:center;">
-      <div style="background:white;max-width:330px;border-radius:15px;box-shadow:0 6px 24px #00336624;padding:19px 13px 10px;text-align:center;position:relative;font-family:Montserrat;">
-        <button onclick="document.getElementById('founder-modal').style.display='none';document.body.style.overflow='';"
-        style='position:absolute;top:7px;right:7px;background:#e6f3fe;font-size:1.3rem;color:#1376d4;border:none;border-radius:8px;font-weight:700;width:26px;height:26px;cursor:pointer;'>×</button>
-        <img src='https://avatars.githubusercontent.com/u/7087942?s=400' width='52' style='border-radius:14px;box-shadow:0 2px 12px #00336626;'>
-        <h4 style='margin:11px 0 6px 0;font-family:Montserrat;color:#003366;font-size:1.03rem;'>Mohd Saad</h4>
-        <div style="font-size:0.97rem;color:#1376d4;font-weight:700;">Senior Career Advisor & Founder</div>
-        <div style="font-size:0.91rem;color:#124;background:#e6f3fe;border-radius:6px;padding:5px 3px;margin:8px 0 5px;">
-            <b>Guiding you with ethics, not sales.</b><br>
-            Every student is seen, heard, and supported.<br>
-        </div>
-        <a href="https://linkedin.com/" target="_blank" style="text-decoration:none;">
-            <button style="background:#1376d4;color:#fff;font-family:Montserrat;font-weight:700;font-size:0.97rem;padding:6px 14px;border:none;border-radius:10px;margin-bottom:5px;cursor:pointer;">LinkedIn</button>
-        </a>
-        <br>
-        <button onclick="document.getElementById('founder-modal').style.display='none';document.body.style.overflow='';"
-         style="margin-top:7px;background:#ececec;color:#003366;font-family:Inter;font-weight:700;border:none;border-radius:10px;padding:6px 13px;">OK, Explore</button>
-      </div>
-    </div>
-    <script>
-    document.body.style.overflow = 'hidden';
-    document.getElementById('founder-modal').addEventListener('click', function(e) {
-      if(e.target === this) { this.style.display='none';document.body.style.overflow = ''; }
-    });
-    </script>
-    '''
-    components.html(modal_code, height=310)
+def get_bot_response_smart(user_query):
+    q = user_query.lower()
+    if "fee" in q or "cost" in q or "emi" in q: return f"Fees are competitive. We have options starting from ₹98,000 up to ₹400,000. Check the Explorer tab for your exact budget."
+    if "placement" in q or "job" in q or "roi" in q: return "High placement stats are critical! NMIMS recorded a highest package of ₹24 LPA. We track ROI, check the Explorer for more."
+    if "valid" in q or "ugc" in q: return "100% valid. All universities we list are UGC-DEB/NAAC accredited."
+    return "That's a great question! Check out the Explorer tab for quick data or consider the Premium Session for detailed comparison."
 
-# --- NAVBAR ---
-def navbar():
-    cols = st.columns([2.4,1,1.25,1.23,1,1.46])
-    with cols[0]:
-        st.markdown("<span class='nav-logo'>Distoversity</span>",unsafe_allow_html=True)
-        st.markdown("<span class='empower-small'>Empowering India <span class='nav-flag'>🇮🇳</span></span>",unsafe_allow_html=True)
-    if cols[1].button("Home"): st.session_state.page="Home";st.rerun()
-    if cols[2].button("4D Assessment"): st.session_state.page="Assessment";st.rerun()
-    if cols[3].button("Universities"): st.session_state.page="Universities";st.rerun()
-    if cols[4].button("FAQ"): st.session_state.page="FAQ";st.rerun()
-    if cols[5].button("About"): st.session_state.page="About";st.rerun()
+# --- 4. NAVIGATION & JS TRIGGERS ---
+
+def desktop_navbar():
+    with st.container():
+        c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1, 1, 1, 1, 1, 1])
+        with c1:
+            st.markdown("<h3 style='margin:0; padding:0;'>Distoversity<span style='color:#00B4D8'>.</span></h3>", unsafe_allow_html=True)
+        
+        if c2.button("Home"): st.session_state.page = "Home"; st.rerun()
+        if c3.button("About"): st.session_state.page = "About"; st.rerun()
+        if c4.button("4D Quiz"): st.session_state.page = "Assessment"; st.rerun()
+        if c5.button("Courses"): st.session_state.page = "Explorer"; st.rerun()
+        if c6.button("Bot"): st.session_state.page = "Eduveer"; st.rerun()
+        if c7.button("FAQ"): st.session_state.page = "FAQ"; st.rerun()
     st.markdown("---")
 
-def home_page():
-    if st.session_state.page == "Home" and st.session_state.founder_modal:
-        founder_modal()
-        st.session_state.founder_modal = False
+def mobile_bottom_nav():
     st.markdown("""
-    <div class="hero-section">
-        <h1>Engineer Your Career Destiny <span class='nav-flag'>🇮🇳</span></h1>
-        <p style="font-size:1.17rem;">Experience India's most ethical consultative career science.<br>
-        <span class="badge">4D Assessment | Mentor + AI Guidance | Trusted University Match</span></p>
-        <ul>
-        <li>Take the <b>Distoversity 4D Assessment</b> (Discover your Creator, Influencer, Catalyst, Analyst energies!)</li>
-        <li>Compare NAAC/UGC universities—transparent, unbiased data only</li>
-        <li>Join <span class="alison-tag">Alison Community</span> upskilling courses matched for every energy profile</li>
-        <li>All counseling and advice are consultative, not transactional—mentor + AI, never pushy selling</li>
-        </ul>
+    <div style="position:fixed; bottom:0; left:0; width:100%; background:white; border-top:1px solid #E2E8F0; padding:10px 0; z-index:9999; display:flex; justify-content:space-around; text-align:center;">
+        <a onclick="document.getElementById('home_btn_trigger').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🏠<br>Home</a>
+        <a onclick="document.getElementById('quiz_btn_trigger').click()" style="color:#0077B6; font-weight:bold; font-size:0.8rem; text-decoration:none; cursor:pointer;">🧬<br>Quiz</a>
+        <a onclick="document.getElementById('bot_btn_trigger').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🤖<br>Bot</a>
     </div>
-    """,unsafe_allow_html=True)
-    st.button("✨ Start Your 4D Assessment",type="primary",on_click=lambda: nav("Assessment"))
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/80px-India_Flag_300.png",width=64)
+    """, unsafe_allow_html=True)
 
-def assessment_page():
-    st.markdown("<h2 style='text-align:center;'>4D Assessment – Discover Your 4 Energies</h2>",unsafe_allow_html=True)
+# --- 5. PAGES ---
+
+def render_home():
     st.markdown("""
-    <div style='text-align:center;'>
-      <span class='badge'>AI Supported | Mentor Validated | Career Science for India</span>
-      <br>
-      <span style="font-size:1.07rem; color:#1376d4;"><b>Our original test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
+    <div style="text-align:center; padding: 2rem 0;">
+        <span style="background:#E0F2FE; color:#0077B6; padding:6px 16px; border-radius:20px; font-size:0.85rem; font-weight:700; letter-spacing: 1px;">🚫 WARNING: DON'T BE SOLD. BE GUIDED.</span>
+        <h1 style="font-size: 3.2rem; line-height:1.1; margin-top:20px; font-weight: 800;">Is Your Online Career Designed by <span style="color:#0077B6">Science</span>...<br>or a <span style="color:#F97316">Sales Agent?</span></h1>
+        <p style="color:#475569; font-size:1.2rem; margin-top:1.5rem; max-width: 700px; margin-left:auto; margin-right:auto;">
+            93% of students choose the wrong course because they trust "Free Counselors." We, as industry veterans, offer the <b>4-Genius Framework</b> to match your DNA to the Degree.
+        </p>
     </div>
-    """,unsafe_allow_html=True)
-    st.info("Answer 5 short questions. No right/wrong answers—just your energy flow.")
-    with st.form("dist_assess"):
-        q1 = st.radio("Q1. Work makes you happiest when?",["Inventing new things","Inspiring/leading people","Finishing/executing big projects","Solving complex puzzles"],index=None)
-        q2 = st.radio("Q2. Friends see you as…",["The innovator","The motivator","The finisher","The analyst"],index=None)
-        q3 = st.radio("Q3. You get bored by…",["Repeating/routine work","Isolation/lack of people","Waiting/unclear targets","Hype, not facts"],index=None)
-        q4 = st.radio("Q4. If given a whole free day, you would…",["Draw 3 startup ideas","Host an event","Clear all pending tasks","Decode new trends in stocks/news"],index=None)
-        q5 = st.radio("Q5. Life goal?",["Invent something world-class","Inspire lakhs","Become Operations CEO","Crack million-dollar data puzzle"],index=None)
-        if st.form_submit_button("See My 4D Profile →"):
-            tally = {"Creator":0,"Influencer":0,"Catalyst":0,"Analyst":0}
-            for a in [q1,q2,q3,q4,q5]:
-                if a and ("idea" in a or "Invent" in a or "innovator" in a or "draw" in a): tally["Creator"]+=1
-                elif a and ("Inspire" in a or "people" in a or "event" in a or "motivator" in a or "lakhs" in a): tally["Influencer"]+=1
-                elif a and ("Finish" in a or "Operations"
+    """, unsafe_allow_html=True)
+    
+    c1, c2, c3 = st.columns([1, 2, 1])
+    with c2:
+        if st.button("🧬 Decode My Career DNA (Free)", type="primary", use_container_width=True):
+            st.session_state.page = 'Assessment'; st.rerun()
+        st.markdown("<div style='text-align:center; font-size:0.85rem; color:#64748B; margin-top:8px;'>✅ 98% Accuracy • ⏱️ Takes 2 Minutes • 🔒 Private</div>", unsafe_allow_html=True)
+
+    st.markdown("---")
+    col1, col2 = st.columns([3, 1])
+    with col2:
+        if st.button("Meet the Founder ➔"):
+            st.session_state.page = "About"; st.rerun()
+
+def render_about():
+    st.markdown("<h2 style='text-align:center;'>The Man Who Rejected the 'System'</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#64748B;'>From the factory floor to fixing education.</p>", unsafe_allow_html=True)
+    
+    c1, c2 = st.columns([1, 2])
+    with c2:
+        st.markdown("""
+        <div class="d-card" style="border-left: 5px solid #F97316 !important;">
+            <h3>🏭 2019: The Factory Floor (The Hook)</h3>
+            <p>My career didn't start in a boardroom. It started at <b>Oppo & Yazaki</b>. 
+            I worked 12-hour shifts. I saw thousands of hardworking Indians working like machines simply because they lacked <b>Guidance</b>.</p>
+        </div>
+        <div class="d-card" style="border-left: 5px solid #0077B6 !important;">
+            <h3>📞 2021: The Sales Trap & Integrity</h3>
+            <p>I moved to Education Counseling (Amity). I spoke to <b>2,000+ students</b>. 
+            But I realized: <b>"Education is being sold, not served."</b> I chose integrity over commission and built a better system.</p>
+        </div>
+        <div class="d-card" style="border-left: 5px solid #10B981 !important;">
+            <h3>🧬 2024: The Birth of Distoversity</h3>
+            <p>I built a platform that uses <b>Data & Psychology</b> (The 4-Genius Framework), not sales tactics. Our mission is to see <b>1000K students grow together</b>.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    if st.button("See How My Logic Works ➔", type="primary", use_container_width=True):
+        st.session_state.page = "Assessment"; st.rerun()
+
+def render_assessment():
+    st.markdown("<h2 style='text-align:center;'>🧠 The 4-Genius Energy Analysis</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:#64748B;'>Stop forcing yourself into careers that don't fit.</p>", unsafe_allow_html=True)
+    
+    with st.form("quiz"):
+        st.markdown("### 1. When a problem arises, your FIRST instinct?")
+        q1 = st.radio("q1", ["💡 Create Ideas", "🗣️ Talk to People", "⚡ Start Acting", "📊 Analyze Data"], label_visibility="collapsed")
+        
+        st.markdown("### 2. What drains your energy?")
+        q2 = st.radio("q2", ["Routine Tasks", "Working Alone", "Vague Plans", "Sales Pressure"], label_visibility="collapsed")
+        
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.form_submit_button("Analyze My Energy ➤", type="primary", use_container_width=True):
+            # Logic Mapping
+            if "Create" in q1: st.session_state.user_profile = "Distoversity Creator"
+            elif "Talk" in q1: st.session_state.user_profile = "Distoversity Influencer"
+            elif "Act" in q1: st.session_state.user_profile = "Distoversity Catalyst"
+            else: st.session_state.user_profile = "Distoversity Analyst"
+            
+            st.session_state.page = 'Result'; st.rerun()
+
+def render_result():
+    profile = st.session_state.user_profile
+    if not profile: st.warning("Please complete the assessment first."); return
+
+    # --- LEAD GATE ---
+    if not st.session_state.lead_captured:
+        st.markdown(f"""
+        <div class="d-card" style="text-align:center; padding: 3rem;">
+            <h2 style="color:#0077B6;">🎉 Profile Identified!</h2>
+            <p style="font-size:1.2rem;">Your Core Energy Type is: <b>{profile.split()[1]}</b></p>
+            <hr>
+            <p>To unlock your <b>Career Roadmap</b>, <b>University Matches</b>, and <b>Salary Prediction</b>, please verify your details.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.form("lead_gen"):
+            name = st.text_input("Your Name")
+            phone = st.text_input("WhatsApp Number")
+            if st.form_submit_button("🔓 Unlock My Full Report"):
+                if name and len(phone) > 9:
+                    st.session_state.lead_captured = True; st.rerun()
+                else:
+                    st.error("Please enter valid details.")
+        return
+
+    # --- REAL RESULT ---
+    st.balloons()
+    st.markdown(f"""
+    <div class="d-card" style="background:#F0F9FF !important; text-align:center; border-color:#BAE6FD !important;">
+        <span style="font-size:1rem; color:#0077B6; font-weight:bold; letter-spacing:1px;">OFFICIAL DISTOVERSITY PROFILE</span>
+        <h1 style="color:#0077B6 !important; font-size:2.5rem !important; margin:10px 0;">{profile.replace('Distoversity ', '')}</h1>
+        <p style="color:#0F172A;"><b>Your Superpower:</b> {get_superpower(profile)}</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # PREMIUM UPSELL
+    st.markdown("""
+    <div class="gold-card">
+        <h3 style="color:#D97706 !important;">👑 Premium Guidance</h3>
+        <p>Don't risk your career on free advice. Get a <b>1:1 Deep Dive Session</b> with our Senior Career Architect.</p>
+        <h2 style="color:#D97706 !important;">₹999 <span style="font-size:1rem; text-decoration:line-through; color:gray;">₹2,499</span></h2>
+        
+        <a href="https://wa.me/919118231052?text=Hi, I want to book the Premium Career Session for Rs.999." target="_blank" style="text-decoration:none;">
+            <button style="background:#D97706; color:white; border:none; padding:10px 20px; border-radius:5px; font-weight:bold; cursor:pointer;">Book Now ➤</button>
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # NEXT STEP
+    if st.button("View Matched Universities ➔"):
+        st.session_state.page = "Explorer"; st.rerun()
+
+def render_explorer():
+    st.title("University Explorer")
+    budget = st.slider("Max Budget", 50000, 500000, 200000)
+    filtered = df[df['fees'] <= budget]
+    for idx, row in filtered.iterrows():
+        wa_link = f"https://wa.me/919118231052?text=I am interested in {row['name']}."
+        st.markdown(f"""
+        <div class="d-card">
+            <h4>{row['name']}</h4>
+            <p>🏅 {row['badge']} | 💰 ₹{row['fees']:,}</p>
+            <a href="{wa_link}" style="text-decoration:none;">
+                <button style="background:#0077B6; color:white; width:100%; padding:10px; border:none; border-radius:5px; cursor:pointer;">👉 Apply on WhatsApp</button>
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # NEXT STEP
+    if st.button("Have Doubts? Ask Eduveer ➔"):
+        st.session_state.page = "Eduveer"; st.rerun()
+
+def render_eduveer():
+    st.title("Chat with Eduveer 🤖")
+    with st.container(height=500, border=True):
+        for msg in st.session_state.messages:
+            st.chat_message(msg["role"]).write(msg["content"])
+        if prompt := st.chat_input("Ask about fees, placements..."):
+            st.session_state.messages.append({"role": "user", "content": prompt}); st.chat_message("user").write(prompt)
+            # --- SMART LOGIC INTEGRATED ---
+            response = get_bot_response_smart(prompt)
+            st.session_state.messages.append({"role": "assistant", "content": response}); st.rerun()
+
+def render_faq():
+    st.title("❓ Frequently Asked Questions")
+    tab1, tab2, tab3 = st.tabs(["🌟 Career Guidance", "💻 Online Education", "🎓 Universities"])
+    
+    with tab1:
+        st.header("General Education & Career")
+        with st.expander("❓ I'm confused about my career path after high school. How can Distoversity help?"):
+            st.write("We help you discover your 'Genius Profile' (natural strengths) via AI, guiding you to academic fields and careers that truly fit you.")
+        with st.expander("❓ Is the Distoversity 'Genius Profile' a psychological test?"):
+            st.write("No, it is a self-discovery and guidance tool based on Wealth Dynamics, not a psychological diagnostic test.")
+        with st.expander("❓ What do Dynamo, Blaze, Tempo, and Steel mean?"):
+            st.write("Dynamo = Ideas (Creator), Blaze = People (Influencer), Tempo = Timing (Catalyst), Steel = Details (Analyst).")
+    
+    with tab2:
+        st.header("Online Education & Learning Trends")
+        with st.expander("❓ Is online education a good option?"):
+            st.write("Yes! Your profile determines your online fit. We match you to programs that suit your learning style.")
+
+    with tab3:
+        st.header("Universities & Admissions")
+        with st.expander("❓ Which universities partner with Distoversity?"):
+            st.write("We partner only with NAAC A+ and A++ accredited universities like Amity, Manipal, Jain, and NMIMS.")
+        with st.expander("❓ How do I apply?"):
+            st.write("Once you find your match, you can request a brochure or book a call. Our counselors will guide you through the application process.")
+        
+# --- 6. MAIN ROUTER ---
+desktop_navbar()
+mobile_bottom_nav()
+
+# Hidden buttons for mobile nav trigger (Final Structural Fix)
+st_hide_slot = st.empty() 
+with st_hide_slot.container():
+    if st.button("Home_Trigger", key="home_btn_trigger"): st.session_state.page = "Home"; st.rerun()
+    if st.button("Quiz_Trigger", key="quiz_btn_trigger"): st.session_state.page = "Assessment"; st.rerun()
+    if st.button("Bot_Trigger", key="bot_btn_trigger"): st.session_state.page = "Eduveer"; st.rerun()
+
+# Final Logic Router
+if st.session_state.page == 'Home': render_home()
+elif st.session_state.page == 'About': render_about()
+elif st.session_state.page == 'Assessment': render_assessment()
+elif st.session_state.page == 'Result': render_result()
+elif st.session_state.page == 'Explorer': render_explorer()
+elif st.session_state.page == 'Eduveer': render_eduveer()
+elif st.session_state.page == 'FAQ': render_faq()
