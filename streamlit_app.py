@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import time
 import os
 
 # --- PAGE CONFIGURATION ---
@@ -40,15 +39,6 @@ st.markdown("""
         background-color: #FFFFFF !important;
         color: #0F172A !important;
     }
-    .stChatMessage[data-testid="user-message"] {
-        background-color: #E0F2FE !important;
-        color: #000000 !important;
-    }
-    .stChatMessage[data-testid="assistant-message"] {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-        border: 1px solid #E2E8F0 !important;
-    }
     button { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
     a { color: #0077B6 !important; -webkit-text-fill-color: #0077B6 !important; }
     .footer-note { font-size:0.9rem; color:#475569 !important; text-align:center; margin-top:20px; }
@@ -68,112 +58,98 @@ QUESTIONS = [
     {"q": "What motivates you?", "options": [("🚀 Creating", "Creator"), ("🤝 Connecting", "Influencer"), ("🔍 Analyzing", "Analyst"), ("✅ Doing", "Catalyst")]}
 ]
 PROFILE_DESCRIPTIONS = {
-    "Creator": "Innovative, big-picture, loves launching ideas. Best fit: Product Designer, Brand Builder, Strategy.",
-    "Influencer": "Natural leader, communicator, energizes teams. Best fit: PR, HR, Client Relations, Media.",
-    "Catalyst": "Efficient, action-oriented, gets results. Best fit: Ops Manager, Logistics, Project Execution.",
-    "Analyst": "Precise, data-driven, solves puzzles. Best fit: Finance, Data, Engineering."
+    "Creator": "Naye ideas, product design, brand building. (Best careers: Innovator/Entrepreneur)",
+    "Influencer": "Logon ko guide karna, team motivate karna. (Best: PR, HR, Sales, Media)",
+    "Catalyst": "Kaam ko jaldi aur sahi finish karna. (Best: Operations, Logistics, Project Manager)",
+    "Analyst": "Data, problem solve karna, finance. (Best: Finance, Engineering, Data Science)"
 }
-# --- SESSION STATE ---
 if "messages" not in st.session_state: st.session_state.messages = []
 if "step" not in st.session_state: st.session_state.step = 0
 if "q_index" not in st.session_state: st.session_state.q_index = 0
 if "scores" not in st.session_state: st.session_state.scores = {"Creator": 0, "Influencer": 0, "Analyst": 0, "Catalyst": 0}
 if "profile_result" not in st.session_state: st.session_state.profile_result = None
 
-# --- SIDEBAR: BIO, PRIVACY & COPYRIGHT ---
+# --- SIDEBAR ---
 with st.sidebar:
     st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
     st.title("Mohd Saad")
     st.markdown("Founder | Ed-Tech Intrapreneur")
     st.caption("📍 New Delhi, India")
-    st.success("🎯 Mission: To replace 'Sales' in education with 'Science'.")
+    st.success("🎯 Mission: Replace 'Sales' in education with 'Science'")
     st.markdown("### 🛠 Skills")
     st.code("Python & Streamlit")
     st.code("LLM & AI Agents")
     st.code("Franchise Expansion")
     st.code("Ed-Psychology")
     st.markdown("---")
-    st.markdown("<b>Privacy Policy:</b> Your data is always safe and confidential. We never sell or share personal information.", unsafe_allow_html=True)
+    st.markdown("<b>Privacy Policy:</b> Hamara data confidential hai, kisi bhi third party ko share nahi hota.", unsafe_allow_html=True)
     st.markdown("<b>Copyright © 2025 Distoversity.</b> All rights reserved.", unsafe_allow_html=True)
     st.markdown("[LinkedIn](https://linkedin.com) | [Email](mailto:saad01489@gmail.com)")
 
 # --- MAIN TABS ---
 tab1, tab2, tab3 = st.tabs([
-    "📖 My Story (The Hook)", 
-    "🧠 The 4-Genius Framework", 
-    "🤖 Eduveer AI (Live Demo)"
+    "📖 Story", 
+    "🧠 Genius Framework", 
+    "🤖 Eduveer AI Demo"
 ])
 
 # --- TAB 1: STORY ---
 with tab1:
-    st.header("From Assembly Lines to Assembling Futures 🚀")
-    st.markdown("##### *Why I quit a stable job to fix the Education System.*")
+    st.header("From Factory Floor to Career Architect 🚀")
     st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
     st.divider()
     col1, col2 = st.columns([2,1])
     with col1:
         st.markdown("""
         <div class="story-card">
-            <div class="story-year">2018 - 2020</div>
-            <div class="story-title">🏭 The Factory Floor Reality</div>
-            <div class="story-text">
-                My journey began at <b>Oppo Mobile & Yazaki</b>, 12-hour shifts as Line Engineer, assembling SMT boards.<br><br>
-                <b>Lesson:</b> India has millions of youth with grit but lacking guidance. I felt trapped, assembling products instead of building lives.
-            </div>
+            <div>2018 - 2020: 🏭 Oppo Mobile & Yazaki</div>
+            <div>Naukri ki shuruat ek factory se hui, 12 ghante shifts. Yaha samjha ki youth ko guidance ki kitni zaroorat hai.</div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("""
         <div class="story-card" style="border-left-color: #F97316;">
-            <div class="story-year">2021 - 2024</div>
-            <div class="story-title">📞 The "Sales" Trap</div>
-            <div class="story-text">
-                I moved to Education Counseling (Amity/Manipal), helped 2,000+ students. Realized education was transactional, not transformational. Students became "Leads"; counselors closed deals, not dreams.
-            </div>
+            <div>2021 - 2024: 📞 Sales Trap</div>
+            <div>Amity/Manipal main 2,000+ students ko counsel kiya. Dekha, education ek transaction ban gayi hai. Students 'Lead' ban gaye, sapne kho gaye.</div>
         </div>
         """, unsafe_allow_html=True)
         st.markdown("""
         <div class="story-card" style="border-left-color: #10B981;">
-            <div class="story-year">2024 - Present</div>
-            <div class="story-title">🚀 Distoversity & Eduveer</div>
-            <div class="story-text">
-                I chose to build. Distoversity merges <b>Psychology (4-Genius)</b> and <b>Tech (AI)</b>. I don't sell degrees; I architect futures.
-            </div>
+            <div>2024 - Present: 🚀 Distoversity & Eduveer</div>
+            <div>Ed-Tech ko ethical aur logical banana, wahi mission hai. Psychology + Tech = Career Architecture.</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.info("💡 Why TFI?")
         st.markdown("""
-        - Grit of a factory worker  
-        - Empathy of a counselor  
-        - Vision of a founder  
-        I want to bring <b>Operations + Tech + Heart</b> to Teach For India.
+        - Factory ka hardwork
+        - Counselor ka empathy
+        - Founder ka vision
+        Ye sab main Teach For India ke liye lana chahta hoon!
         """, unsafe_allow_html=True)
 
 # --- TAB 2: FRAMEWORK ---
 with tab2:
-    st.header("We don't ask for Marks. We ask for Energy.")
-    st.write("Distoversity philosophy: You cannot judge a fish by its ability to climb a tree.")
+    st.header("We don't ask for marks, We map your energy!")
     st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
     c1, c2 = st.columns(2)
     with c1:
         energy = st.selectbox(
-            "Select a Profile to Analyze:", 
+            "Apna Genius Profile dekhein:", 
             ["Creator", "Influencer", "Catalyst", "Analyst"]
         )
     with c2:
         if energy:
             st.markdown(f"**{energy}:** {PROFILE_DESCRIPTIONS[energy]}")
-            if "Creator" == energy: st.success("🌟 Vision-driven. Loves freedom. Struggles with routine.")
-            if "Influencer" == energy: st.warning("🔥 People-driven. Needs collaboration. Avoids isolation.")
-            if "Catalyst" == energy: st.info("🤝 Results-driven. Needs structure, hates chaos.")
-            if "Analyst" == energy: st.error("📊 Data-driven. Needs clarity, hates hype.")
+            if "Creator" == energy: st.success("🌟 Naye idea, freedom, routine se pareshaan.")
+            if "Influencer" == energy: st.warning("🔥 Log, teamwork, isolation se pareshaan.")
+            if "Catalyst" == energy: st.info("🤝 Jaldi result, structure, chaos se pareshaan.")
+            if "Analyst" == energy: st.error("📊 Data, research, hype se pareshaan.")
 
 # --- TAB 3: EDUVEER BOT/QUIZ ---
 with tab3:
-    st.title("🤖 Eduveer AI Demo")
+    st.title("Eduveer AI Demo")
     st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
-    st.caption("Logic-based career counselor for every Indian student.")
-
+    st.caption("Logic-based career test for every student.")
     if st.session_state.step == 0:
         if st.button("Start AI Assessment ➔", type="primary"):
             st.session_state.step = 1
@@ -192,15 +168,15 @@ with tab3:
                 st.rerun()
     elif st.session_state.step == 2:
         primary = max(st.session_state.scores, key=st.session_state.scores.get)
-        st.success(f"🎉 Result: You are a {primary}!")
+        st.success(f"🎉 Result: Aapka Genius Profile hai: {primary}!")
         st.write(PROFILE_DESCRIPTIONS[primary])
-        st.write("Universities matching your profile:")
+        st.write("Yeh universities aapke profile match karti hain:")
         matches = [u for u in UNIVERSITIES if primary in u["best_for"]]
         for u in matches:
             st.markdown(f"""
             <div style="padding:15px; border:1px solid #ddd; border-radius:10px; margin-bottom:10px;">
                 <h4>{u['name']}</h4>
-                <p><b>Programs:</b> {', '.join(u['programs'])} | <b>Fee:</b> {u['fee']} | <b>Highest Pkg:</b> {u['high_pkg']}</p>
+                <p><b>Programs:</b> {', '.join(u['programs'])} | <b>Fee:</b> {u['fee']} | <b>Highest:</b> {u['high_pkg']}</p>
             </div>
             """, unsafe_allow_html=True)
         if st.button("Restart Demo"):
@@ -212,8 +188,8 @@ with tab3:
 # --- FOOTER: PRIVACY & COPYRIGHT ---
 st.markdown("""
 <div class="footer-note">
-<b>EMPOWERING INDIA 🇮🇳</b><br>
-<b>Privacy Policy:</b> We do NOT collect, share, or sell your personal data. All information is confidential.<br>
+<b>EMPOWERING INDIA 🇮🇳</b> <br>
+<b>Privacy Policy:</b> Hum data kabhi kisi ko nahi dete, sab confidential hota hai.<br>
 <b>Copyright © 2025 Distoversity. All rights reserved.</b>
 </div>
 """, unsafe_allow_html=True)
