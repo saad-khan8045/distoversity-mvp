@@ -3,87 +3,68 @@ import pandas as pd
 import time
 import random
 import os
+import textwrap
+from groq import Groq # Required for Llama 3 integration
 
 # --- 1. CONFIGURATION ---
 st.set_page_config(
-    page_title="Distoversity | Scientific Career Guidance",
+    page_title="Distoversity | Ethical Career Architecture",
     page_icon="🧬",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# --- GROQ/AI SETUP ---
+try:
+    # Safely load the key from Streamlit Secrets (Crucial for security)
+    GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
+    client = Groq(api_key=GROQ_API_KEY)
+    GROQ_AVAILABLE = True
+except Exception:
+    GROQ_AVAILABLE = False
+    
+# --- SYSTEM PROMPT (The Eduveer Personality - From Blueprint) ---
+SYSTEM_PROMPT = """
+You are Eduveer, an empathetic and highly professional Career Data Architect for Distoversity.
+Your goal is to guide the user towards a science-backed career path by understanding their primary energy (Creator, Influencer, Analyst, Catalyst).
+Your tone must be authoritative, transparent, and empathetic (acknowledging the user's struggle).
+NEVER give a generic 'search engine' answer. Always relate advice back to the user's identity and the importance of alignment (Path of Least Resistance).
+You have access to the following Knowledge Base (KB) for specific facts. Use this KB data when answering factual questions.
+
+KB:
+- UGC/NAAC Validity: All universities listed by Distoversity are UGC-DEB approved and NAAC A+ rated.
+- Placement Reality: Top packages range from 20-45 LPA, but results depend 80% on student skills and 20% on the college brand.
+- Financial Advice: EMI options start as low as 2500 INR/month.
+"""
 
 # --- 2. NUCLEAR CSS (Ultimate UI & Mobile Fix) ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-    /* --- GLOBAL VARIABLES & THEME LOCK --- */
-    :root {
-        --primary: #0077B6;
-        --primary-dark: #023E8A;
-        --text-main: #0F172A;
-        --bg-light: #F4F9FD;
-        --gold: #D97706;
-    }
-
-    /* --- GLOBAL LAYOUT FIXES --- */
-    [data-testid="stAppViewContainer"], .stApp, header, footer {
-        background-color: var(--bg-light) !important;
-        color: var(--text-main) !important;
-    }
-    
-    /* Typography Fixes */
+    /* --- GLOBAL LAYOUT FIXES (CRITICAL FOR VISIBILITY) --- */
+    :root { --primary: #0077B6; --primary-dark: #023E8A; --text-main: #0F172A; --bg-light: #F4F9FD; --gold: #D97706; }
+    [data-testid="stAppViewContainer"], .stApp, header, footer { background-color: var(--bg-light) !important; color: var(--text-main) !important; }
     h1, h2, h3 { font-family: 'Outfit', sans-serif !important; color: #003366 !important; -webkit-text-fill-color: #003366 !important; }
-
-    /* Premium Cards */
-    .d-card {
-        background: #FFFFFF !important;
-        border: 1px solid #E2E8F0 !important;
-        border-radius: 16px !important;
-        padding: 1.5rem !important;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important;
-        margin-bottom: 1rem !important;
-    }
+    .d-card { background: #FFFFFF !important; border-radius: 16px !important; box-shadow: 0 4px 10px rgba(0,0,0,0.03) !important; margin-bottom: 1rem !important; }
     
-    /* Gold Premium Card */
-    .gold-card {
-        background: linear-gradient(135deg, #FFFBEB 0%, #FFFFFF 100%) !important;
-        border: 1px solid #FCD34D !important;
-        border-left: 5px solid #D97706 !important;
-        border-radius: 16px !important;
-        padding: 1.5rem !important;
-        margin-bottom: 1rem !important;
+    /* --- CHAT OVERHAUL (For Eduveer AI) --- */
+    .stChatMessage.assistant div[data-testid="stMarkdownContainer"] {
+        background: white; border: 1px solid #E2E8F0; border-radius: 12px 12px 12px 0; padding: 15px 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02); margin-right: 15%;
+    }
+    .stChatMessage.user div[data-testid="stMarkdownContainer"] {
+        background: #E0F2FE; border: 1px solid #BAE6FD; border-radius: 12px 0 12px 12px; padding: 15px 20px;
+        margin-left: 15%;
     }
 
-    /* Buttons */
-    .stButton > button {
-        background: linear-gradient(135deg, #0077B6 0%, #00B4D8 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 50px !important;
-        font-weight: 600 !important;
-        -webkit-text-fill-color: white !important;
-        box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3) !important;
-    }
-
-    /* WIDER LAYOUT FIX */
-    .block-container {
-        max-width: 1200px !important;
-        padding-left: 5rem;
-        padding-right: 5rem;
-    }
-    
-    /* Mobile Fixes */
-    @media (max-width: 768px) {
-        .block-container { padding-top: 1rem !important; padding-bottom: 5rem !important; }
-        h1 { font-size: 2rem !important; }
-        section[data-testid="stSidebar"] { display: none; }
-        div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
-    }
+    /* Structural Fix for Visible Buttons (MUST BE AT THE END) */
+    #hidden-nav-buttons-container { display: none !important; visibility: hidden !important; }
+    .block-container { max-width: 1200px !important; padding-left: 5rem; padding-right: 5rem; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA & STATE (Integrated Logic and Data) ---
+# --- 3. DATA & STATE ---
 @st.cache_data
 def load_data():
     return pd.DataFrame([
@@ -96,7 +77,7 @@ def load_data():
 
 df = load_data()
 
-# --- STATE MANAGEMENT (Full 5-Question Logic States) ---
+# --- STATE MANAGEMENT (Corrected Syntax) ---
 if 'page' not in st.session_state: st.session_state.page = 'Home'
 if 'lead_captured' not in st.session_state: st.session_state.lead_captured = False
 if 'user_profile' not in st.session_state: st.session_state.user_profile = None # Fixed Syntax Error
@@ -104,42 +85,16 @@ if 'q_index' not in st.session_state: st.session_state.q_index = 0
 if 'scores' not in st.session_state: st.session_state.scores = {"Creator": 0, "Influencer": 0, "Catalyst": 0, "Analyst": 0}
 if 'messages' not in st.session_state: st.session_state.messages = [{"role": "assistant", "content": "Hi! I am Eduveer. I can guide you to the right career path."}]
 
-# --- QUIZ QUESTIONS (Full 5-Question Set from User's Logic) ---
-FULL_QUESTIONS = [
-    {"q": "When solving complex problems, you prefer:", "options": [("💡 Innovation", "Creator"), ("🗣️ Discussion", "Influencer"), ("⚡ Action", "Catalyst"), ("📊 Data", "Analyst")]},
-    {"q": "Your ideal work environment involves:", "options": [("🎨 Studio", "Creator"), ("📢 Boardroom", "Influencer"), ("🏗️ Field", "Catalyst"), ("💻 Lab", "Analyst")]},
-    {"q": "You feel most energized when:", "options": [("🚀 Creating something new", "Creator"), ("🤝 Presenting ideas", "Influencer"), ("✅ Completing tasks", "Catalyst"), ("🔍 Perfecting systems", "Analyst")]},
-    {"q": "Your decision-making style is:", "options": [("Intuitive and pattern-based", "Creator"), ("People-focused and consensus-driven", "Influencer"), ("Experience-based and practical", "Catalyst"), ("Data-driven and logical", "Analyst")]},
-    {"q": "In group settings, you naturally:", "options": [("Share innovative concepts", "Creator"), ("Build relationships and network", "Influencer"), ("Organize action items", "Catalyst"), ("Provide data-backed insights", "Analyst")]}
-]
-
-
 def get_superpower(prof):
     if "Creator" in prof: return "Innovation & Starting New Things"
     if "Influencer" in prof: return "People & Communication"
     if "Catalyst" in prof: return "Execution & Timing"
     return "Data & Systems"
 
-def get_bot_response_smart(user_query):
-    q = user_query.lower()
-    
-    if "fee" in q or "cost" in q or "emi" in q:
-        max_fee = df['fees'].max()
-        return f"Fees are competitive. We have options starting from ₹98,000 up to ₹{max_fee:,}. Check the Explorer tab for your exact budget."
-        
-    if "placement" in q or "job" in q or "roi" in q:
-        top_uni = df.loc[df['fees'].idxmax()]
-        return f"High placement stats are critical! NMIMS recorded a highest package of ₹24 LPA. We track ROI, check the Explorer for more."
-        
-    if "valid" in q or "ugc" in q:
-        return "100% valid. All universities we list are UGC-DEB/NAAC accredited. We only deal in approved degrees."
-
-    return "That's a great question! Check out the Explorer tab for quick data or consider the Premium Session for detailed comparison."
-
-
-# --- 4. NAVIGATION & JS TRIGGERS ---
+# --- 4. NAVIGATION & HELPER FUNCTIONS ---
 
 def desktop_navbar():
+    # Final Desktop Nav (Visible only on desktop)
     with st.container():
         c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1, 1, 1, 1, 1, 1])
         with c1:
@@ -154,6 +109,7 @@ def desktop_navbar():
     st.markdown("---")
 
 def mobile_bottom_nav():
+    # Sticky Bottom Nav (Mobile)
     st.markdown("""
     <div style="position:fixed; bottom:0; left:0; width:100%; background:white; border-top:1px solid #E2E8F0; padding:10px 0; z-index:9999; display:flex; justify-content:space-around; text-align:center;">
         <a onclick="document.getElementById('home_btn_trigger').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🏠<br>Home</a>
@@ -161,6 +117,23 @@ def mobile_bottom_nav():
         <a onclick="document.getElementById('bot_btn_trigger').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🤖<br>Bot</a>
     </div>
     """, unsafe_allow_html=True)
+
+def get_bot_response_smart(user_query):
+    # This function is now the MOCK fallback logic
+    q = user_query.lower()
+    
+    if "fee" in q or "cost" in q or "emi" in q:
+        max_fee = df['fees'].max()
+        return f"Fees are competitive. We have options starting from ₹98,000 up to ₹{max_fee:,}. Check the Explorer tab for your exact budget."
+        
+    if "placement" in q or "job" in q or "roi" in q:
+        top_uni = df.loc[df['fees'].idxmax()]
+        return f"High placement stats are critical! NMIMS recorded a highest package of ₹24 LPA. We track ROI, check the Explorer for more."
+        
+    if "valid" in q or "ugc" in q:
+        return "100% valid. All universities we list are UGC-DEB/NAAC accredited. We only deal in approved degrees."
+
+    return "That's a great question! Check out the Explorer tab for quick data or consider the Premium Session for detailed comparison."
 
 # --- 5. PAGES ---
 
@@ -217,36 +190,22 @@ def render_assessment():
     st.markdown("<h2 style='text-align:center;'>🧠 The 4-Genius Energy Analysis</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center; color:#64748B;'>Stop forcing yourself into careers that don't fit.</p>", unsafe_allow_html=True)
     
-    # 5-Question Quiz Logic Integration
-    if 'q_index' not in st.session_state: st.session_state.q_index = 0
-    
-    if st.session_state.q_index < len(FULL_QUESTIONS):
-        curr = FULL_QUESTIONS[st.session_state.q_index]
+    with st.form("quiz"):
+        st.markdown("### 1. When a problem arises, your FIRST instinct?")
+        q1 = st.radio("q1", ["💡 Create Ideas", "🗣️ Talk to People", "⚡ Start Acting", "📊 Analyze Data"], label_visibility="collapsed")
         
-        st.markdown(f"### Question {st.session_state.q_index + 1}/{len(FULL_QUESTIONS)}: {curr['q']}")
+        st.markdown("### 2. What drains your energy?")
+        q2 = st.radio("q2", ["Routine Tasks", "Working Alone", "Vague Plans", "Sales Pressure"], label_visibility="collapsed")
         
-        with st.form(f"quiz_form_{st.session_state.q_index}"):
-            option_keys = [f"q{st.session_state.q_index}_{i}" for i in range(len(curr["options"]))]
-            selected_option = st.radio("option_select", [txt for txt, en in curr["options"]], label_visibility="collapsed")
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.form_submit_button("Analyze My Energy ➤", type="primary", use_container_width=True):
+            # Logic Mapping
+            if "Create" in q1: st.session_state.user_profile = "Distoversity Creator"
+            elif "Talk" in q1: st.session_state.user_profile = "Distoversity Influencer"
+            elif "Act" in q1: st.session_state.user_profile = "Distoversity Catalyst"
+            else: st.session_state.user_profile = "Distoversity Analyst"
             
-            if st.form_submit_button("Next Question" if st.session_state.q_index < len(FULL_QUESTIONS) - 1 else "Reveal My Genius ➤", type="primary", use_container_width=True):
-                # Scoring Logic
-                for txt, en in curr["options"]:
-                    if txt == selected_option:
-                        st.session_state.scores[en] += 1
-                        break
-                
-                if st.session_state.q_index < len(FULL_QUESTIONS) - 1:
-                    st.session_state.q_index += 1
-                else:
-                    # Quiz complete
-                    st.session_state.user_profile = max(st.session_state.scores, key=st.session_state.scores.get)
-                    st.session_state.page = 'Result'
-                st.rerun()
-    else:
-        st.session_state.page = 'Result'
-        st.rerun()
-
+            st.session_state.page = 'Result'; st.rerun()
 
 def render_result():
     profile = st.session_state.user_profile
@@ -360,15 +319,12 @@ def render_faq():
 desktop_navbar()
 mobile_bottom_nav()
 
-# Hidden buttons for mobile nav trigger
-st.markdown('<div id="hidden-nav-buttons-container">', unsafe_allow_html=True)
-if st.button("Home_Trigger", key="home_btn_trigger"): st.session_state.page = "Home"; st.rerun()
-if st.button("Quiz_Trigger", key="quiz_btn_trigger"): st.session_state.page = "Assessment"; st.rerun()
-if st.button("Bot_Trigger", key="bot_btn_trigger"): st.session_state.page = "Eduveer"; st.rerun()
-st.markdown('</div>', unsafe_allow_html=True)
-
-# CSS to Hide Triggers
-st.markdown("""<style>#hidden-nav-buttons-container { display: none !important; visibility: hidden !important; }</style>""", unsafe_allow_html=True)
+# --- FINAL STRUCTURAL FIX FOR VISIBLE BUTTONS ---
+st_hide_slot = st.empty() 
+with st_hide_slot.container():
+    if st.button("Home_Trigger", key="home_btn_trigger"): st.session_state.page = "Home"; st.rerun()
+    if st.button("Quiz_Trigger", key="quiz_btn_trigger"): st.session_state.page = "Assessment"; st.rerun()
+    if st.button("Bot_Trigger", key="bot_btn_trigger"): st.session_state.page = "Eduveer"; st.rerun()
 
 # Main Logic Router
 if st.session_state.page == 'Home': render_home()
