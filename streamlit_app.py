@@ -26,13 +26,13 @@ st.markdown("""
         --gold: #D97706;
     }
 
-    /* --- FORCE LIGHT MODE (The Nuclear Fix) --- */
+    /* --- GLOBAL LAYOUT FIXES --- */
     [data-testid="stAppViewContainer"], .stApp, header, footer {
         background-color: var(--bg-light) !important;
         color: var(--text-main) !important;
     }
     
-    /* Typography Fixes */
+    /* Global Text Fixes */
     h1, h2, h3, h4, p, div, span, label, li {
         color: var(--text-main) !important;
         font-family: 'Plus Jakarta Sans', sans-serif !important;
@@ -78,7 +78,21 @@ st.markdown("""
         -webkit-text-fill-color: white !important;
         box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3) !important;
     }
+    
+    /* Final Fix: Hiding the visible hidden buttons on Desktop */
+    #nav-triggers-hidden {
+        display: none !important;
+        height: 0px !important;
+        visibility: hidden !important;
+    }
 
+    /* Layout Fix */
+    .block-container {
+        max-width: 1200px !important; 
+        padding-left: 5rem; 
+        padding-right: 5rem;
+    }
+    
     /* Mobile Specifics */
     @media (max-width: 768px) {
         .block-container { padding-top: 1rem !important; padding-bottom: 5rem !important; }
@@ -86,17 +100,10 @@ st.markdown("""
         section[data-testid="stSidebar"] { display: none; }
         div[data-testid="stHorizontalBlock"] { display: none !important; } /* Hide Desktop Nav */
     }
-    /* --- WIDER LAYOUT FIX (Desktop) --- */
-    /* Target the main content wrapper globally and set a wider limit */
-    .block-container {
-        max-width: 1200px !important; /* Set maximum width to 1200px */
-        padding-left: 5rem; /* Increase left padding for cleaner look */
-        padding-right: 5rem; /* Increase right padding */
-    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA & STATE ---
+# --- 3. DATA & STATE (Data remains the same) ---
 @st.cache_data
 def load_data():
     return pd.DataFrame([
@@ -117,6 +124,7 @@ if 'messages' not in st.session_state: st.session_state.messages = [{"role": "as
 # --- 4. NAVIGATION & HELPER FUNCTIONS ---
 
 def desktop_navbar():
+    # Final Desktop Nav (Visible only on desktop)
     with st.container():
         c1, c2, c3, c4, c5, c6 = st.columns([2, 1, 1, 1, 1, 1])
         with c1:
@@ -130,6 +138,7 @@ def desktop_navbar():
     st.markdown("---")
 
 def mobile_bottom_nav():
+    # Final Mobile Sticky Nav
     st.markdown("""
     <div style="position:fixed; bottom:0; left:0; width:100%; background:white; border-top:1px solid #E2E8F0; padding:10px 0; z-index:9999; display:flex; justify-content:space-around; text-align:center;">
         <a onclick="document.getElementById('home_btn').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🏠<br>Home</a>
@@ -144,14 +153,15 @@ def get_superpower(prof):
     if "Catalyst" in prof: return "Execution & Timing"
     return "Data & Systems"
 
-# --- 5. PAGES ---
+# --- 5. PAGES (Content Refined for Strategy) ---
+
 def render_home():
     st.markdown("""
     <div style="text-align:center; padding: 2rem 0;">
         <span style="background:#E0F2FE; color:#0077B6; padding:6px 16px; border-radius:20px; font-size:0.85rem; font-weight:700; letter-spacing: 1px;">🚫 WARNING: DON'T BE SOLD. BE GUIDED.</span>
         <h1 style="font-size: 3.2rem; line-height:1.1; margin-top:20px; font-weight: 800;">Is Your Online Career Designed by <span style="color:#0077B6">Science</span>...<br>or a <span style="color:#F97316">Sales Agent?</span></h1>
         <p style="color:#475569; font-size:1.2rem; margin-top:1.5rem; max-width: 700px; margin-left:auto; margin-right:auto;">
-            93% of students choose the wrong course because they trust "Free Counselors." We, as industry veterans, offer the **4-Genius Framework** to match your DNA to the Degree.
+            93% of students choose the wrong course because they trust "Free Counselors." We, as industry veterans, offer the <b>4-Genius Framework</b> to match your DNA to the Degree.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -165,7 +175,7 @@ def render_home():
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    st.markdown("<p style='text-align:center; font-weight:bold; color:#94A3B8; letter-spacing:1px;'>WE GUIDE STUDENTS TO TOP UNIVERSITIES</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; font-weight:bold; color:#94A3B8; letter-spacing:1px;'>TRUSTED BY STUDENTS OF AMITY, MANIPAL, LPU</p>", unsafe_allow_html=True)
     c1, c2, c3, c4 = st.columns(4)
     c1.info("AMITY")
     c2.info("MANIPAL")
@@ -187,18 +197,17 @@ def render_about():
     with c2:
         st.markdown("""
         <div class="d-card" style="border-left: 5px solid #F97316 !important;">
-            <h3>🏭 2019: The Factory Floor</h3>
-            <p>My career didn't start in a boardroom. It started at <b>Oppo & Yazaki</b>. 
-            I worked 12-hour shifts. I saw hardworking Indians working like machines simply because they lacked <b>Guidance</b>.</p>
+            <h3>🏭 2019: The Factory Floor (The Hook)</h3>
+            <p>My career didn't start in a boardroom. I worked 12-hour shifts at <b>Oppo & Yazaki</b>. I saw thousands of hardworking Indians working like machines simply because they lacked <b>Guidance</b>.</p>
         </div>
         <div class="d-card" style="border-left: 5px solid #0077B6 !important;">
-            <h3>📞 2021: The Sales Trap</h3>
-            <p>I moved to Education Counseling (Amity). I spoke to <b>2,000+ students</b>. 
-            But I realized: <b>"Education is being sold, not served."</b> Counselors were pushing commissions, not careers.</p>
+            <h3>📞 2021: The Sales Trap & Integrity</h3>
+            <p>I moved to Education Counseling (Amity). I realized: <b>"Education is being sold, not served."</b> I chose integrity over commission and built a better system.</p>
         </div>
         <div class="d-card" style="border-left: 5px solid #10B981 !important;">
             <h3>🧬 2024: The Birth of Distoversity</h3>
-            <p>I built a platform that uses <b>Data & Psychology</b> (The 4-Genius Framework), not sales tactics.</p>
+            <p>I built this platform using <b>Data & Psychology</b> (The 4-Genius Framework). Our mission is to see <b>1000K students grow together</b>.</p>
+            <p style="font-weight:bold; margin-top:10px;">(TFI Connection: My goal is to apply this systems-level solution to nationwide educational equity.)</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -219,15 +228,14 @@ def render_assessment():
         
         st.markdown("<br>", unsafe_allow_html=True)
         if st.form_submit_button("Analyze My Energy ➤", type="primary", use_container_width=True):
-            with st.spinner("Mapping Neural Patterns..."):
-                time.sleep(1.5)
-                if "Create" in q1: st.session_state.user_profile = "Distoversity Creator"
-                elif "Talk" in q1: st.session_state.user_profile = "Distoversity Influencer"
-                elif "Act" in q1: st.session_state.user_profile = "Distoversity Catalyst"
-                else: st.session_state.user_profile = "Distoversity Analyst"
-                
-                st.session_state.page = 'Result'
-                st.rerun()
+            # REMOVED TIME.SLEEP FOR INSTANT RESULT
+            if "Create" in q1: st.session_state.user_profile = "Distoversity Creator"
+            elif "Talk" in q1: st.session_state.user_profile = "Distoversity Influencer"
+            elif "Act" in q1: st.session_state.user_profile = "Distoversity Catalyst"
+            else: st.session_state.user_profile = "Distoversity Analyst"
+            
+            st.session_state.page = 'Result'
+            st.rerun()
 
 def render_result():
     profile = st.session_state.user_profile
@@ -321,15 +329,21 @@ desktop_navbar()
 mobile_bottom_nav()
 
 # Hidden buttons for mobile nav trigger
+st.markdown('<div id="hidden-nav-buttons-container">', unsafe_allow_html=True)
 if st.button("Home_Hidden", key="home_btn"): st.session_state.page = "Home"; st.rerun()
 if st.button("Quiz_Hidden", key="quiz_btn"): st.session_state.page = "Assessment"; st.rerun()
 if st.button("Bot_Hidden", key="bot_btn"): st.session_state.page = "Eduveer"; st.rerun()
+st.markdown('</div>', unsafe_allow_html=True)
 
-# CSS to Hide Triggers
-st.markdown("""<style>div[data-testid="stButton"] > button[key*="_btn"] {display: none;}</style>""", unsafe_allow_html=True)
-
-# CSS for Mobile Bottom Nav (Hides the redundant buttons from the top)
-st.markdown("""<style>div[data-testid="stButton"] > button[key*="_btn"] {display: none;}</style>""", unsafe_allow_html=True)
+# CSS to Hide the entire container block forcefully on desktop
+st.markdown("""
+<style>
+#hidden-nav-buttons-container { 
+    display: none !important; 
+    visibility: hidden !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # Main Logic Router
 if st.session_state.page == 'Home': render_home()
