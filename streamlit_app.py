@@ -328,24 +328,27 @@ def render_eduveer():
 desktop_navbar()
 mobile_bottom_nav()
 
-# Hidden buttons for mobile nav trigger
-st.markdown('<div id="hidden-nav-buttons-container">', unsafe_allow_html=True)
+# --- 1. SET UP INVISIBLE TRIGGERS ---
+# We wrap the buttons in a div with a unique ID and then hide the entire div using CSS.
+st.markdown('<div id="mobile-nav-triggers">', unsafe_allow_html=True)
+# The buttons themselves
 if st.button("Home_Hidden", key="home_btn"): st.session_state.page = "Home"; st.rerun()
 if st.button("Quiz_Hidden", key="quiz_btn"): st.session_state.page = "Assessment"; st.rerun()
 if st.button("Bot_Hidden", key="bot_btn"): st.session_state.page = "Eduveer"; st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
-# CSS to Hide the entire container block forcefully on desktop
+# --- 2. AGGRESSIVE CSS HIDE ---
 st.markdown("""
 <style>
-#hidden-nav-buttons-container { 
+/* This rule targets the specific container and forces it to be invisible */
+#mobile-nav-triggers { 
     display: none !important; 
     visibility: hidden !important;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# Main Logic Router
+# --- MAIN APP ROUTER (REST OF THE CODE) ---
 if st.session_state.page == 'Home': render_home()
 elif st.session_state.page == 'About': render_about()
 elif st.session_state.page == 'Assessment': render_assessment()
