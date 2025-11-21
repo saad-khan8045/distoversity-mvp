@@ -17,7 +17,7 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
-    /* --- GLOBAL VARIABLES --- */
+    /* --- GLOBAL VARIABLES & THEME LOCK --- */
     :root {
         --primary: #0077B6;
         --primary-dark: #023E8A;
@@ -26,18 +26,13 @@ st.markdown("""
         --gold: #D97706;
     }
 
-    /* --- GLOBAL LAYOUT FIXES (CRITICAL FOR MOBILE/DESKTOP ALIGNMENT) --- */
+    /* --- GLOBAL LAYOUT FIXES --- */
     [data-testid="stAppViewContainer"], .stApp, header, footer {
         background-color: var(--bg-light) !important;
         color: var(--text-main) !important;
     }
     
     /* Typography Fixes */
-    h1, h2, h3, h4, p, div, span, label, li {
-        color: var(--text-main) !important;
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        -webkit-text-fill-color: var(--text-main) !important;
-    }
     h1, h2, h3 { font-family: 'Outfit', sans-serif !important; color: #003366 !important; -webkit-text-fill-color: #003366 !important; }
 
     /* Fix Inputs & Inputs in Dark Mode */
@@ -45,7 +40,6 @@ st.markdown("""
         background-color: #FFFFFF !important;
         color: #000000 !important;
         border: 1px solid #CBD5E1 !important;
-        -webkit-text-fill-color: #000000 !important;
     }
 
     /* Premium Cards */
@@ -117,11 +111,13 @@ if 'messages' not in st.session_state: st.session_state.messages = [{"role": "as
 # --- 4. NAVIGATION & HELPER FUNCTIONS ---
 
 def desktop_navbar():
+    # Final Desktop Nav (Visible only on desktop)
     with st.container():
         c1, c2, c3, c4, c5, c6, c7 = st.columns([2, 1, 1, 1, 1, 1, 1])
         with c1:
             st.markdown("<h3 style='margin:0; padding:0;'>Distoversity<span style='color:#00B4D8'>.</span></h3>", unsafe_allow_html=True)
         
+        # Desktop Buttons
         if c2.button("Home"): st.session_state.page = "Home"; st.rerun()
         if c3.button("About"): st.session_state.page = "About"; st.rerun()
         if c4.button("4D Quiz"): st.session_state.page = "Assessment"; st.rerun()
@@ -131,6 +127,7 @@ def desktop_navbar():
     st.markdown("---")
 
 def mobile_bottom_nav():
+    # Sticky Bottom Nav (Mobile)
     st.markdown("""
     <div style="position:fixed; bottom:0; left:0; width:100%; background:white; border-top:1px solid #E2E8F0; padding:10px 0; z-index:9999; display:flex; justify-content:space-around; text-align:center;">
         <a onclick="document.getElementById('home_btn_trigger').click()" style="color:#64748B; font-size:0.8rem; text-decoration:none; cursor:pointer;">🏠<br>Home</a>
@@ -169,8 +166,7 @@ def render_home():
     col1, col2 = st.columns([3, 1])
     with col2:
         if st.button("Meet the Founder ➔"):
-            st.session_state.page = "About"
-            st.rerun()
+            st.session_state.page = "About"; st.rerun()
 
 def render_about():
     st.markdown("<h2 style='text-align:center;'>The Man Who Rejected the 'System'</h2>", unsafe_allow_html=True)
@@ -196,8 +192,7 @@ def render_about():
         """, unsafe_allow_html=True)
     
     if st.button("See How My Logic Works ➔", type="primary", use_container_width=True):
-        st.session_state.page = "Assessment"
-        st.rerun()
+        st.session_state.page = "Assessment"; st.rerun()
 
 def render_assessment():
     st.markdown("<h2 style='text-align:center;'>🧠 The 4-Genius Energy Analysis</h2>", unsafe_allow_html=True)
@@ -218,8 +213,7 @@ def render_assessment():
             elif "Act" in q1: st.session_state.user_profile = "Distoversity Catalyst"
             else: st.session_state.user_profile = "Distoversity Analyst"
             
-            st.session_state.page = 'Result'
-            st.rerun()
+            st.session_state.page = 'Result'; st.rerun()
 
 def render_result():
     profile = st.session_state.user_profile
@@ -241,8 +235,7 @@ def render_result():
             phone = st.text_input("WhatsApp Number")
             if st.form_submit_button("🔓 Unlock My Full Report"):
                 if name and len(phone) > 9:
-                    st.session_state.lead_captured = True
-                    st.rerun()
+                    st.session_state.lead_captured = True; st.rerun()
                 else:
                     st.error("Please enter valid details.")
         return
@@ -254,6 +247,7 @@ def render_result():
         <span style="font-size:1rem; color:#0077B6; font-weight:bold; letter-spacing:1px;">OFFICIAL DISTOVERSITY PROFILE</span>
         <h1 style="color:#0077B6 !important; font-size:2.5rem !important; margin:10px 0;">{profile.replace('Distoversity ', '')}</h1>
         <p style="color:#0F172A;"><b>Your Superpower:</b> {get_superpower(profile)}</p>
+        <p><b>Alison Courses:</b> Your profile aligns with Project Management. Check out the free course links in the Report below!</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -272,8 +266,7 @@ def render_result():
 
     # NEXT STEP
     if st.button("View Matched Universities ➔"):
-        st.session_state.page = "Explorer"
-        st.rerun()
+        st.session_state.page = "Explorer"; st.rerun()
 
 def render_explorer():
     st.title("University Explorer")
@@ -293,8 +286,7 @@ def render_explorer():
     
     # NEXT STEP
     if st.button("Have Doubts? Ask Eduveer ➔"):
-        st.session_state.page = "Eduveer"
-        st.rerun()
+        st.session_state.page = "Eduveer"; st.rerun()
 
 def render_eduveer():
     st.title("Chat with Eduveer 🤖")
@@ -302,11 +294,9 @@ def render_eduveer():
         for msg in st.session_state.messages:
             st.chat_message(msg["role"]).write(msg["content"])
         if prompt := st.chat_input("Ask about fees, placements..."):
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            st.chat_message("user").write(prompt)
+            st.session_state.messages.append({"role": "user", "content": prompt}); st.chat_message("user").write(prompt)
             time.sleep(0.5)
-            st.session_state.messages.append({"role": "assistant", "content": "Great question! Please check the Explorer tab for details."})
-            st.rerun()
+            st.session_state.messages.append({"role": "assistant", "content": "Great question! Please check the Explorer tab for details."}); st.rerun()
 
 def render_faq():
     st.title("❓ Frequently Asked Questions")
@@ -333,19 +323,23 @@ def render_faq():
         with st.expander("❓ How do I apply?"):
             st.write("Once you find your match, you can request a brochure or book a call. Our counselors will guide you through the application process.")
         
-# --- 6. MAIN ROUTER ---
+# --- 6. MAIN ROUTER (FINAL FIX) ---
+
+# 1. Desktop Nav Bar
 desktop_navbar()
+# 2. Mobile Sticky Nav
 mobile_bottom_nav()
 
-# Hidden buttons for mobile nav trigger
+# 3. Aggressive CSS/HTML Block to Hide the Buttons (THE FIX)
 st.markdown('<div id="hidden-nav-buttons-container">', unsafe_allow_html=True)
 if st.button("Home_Trigger", key="home_btn_trigger"): st.session_state.page = "Home"; st.rerun()
 if st.button("Quiz_Trigger", key="quiz_btn_trigger"): st.session_state.page = "Assessment"; st.rerun()
 if st.button("Bot_Trigger", key="bot_btn_trigger"): st.session_state.page = "Eduveer"; st.rerun()
 st.markdown('</div>', unsafe_allow_html=True)
 
-# CSS to Hide Triggers
+# 4. Final CSS to Hide Triggers (Must be below the buttons)
 st.markdown("""<style>#hidden-nav-buttons-container { display: none !important; visibility: hidden !important; }</style>""", unsafe_allow_html=True)
+
 
 # Main Logic Router
 if st.session_state.page == 'Home': render_home()
