@@ -137,6 +137,19 @@ def navbar():
 
 # --- PAGE ROUTES ---
 def home_page():
+    # Empowering India Vision Banner
+    st.markdown("""
+    <div style="background: linear-gradient(90deg, #E0F2FE 20%, #d1fae5 90%);
+                border-radius:18px; border:2px solid #00AEEF;
+                padding:24px 22px 18px 22px; margin-bottom:22px; box-shadow: 0 2px 14px #1ab6ed21;">
+        <h2 style="text-align:center; color:#003366; margin-bottom:7px;">🚀 Our Vision: Empowering India</h2>
+        <p style="font-size:1.17rem; color:#045; text-align:center;">
+        <b>Distoversity</b> is on a mission to help every student—and every working professional—discover their purpose, build global skills, and achieve career dreams with ethics and transparency.<br>
+        <span style="color:#1bbc87; font-weight:700;">Together, we are empowering India—one future at a time.</span>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+    # ...rest of your home hero content unchanged...
     st.markdown("""
     <div class="hero-section">
         <h1>Unlock Your Dream Career – Start Your Free Assessment Today! <span class='nav-flag'>🎯</span></h1>
@@ -154,7 +167,6 @@ def home_page():
     """,unsafe_allow_html=True)
     st.button("🚀 Start Your Free Assessment Now",type="primary",on_click=lambda: nav("Assessment"))
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/80px-India_Flag_300.png",width=64)
-
 def assessment_page():
     st.markdown("<h2 style='text-align:center;'>Discover Your Career DNA – Free 4D Assessment</h2>",unsafe_allow_html=True)
     st.markdown("""
