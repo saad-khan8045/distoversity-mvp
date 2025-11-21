@@ -18,85 +18,21 @@ st.markdown("""
 html,body,[class*="css"]{
     font-family:'Inter',sans-serif!important;
     background:#f4f9fd!important;
-    color:#19315B;
-}
-h1,h2,h3{
-    font-family:'Montserrat',sans-serif!important;
-    font-weight:900!important;letter-spacing:-1.1px;
-    color:#003366!important;
-}
-.nav-logo{
-    font-family:'Montserrat',sans-serif;font-size:2.18rem;font-weight:900!important;
-    color:#003366!important;display:inline;margin-right:7px;letter-spacing:-2px;
-}
-.empower-small{
-    font-family:'Montserrat',sans-serif!important;
-    font-size:1rem;
-    color:#1376d4!important;
-    font-weight:700!important;display:inline-block;margin-top:2px;margin-left:2px;
-}
-.nav-flag{
-    font-size:1.3rem;display:inline;vertical-align:middle;margin-left:3px;
-}
-.stButton>button{
-    background:#1376d4!important;
-    color:#fff!important;
-    font-family:'Montserrat',sans-serif!important;
-    font-weight:800;
-    font-size:1.09rem;
-    border:none;
-    border-radius:32px;
-    padding:0.60rem 1.6rem;
-    box-shadow:0 2px 14px #1ab6ed21;
-}
-.d-card{
-    background:linear-gradient(95deg,#fff 88%,#e6f3fe 100%);
-    border:1.3px solid #daecfa;
-    border-radius:18px;
-    padding:1.25rem 1.3rem 1.1rem;
-    margin:1.1rem 0;
-    box-shadow:0 3px 11px #98d4fb22;
-}
-.hero-section,.about-box{
-    background:linear-gradient(97deg,#e7f1fb 85%,#fff 100%);
-    border-radius:24px;
-    margin-bottom:33px;
-    padding:2.15rem 2.0rem 1.35rem;
-    border:1px solid #dbe5ee;}
-label,.question-text{
-    color:#0d2e42!important;font-weight:700!important;
-    font-family:'Montserrat',sans-serif!important;
-    font-size:1.13rem;}
-.badge{
-    background:#e6f3fe;
-    color:#0077B6;
-    font-family:'Montserrat',sans-serif!important;
-    padding:7px 17px;
-    font-weight:700;border-radius:15px;
-    font-size:0.96rem;margin-right:6px;margin-bottom:4px;}
-.cta-sticky{
-    position:fixed;bottom:17px;right:17px;z-index:9188;
-    background:#0077B6!important;
-    color:white;font-family:'Montserrat',sans-serif;
-    font-weight:900;font-size:1.09rem;
-    padding:0.92rem 2.09rem;
-    border-radius:39px;
-    box-shadow:0 3px 18px #1376d41a;
-    border:none;}
-.footer-note{
-    font-size:1.01rem;text-align:center;margin:1.9rem 0 0;color:#476;}
+    color:#19315B;}
+h1,h2,h3{font-family:'Montserrat',sans-serif!important;font-weight:900!important;letter-spacing:-1.1px;color:#003366!important;}
+.nav-logo{font-family:'Montserrat',sans-serif;font-size:2.18rem;font-weight:900!important;color:#003366!important;display:inline;margin-right:7px;letter-spacing:-2px;}
+.empower-small{font-family:'Montserrat',sans-serif!important;font-size:1rem;color:#1376d4!important;font-weight:700!important;display:inline-block;margin-top:2px;margin-left:2px;}
+.nav-flag{font-size:1.3rem;display:inline;vertical-align:middle;margin-left:3px;}
+.stButton>button{background:#1376d4!important;color:#fff!important;font-family:'Montserrat',sans-serif!important;font-weight:800;font-size:1.09rem;border:none;border-radius:32px;padding:0.60rem 1.6rem;box-shadow:0 2px 14px #1ab6ed21;}
+.d-card{background:linear-gradient(95deg,#fff 88%,#e6f3fe 100%);border:1.3px solid #daecfa;border-radius:18px;padding:1.25rem 1.3rem 1.1rem;margin:1.1rem 0;box-shadow:0 3px 11px #98d4fb22;}
+.hero-section,.about-box{background:linear-gradient(97deg,#e7f1fb 85%,#fff 100%);border-radius:24px;margin-bottom:33px;padding:2.15rem 2.0rem 1.35rem;border:1px solid #dbe5ee;}
+label,.question-text{color:#0d2e42!important;font-weight:700!important;font-family:'Montserrat',sans-serif!important;font-size:1.13rem;}
+.badge{background:#e6f3fe;color:#0077B6;font-family:'Montserrat',sans-serif!important;padding:7px 17px;font-weight:700;border-radius:15px;font-size:0.96rem;margin-right:6px;margin-bottom:4px;}
+.cta-sticky{position:fixed;bottom:17px;right:17px;z-index:9188;background:#0077B6!important;color:white;font-family:'Montserrat',sans-serif;font-weight:900;font-size:1.09rem;padding:0.92rem 2.09rem;border-radius:39px;box-shadow:0 3px 18px #1376d41a;border:none;}
+.footer-note{font-size:1.01rem;text-align:center;margin:1.9rem 0 0;color:#476;}
 hr {border:none;border-top:1.6px solid #e2eaf7;margin:21px 0;}
 ul,ol{font-size:1.07rem;color:#26334c;}
-.alison-tag{
-    background:#e7f7e7;color:#38953b;
-    border-radius:9px;
-    font-size:0.94rem;
-    font-weight:700;
-    display:inline-block;
-    padding:3px 9px;
-    margin-bottom:7px;
-    margin-left:2px;
-}
+.alison-tag{background:#e7f7e7;color:#38953b;border-radius:9px;font-size:0.94rem;font-weight:700;display:inline-block;padding:3px 9px;margin-bottom:7px;margin-left:2px;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -117,10 +53,34 @@ alison_courses = {
     "Analyst":["Data Science Fundamentals (Alison)", "Excel Strategies"]
 }
 
-# --- STATE ---
 if "page" not in st.session_state: st.session_state.page = "Home"
 if "profile" not in st.session_state: st.session_state.profile = None
 if "scores" not in st.session_state: st.session_state.scores = None
+
+# --- FOUNDER POPUP ---
+if "founder_popup" not in st.session_state:
+    st.session_state.founder_popup = False
+
+def show_founder_popup():
+    st.markdown("""
+        <div class="d-card" style="max-width:490px;margin:auto;text-align:center;">
+            <img src="https://avatars.githubusercontent.com/u/7087942?s=400&u=860ba9126b6e8ce3fe01a8b337b836ca95a2d165&v=4" width="88" style="border-radius:24px;box-shadow:0 6px 22px #234;">
+            <h3 style="color:#003366;margin:11px 0 6px 0;">Meet Your Mentor</h3>
+            <b>Hi, I'm Mohd Saad</b><br>
+            Founder – Distoversity <span class='nav-flag'>🇮🇳</span>
+            <div style="font-size:1.10rem;color:#1376d4;">
+            <br>My journey started on India's factory floors.<br>
+            After helping 2,000+ students, I realized Indian guidance needs heart + science.<br><br>
+            Distoversity is built for you: consultative selling, ethical advice, AI + mentors.<br>
+            <b>This site is my story—join our movement!</b>
+            </div>
+            <hr>
+            <a href="mailto:distoversity@gmail.com" style="text-decoration:none;">
+              <button style="margin-top:8px;background:#1376d4;color:#fff;border:none;border-radius:22px;font-weight:700;padding:8px 24px;font-size:1.09rem;">Connect with Me</button>
+            </a><br>
+            <button onclick="window.location.reload();" style="margin-top:8px;background:#e6f3fe;color:#003366;border:none;border-radius:19px;font-weight:700;padding:7px 15px;box-shadow:0 2px 11px #1376d41a;">Let’s go!</button>
+        </div>
+    """, unsafe_allow_html=True)
 
 # --- NAVBAR ---
 def navbar():
@@ -137,6 +97,11 @@ def navbar():
 
 # --- PAGE ROUTES ---
 def home_page():
+    # FOUNDER POPUP triggers only on Home tab first load
+    if st.session_state.page == "Home" and not st.session_state.founder_popup:
+        with st.expander("Meet Mohd Saad (Founder)", expanded=True):
+            show_founder_popup()
+            st.session_state.founder_popup = True
     st.markdown("""
     <div class="hero-section">
         <h1>Engineer Your Career Destiny <span class='nav-flag'>🇮🇳</span></h1>
@@ -159,7 +124,7 @@ def assessment_page():
     <div style='text-align:center;'>
       <span class='badge'>AI Supported | Mentor Validated | Career Science for India</span>
       <br>
-      <span style="font-size:1.07rem; color:#1376d4;"><b>Our original test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
+      <span style="font-size:1.07rem; color:#1376d4;"><b>Our test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
     </div>
     """,unsafe_allow_html=True)
     st.info("Answer 5 short questions. No right/wrong answers—just your energy flow.")
