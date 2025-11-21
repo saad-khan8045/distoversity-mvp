@@ -3,12 +3,12 @@ import pandas as pd
 
 # --- PAGE CONFIG & SEO ---
 st.set_page_config(
-    page_title="Distoversity | Empowering India – 4D Assessment, Ethical Career & University Guidance",
-    page_icon="🇮🇳",
+    page_title="Distoversity | Find Your Perfect Career Path with Free Assessment & Expert Counseling",
+    page_icon="🎓",
     layout="wide"
 )
 st.markdown("""
-    <meta name="description" content="Distoversity – Take the 4D Assessment to discover your four career energies, compare top Indian universities, join Alison's global learning community, and get AI-powered, mentor-led guidance. Empowering India through consultative selling and real impact.">
+    <meta name="description" content="Discover your ideal career with Distoversity's free 4D Assessment. Get personalized university recommendations, expert counseling, and skill-building resources. Start your success journey today!">
 """, unsafe_allow_html=True)
 
 # --- MODERN DESIGN / COLOR / FONT ---
@@ -127,9 +127,9 @@ def navbar():
     cols = st.columns([2.4,1,1.25,1.23,1,1.46])
     with cols[0]:
         st.markdown("<span class='nav-logo'>Distoversity</span>",unsafe_allow_html=True)
-        st.markdown("<span class='empower-small'>Empowering India <span class='nav-flag'>🇮🇳</span></span>",unsafe_allow_html=True)
+        st.markdown("<span class='empower-small'>Your Career Success Partner <span class='nav-flag'>🎓</span></span>",unsafe_allow_html=True)
     if cols[1].button("Home"): st.session_state.page="Home";st.rerun()
-    if cols[2].button("4D Assessment"): st.session_state.page="Assessment";st.rerun()
+    if cols[2].button("Free Assessment"): st.session_state.page="Assessment";st.rerun()
     if cols[3].button("Universities"): st.session_state.page="Universities";st.rerun()
     if cols[4].button("FAQ"): st.session_state.page="FAQ";st.rerun()
     if cols[5].button("About"): st.session_state.page="About";st.rerun()
@@ -139,42 +139,43 @@ def navbar():
 def home_page():
     st.markdown("""
     <div class="hero-section">
-        <h1>Engineer Your Career Destiny <span class='nav-flag'>🇮🇳</span></h1>
-        <p style="font-size:1.17rem;">Experience India's most ethical consultative career science.<br>
-        <span class="badge">4D Assessment | Mentor + AI Guidance | Trusted University Match</span></p>
+        <h1>Unlock Your Dream Career – Free Assessment Inside! <span class='nav-flag'>🎯</span></h1>
+        <p style="font-size:1.17rem;">Take the first step toward your perfect career with expert guidance.<br>
+        <span class="badge">Free Career Assessment | Expert Counseling | Top University Match</span></p>
         <ul>
-        <li>Take the <b>Distoversity 4D Assessment</b> (Discover your Creator, Influencer, Catalyst, Analyst energies!)</li>
-        <li>Compare NAAC/UGC universities—transparent, unbiased data only</li>
-        <li>Join <span class="alison-tag">Alison Community</span> upskilling courses matched for every energy profile</li>
-        <li>All counseling and advice are consultative, not transactional—mentor + AI, never pushy selling</li>
+        <li>🎯 Take our <b>Free 4D Career Assessment</b> – Discover if you're a Creator, Influencer, Catalyst, or Analyst!</li>
+        <li>🎓 Compare India's best UGC-approved universities with complete transparency</li>
+        <li>📚 Get access to <span class="alison-tag">Free Skill Courses</span> matched to your career profile</li>
+        <li>💡 Receive personalized guidance from real mentors, not salespeople – we help you decide, never push</li>
         </ul>
+        <p style="font-size:1.1rem;margin-top:1rem;"><b>Why wait? Your dream career is just one assessment away!</b></p>
     </div>
     """,unsafe_allow_html=True)
-    st.button("✨ Start Your 4D Assessment",type="primary",on_click=lambda: nav("Assessment"))
+    st.button("🚀 Start Free Assessment Now",type="primary",on_click=lambda: nav("Assessment"))
     st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/80px-India_Flag_300.png",width=64)
 
 def assessment_page():
-    st.markdown("<h2 style='text-align:center;'>4D Assessment – Discover Your 4 Energies</h2>",unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;'>Discover Your Career DNA – Free 4D Assessment</h2>",unsafe_allow_html=True)
     st.markdown("""
     <div style='text-align:center;'>
-      <span class='badge'>AI Supported | Mentor Validated | Career Science for India</span>
+      <span class='badge'>100% Free | Takes Only 2 Minutes | Get Instant Results</span>
       <br>
-      <span style="font-size:1.07rem; color:#1376d4;"><b>Our original test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
+      <span style="font-size:1.07rem; color:#1376d4;"><b>Find out which of the 4 career types matches your personality:<br>Creator, Influencer, Catalyst, or Analyst. Get your personalized career roadmap!</b></span>
     </div>
     """,unsafe_allow_html=True)
-    st.info("Answer 5 short questions. No right/wrong answers—just your energy flow.")
+    st.info("✅ Just 5 simple questions • No right or wrong answers • Discover your natural strengths")
     with st.form("dist_assess"):
-        q1 = st.radio("Q1. Work makes you happiest when?",["Inventing new things","Inspiring/leading people","Finishing/executing big projects","Solving complex puzzles"],index=None)
-        q2 = st.radio("Q2. Friends see you as…",["The innovator","The motivator","The finisher","The analyst"],index=None)
-        q3 = st.radio("Q3. You get bored by…",["Repeating/routine work","Isolation/lack of people","Waiting/unclear targets","Hype, not facts"],index=None)
-        q4 = st.radio("Q4. If given a whole free day, you would…",["Draw 3 startup ideas","Host an event","Clear all pending tasks","Decode new trends in stocks/news"],index=None)
-        q5 = st.radio("Q5. Life goal?",["Invent something world-class","Inspire lakhs","Become Operations CEO","Crack million-dollar data puzzle"],index=None)
-        if st.form_submit_button("See My 4D Profile →"):
+        q1 = st.radio("Q1. When do you feel most motivated at work?",["Creating something new and innovative","Leading and inspiring others","Completing projects and achieving goals","Analyzing data and solving problems"],index=None)
+        q2 = st.radio("Q2. How would your friends describe you?",["The creative idea person","The natural leader who motivates","The reliable one who gets things done","The smart problem-solver"],index=None)
+        q3 = st.radio("Q3. What frustrates you the most?",["Boring, repetitive tasks","Working alone without interaction","Unclear goals and delays","Making decisions without facts"],index=None)
+        q4 = st.radio("Q4. If you had a completely free day, what would excite you?",["Brainstorming 3 new business ideas","Organizing a fun event with friends","Completing all your pending tasks","Learning about new trends and data"],index=None)
+        q5 = st.radio("Q5. What's your ultimate career goal?",["Build something world-changing","Inspire thousands of people","Lead operations at a top company","Solve complex challenges with data"],index=None)
+        if st.form_submit_button("✨ Get My Free Career Profile →"):
             tally = {"Creator":0,"Influencer":0,"Catalyst":0,"Analyst":0}
             for a in [q1,q2,q3,q4,q5]:
-                if "idea" in a or "Invent" in a or "innovator" in a or "draw" in a: tally["Creator"]+=1
-                elif "Inspire" in a or "people" in a or "event" in a or "motivator" in a or "lakhs" in a: tally["Influencer"]+=1
-                elif "Finish" in a or "Operations" in a or "clear" in a or "tasks" in a or "finisher" in a: tally["Catalyst"]+=1
+                if "idea" in a or "Creating" in a or "creative" in a or "Brainstorming" in a or "Build" in a: tally["Creator"]+=1
+                elif "inspiring" in a or "Leader" in a or "Inspire" in a or "leading" in a or "event" in a or "motivates" in a: tally["Influencer"]+=1
+                elif "Completing" in a or "achieving" in a or "gets things done" in a or "operations" in a or "pending" in a: tally["Catalyst"]+=1
                 else: tally["Analyst"]+=1
             winner = max(tally, key=tally.get)
             st.session_state.profile = winner
@@ -185,110 +186,32 @@ def result_page():
     prof = st.session_state.get("profile")
     scores = st.session_state.get("scores")
     if not prof:
-        st.warning("Complete your 4D Assessment first!"); return
-    st.markdown(f"<h2 style='color:#1376d4;text-align:center;'>You're a <span style='text-transform:uppercase;'>{prof}</span> Genius.</h2>",unsafe_allow_html=True)
-    st.markdown(f"""<div class="badge" style="margin-bottom:10px;">AI + Mentor Verified | 4D Career DNA</div>""",unsafe_allow_html=True)
+        st.warning("⚠️ Please complete your free assessment first to see your results!"); return
+    st.markdown(f"<h2 style='color:#1376d4;text-align:center;'>🎉 Congratulations! You're a <span style='text-transform:uppercase;'>{prof}</span></h2>",unsafe_allow_html=True)
+    st.markdown(f"""<div class="badge" style="margin-bottom:10px;">Personalized Career DNA | Expert-Validated Results</div>""",unsafe_allow_html=True)
     st.markdown("""
     <div class='d-card' style='margin-bottom:1.2rem;'>
-        <b>Your Growth Story (per Energy):</b>
+        <b>📊 What Each Career Type Means (Your Strengths & Growth Tips):</b>
         <ul>
-        <li>Creator: Visionary, original, high-impact—but finish what you start.</li>
-        <li>Influencer: Leader, motivator, connector—avoid the all-talk trap.</li>
-        <li>Catalyst: Results-getter, ops expert—keep upskilling, avoid burnout!</li>
-        <li>Analyst: Data solver, reliable—don’t let perfection block action.</li>
+        <li><b>Creator:</b> You're innovative and visionary! Focus on completing your ideas to maximize impact.</li>
+        <li><b>Influencer:</b> You inspire and lead naturally! Build genuine connections and back words with action.</li>
+        <li><b>Catalyst:</b> You're a results-driven achiever! Keep learning new skills and maintain work-life balance.</li>
+        <li><b>Analyst:</b> You solve complex problems with data! Don't let perfectionism stop you from taking action.</li>
         </ul>
     </div>
     """,unsafe_allow_html=True)
-    st.markdown(f"<h4>Recommended Alison Upskilling</h4>",unsafe_allow_html=True)
-    st.markdown("<span class='alison-tag'>Alison Community Member | Free Skill Courses</span>",unsafe_allow_html=True)
+    st.markdown(f"<h4>🎓 Recommended Free Courses for {prof}s</h4>",unsafe_allow_html=True)
+    st.markdown("<span class='alison-tag'>Free Skill Building | Boost Your Career</span>",unsafe_allow_html=True)
     for course in alison_courses[prof]:
-        st.write(f"• {course} ([See on Alison](https://alison.com/courses))")
+        st.write(f"✅ {course} ([Start Free Course](https://alison.com/courses))")
     st.markdown("<hr>",unsafe_allow_html=True)
-    st.markdown("<b>Top University Matches:</b>",unsafe_allow_html=True)
+    st.markdown("<b>🎯 Perfect University Matches for Your Profile:</b>",unsafe_allow_html=True)
     matches = [u for u in UNIS if u['profile'] == prof]
     for u in matches:
         st.markdown(f"""
-        <div class="d-card"><h3>{u['name']}</h3>
-        <span class="badge">{u['city']}</span> | <span class="badge">NAAC: {u['naac']}</span> | <b>Fee:</b> ₹{u['fee']:,}<br>
-        <b>Alison:</b> {u['alison']} | <b>Placement:</b> {u['pkg']}
+        <div class="d-card"><h3>🏆 {u['name']}</h3>
+        <span class="badge">{u['city']}</span> | <span class="badge">NAAC: {u['naac']}</span> | <b>Annual Fee:</b> ₹{u['fee']:,}<br>
+        <b>💼 Avg Placement:</b> {u['pkg']} | <b>📚 Skill Course:</b> {u['alison']}
         </div>
         """,unsafe_allow_html=True)
-    st.button("Compare All Universities",on_click=lambda: nav("Universities"))
-
-def universities_page():
-    st.markdown("<h2>Compare India's Top Universities</h2>",unsafe_allow_html=True)
-    st.caption("Sort/filter by fee, NAAC, placement, profile fit, and city—all data transparent.")
-    df = pd.DataFrame(UNIS)
-    cols = st.columns(4)
-    sel_prof = cols[0].selectbox("Profile Filter",["All"]+list(alison_courses.keys()))
-    sel_sort = cols[1].selectbox("Sort by",["Fee (Lowest)","Fee (Highest)","Placement (Highest)"])
-    budget = cols[2].slider("Max Fee (Lakh ₹)",1,6,3)
-    naac_plus = cols[3].checkbox("NAAC A++ only",False)
-    temp = df[df['fee']<=budget*100000]
-    if naac_plus: temp=temp[temp.naac=="A++"]
-    if sel_prof!="All": temp=temp[temp.profile==sel_prof]
-    temp = temp.sort_values("fee" if "Fee" in sel_sort else "pkg", ascending="Lowest" in sel_sort)
-    st.dataframe(temp[["name","profile","fee","naac","city","pkg"]].reset_index(drop=True),use_container_width=True)
-    st.markdown("Click any university row for advice—or return to [4D Assessment](#) for your unique fit.")
-
-def faq_page():
-    st.title("Distoversity FAQ")
-    faq = [
-        ("What is the 4D Assessment?",
-         "Distoversity's 4D Assessment is India's original test for discovering your four career energies (Creator, Influencer, Catalyst, Analyst). Each energy leads to unique careers, skills, and university matches."),
-        ("How is advice given?",
-         "Every match is AI supported, reviewed by real career mentors. We guide, never push sales or random leads."),
-        ("How does Alison help?",
-         "Founder is an Alison global community member. All learners get free, profile-based upskilling links."),
-        ("How is selling consultative?",
-         "We never rush decisions. Our counselors serve as architects, not 'closers'. Every step is science + empathy."),
-        ("How do you select universities?",
-         "UGC/NAAC/AICTE verified only. Stats and fit are shown with transparent filters."),
-        ("How can I contact you?",
-         "Sticky bottom button, email: distoversity@gmail.com, WhatsApp: +91-9111111111.")
-    ]
-    for q,a in faq:
-        with st.expander(q):
-            st.write(a)
-
-def about_page():
-    st.markdown("""
-    <div class='about-box'>
-    <h1 style="margin-bottom:6px;">Distoversity – Ethical Career Science <span class='nav-flag'>🇮🇳</span></h1>
-    <span class='empower-small'>Empowering India</span>
-    <hr>
-    <p>
-    <b>Consultative selling—not closing leads.</b> Distoversity is India's impact-driven career company. We are counselors + AI, never just bots; we advise, not advertise.<br>
-    <br>
-    <b>Founder’s Insight:</b> From factories, real counseling, and learning with Alison, I built the 4D Assessment for every student—science, privacy, and empathy at the core.<br>
-    <br>
-    <span class='alison-tag'>Alison Community Member</span>: Bringing global skill learning free for Indians.<br>
-    <br>
-    <b>For partners & TFI:</b> We aspire to work with every impact-focused educator, fellow, and org. Careers change lives—let's architect India's future, together.<br>
-    <b>Contact:</b> distoversity@gmail.com | <a href="https://linkedin.com">LinkedIn</a>
-    </p>
-    </div>
-    """,unsafe_allow_html=True)
-
-def nav(p): st.session_state.page=p; st.rerun()
-
-# --- MAIN ROUTER ---
-navbar()
-page_map={"Home":home_page,"Assessment":assessment_page,"Result":result_page,
-          "Universities":universities_page,"FAQ":faq_page,"About":about_page}
-if st.session_state.page=="Result":
-    result_page()
-else:
-    page_map[st.session_state.page]()
-
-st.markdown("""
-<a href="mailto:distoversity@gmail.com?subject=Book%20Distoversity%20Counseling"
-class="cta-sticky" target="_blank" style="text-decoration:none;">
-<span class='nav-flag'>🇮🇳</span> Book Consultative Career Call 🚀
-</a>
-<div class="footer-note">
-Distoversity <span class='empower-small'>Empowering India <span class='nav-flag'>🇮🇳</span></span>
-<br>
-Privacy: Data always private. Alison Community | Copyright © 2025 Distoversity.
-</div>
-""",unsafe_allow_html=True)
+    st.button("📚 Compare All Universities →",on_
