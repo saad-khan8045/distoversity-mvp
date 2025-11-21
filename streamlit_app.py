@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 import os
 
 # --- PAGE CONFIGURATION ---
@@ -10,7 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- FORCE LIGHT THEME CSS (NUCLEAR OPTION) ---
+# --- FORCE LIGHT THEME CSS ---
 st.markdown("""
     <style>
     [data-testid="stAppViewContainer"], .stApp, header, footer {
@@ -58,16 +57,16 @@ QUESTIONS = [
     {"q": "What motivates you?", "options": [("🚀 Creating", "Creator"), ("🤝 Connecting", "Influencer"), ("🔍 Analyzing", "Analyst"), ("✅ Doing", "Catalyst")]}
 ]
 PROFILE_DESCRIPTIONS = {
-    "Creator": "Naye ideas, product design, brand building. (Best careers: Innovator/Entrepreneur)",
-    "Influencer": "Logon ko guide karna, team motivate karna. (Best: PR, HR, Sales, Media)",
-    "Catalyst": "Kaam ko jaldi aur sahi finish karna. (Best: Operations, Logistics, Project Manager)",
-    "Analyst": "Data, problem solve karna, finance. (Best: Finance, Engineering, Data Science)"
+    "Creator": "New ideas, product design, brand building. Best: Innovator/Entrepreneur.",
+    "Influencer": "Guides teams, motivates people. Best: PR, HR, Sales, Media.",
+    "Catalyst": "Gets work finished fast & right. Best: Operations, Logistics, Execution.",
+    "Analyst": "Loves data, research, finance. Best: Data Scientist, Finance, Engineering."
 }
-if "messages" not in st.session_state: st.session_state.messages = []
+
+# --- SESSION STATE ---
 if "step" not in st.session_state: st.session_state.step = 0
 if "q_index" not in st.session_state: st.session_state.q_index = 0
 if "scores" not in st.session_state: st.session_state.scores = {"Creator": 0, "Influencer": 0, "Analyst": 0, "Catalyst": 0}
-if "profile_result" not in st.session_state: st.session_state.profile_result = None
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -76,82 +75,31 @@ with st.sidebar:
     st.markdown("Founder | Ed-Tech Intrapreneur")
     st.caption("📍 New Delhi, India")
     st.success("🎯 Mission: Replace 'Sales' in education with 'Science'")
-    st.markdown("### 🛠 Skills")
-    st.code("Python & Streamlit")
-    st.code("LLM & AI Agents")
-    st.code("Franchise Expansion")
-    st.code("Ed-Psychology")
     st.markdown("---")
-    st.markdown("<b>Privacy Policy:</b> Hamara data confidential hai, kisi bhi third party ko share nahi hota.", unsafe_allow_html=True)
-    st.markdown("<b>Copyright © 2025 Distoversity.</b> All rights reserved.", unsafe_allow_html=True)
-    st.markdown("[LinkedIn](https://linkedin.com) | [Email](mailto:saad01489@gmail.com)")
+    st.markdown("<b>Privacy Policy:</b> Hamara data confidential hai, koi third-party ko nahi dete.", unsafe_allow_html=True)
+    st.markdown("<b>Copyright © 2025 Distoversity. All rights reserved.</b>", unsafe_allow_html=True)
 
-# --- MAIN TABS ---
-tab1, tab2, tab3 = st.tabs([
-    "📖 Story", 
-    "🧠 Genius Framework", 
-    "🤖 Eduveer AI Demo"
-])
+# --- MAIN CONTENT ---
+st.markdown("<h1 style='text-align:center;'>Distoversity MVP</h1>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align:center;color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h2>", unsafe_allow_html=True)
+
+tabs = st.tabs(["Story & Mission", "Genius Assessment", "Your Profile & Match"])
 
 # --- TAB 1: STORY ---
-with tab1:
+with tabs[0]:
     st.header("From Factory Floor to Career Architect 🚀")
-    st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
-    st.divider()
-    col1, col2 = st.columns([2,1])
-    with col1:
-        st.markdown("""
-        <div class="story-card">
-            <div>2018 - 2020: 🏭 Oppo Mobile & Yazaki</div>
-            <div>Naukri ki shuruat ek factory se hui, 12 ghante shifts. Yaha samjha ki youth ko guidance ki kitni zaroorat hai.</div>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown("""
-        <div class="story-card" style="border-left-color: #F97316;">
-            <div>2021 - 2024: 📞 Sales Trap</div>
-            <div>Amity/Manipal main 2,000+ students ko counsel kiya. Dekha, education ek transaction ban gayi hai. Students 'Lead' ban gaye, sapne kho gaye.</div>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown("""
-        <div class="story-card" style="border-left-color: #10B981;">
-            <div>2024 - Present: 🚀 Distoversity & Eduveer</div>
-            <div>Ed-Tech ko ethical aur logical banana, wahi mission hai. Psychology + Tech = Career Architecture.</div>
-        </div>
-        """, unsafe_allow_html=True)
-    with col2:
-        st.info("💡 Why TFI?")
-        st.markdown("""
-        - Factory ka hardwork
-        - Counselor ka empathy
-        - Founder ka vision
-        Ye sab main Teach For India ke liye lana chahta hoon!
-        """, unsafe_allow_html=True)
+    st.markdown("""
+    <div class="story-card">
+        <div>2018-2020: 🏭 Oppo Mobile & Yazaki: Factory se shuruat hui, samjha ki youth ko guidance chahiye.</div>
+        <div>2021-2024: 📞 Sales Trap: Students 'lead' ban gaye, sapne kho gaye. Counseling mein ethics ki kami dikhi.</div>
+        <div>2024-Present: 🚀 Distoversity: Psychology + Tech = Career Architecture. Mission: Empowering India!</div>
+    </div>""", unsafe_allow_html=True)
 
-# --- TAB 2: FRAMEWORK ---
-with tab2:
-    st.header("We don't ask for marks, We map your energy!")
-    st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
-    c1, c2 = st.columns(2)
-    with c1:
-        energy = st.selectbox(
-            "Apna Genius Profile dekhein:", 
-            ["Creator", "Influencer", "Catalyst", "Analyst"]
-        )
-    with c2:
-        if energy:
-            st.markdown(f"**{energy}:** {PROFILE_DESCRIPTIONS[energy]}")
-            if "Creator" == energy: st.success("🌟 Naye idea, freedom, routine se pareshaan.")
-            if "Influencer" == energy: st.warning("🔥 Log, teamwork, isolation se pareshaan.")
-            if "Catalyst" == energy: st.info("🤝 Jaldi result, structure, chaos se pareshaan.")
-            if "Analyst" == energy: st.error("📊 Data, research, hype se pareshaan.")
-
-# --- TAB 3: EDUVEER BOT/QUIZ ---
-with tab3:
-    st.title("Eduveer AI Demo")
-    st.markdown("<h3 style='color:#0077B6;'>EMPOWERING INDIA 🇮🇳</h3>", unsafe_allow_html=True)
-    st.caption("Logic-based career test for every student.")
+# --- TAB 2: ASSESSMENT ---
+with tabs[1]:
+    st.header("Genius Assessment: Find Your Core Strength")
     if st.session_state.step == 0:
-        if st.button("Start AI Assessment ➔", type="primary"):
+        if st.button("Start Assessment ➔", type="primary"):
             st.session_state.step = 1
             st.rerun()
     elif st.session_state.step == 1:
@@ -168,9 +116,18 @@ with tab3:
                 st.rerun()
     elif st.session_state.step == 2:
         primary = max(st.session_state.scores, key=st.session_state.scores.get)
-        st.success(f"🎉 Result: Aapka Genius Profile hai: {primary}!")
+        st.success(f"🎉 Your Genius Profile: {primary}")
         st.write(PROFILE_DESCRIPTIONS[primary])
-        st.write("Yeh universities aapke profile match karti hain:")
+
+# --- TAB 3: PROFILE & MATCH ---
+with tabs[2]:
+    if st.session_state.step < 2:
+        st.info("Please complete the assessment first!")
+    else:
+        primary = max(st.session_state.scores, key=st.session_state.scores.get)
+        st.header(f"Your Genius Profile: {primary}")
+        st.write(PROFILE_DESCRIPTIONS[primary])
+        st.subheader("Matching Universities:")
         matches = [u for u in UNIVERSITIES if primary in u["best_for"]]
         for u in matches:
             st.markdown(f"""
@@ -179,17 +136,12 @@ with tab3:
                 <p><b>Programs:</b> {', '.join(u['programs'])} | <b>Fee:</b> {u['fee']} | <b>Highest:</b> {u['high_pkg']}</p>
             </div>
             """, unsafe_allow_html=True)
-        if st.button("Restart Demo"):
-            st.session_state.step = 0
-            st.session_state.q_index = 0
-            st.session_state.scores = {"Creator": 0, "Influencer": 0, "Analyst": 0, "Catalyst": 0}
-            st.rerun()
 
-# --- FOOTER: PRIVACY & COPYRIGHT ---
+# --- FOOTER ---
 st.markdown("""
 <div class="footer-note">
 <b>EMPOWERING INDIA 🇮🇳</b> <br>
-<b>Privacy Policy:</b> Hum data kabhi kisi ko nahi dete, sab confidential hota hai.<br>
+<b>Privacy Policy:</b> Sab data confidential hai, kisi third-party ko share nahi hota.<br>
 <b>Copyright © 2025 Distoversity. All rights reserved.</b>
 </div>
 """, unsafe_allow_html=True)
