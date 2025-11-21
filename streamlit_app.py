@@ -3,12 +3,12 @@ import pandas as pd
 
 # --- PAGE CONFIG & SEO ---
 st.set_page_config(
-    page_title="Distoversity | Free Career Assessment & Expert University Counseling - Find Your Perfect Career",
+    page_title="Distoversity | Free Career Assessment & University Counseling - Find Your Dream Career",
     page_icon="🎓",
     layout="wide"
 )
 st.markdown("""
-    <meta name="description" content="Discover your ideal career with Distoversity's free 4D Assessment. Get personalized university recommendations, expert counseling, and skill courses. 100% data privacy - we never sell your information!">
+    <meta name="description" content="Discover your ideal career with Distoversity's free 4D Assessment. Get personalized university recommendations and expert counseling. 100% data privacy - we never sell your information!">
 """, unsafe_allow_html=True)
 
 # --- MODERN DESIGN / COLOR / FONT ---
@@ -212,4 +212,89 @@ def result_page():
         st.markdown(f"""
         <div class="d-card"><h3>🏆 {u['name']}</h3>
         <span class="badge">{u['city']}</span> | <span class="badge">NAAC: {u['naac']}</span> | <b>Annual Fee:</b> ₹{u['fee']:,}<br>
-        <b>💼 Avg Placement:</b> {u['pkg']} | <b
+        <b>💼 Avg Placement:</b> {u['pkg']} |
+        <b>📚 Skill Course:</b> {u['alison']}
+        </div>
+        """,unsafe_allow_html=True)
+    st.button("📚 Compare All Universities →",on_click=lambda: nav("Universities"))
+
+def universities_page():
+    st.markdown("<h2>Compare India's Top Universities</h2>",unsafe_allow_html=True)
+    st.caption("Sort and filter by fees, NAAC rating, placement packages, career profile match, and city – all data completely transparent.")
+    df = pd.DataFrame(UNIS)
+    cols = st.columns(4)
+    sel_prof = cols[0].selectbox("Filter by Career Profile",["All"]+list(alison_courses.keys()))
+    sel_sort = cols[1].selectbox("Sort by",["Fee (Lowest)","Fee (Highest)","Placement (Highest)"])
+    budget = cols[2].slider("Maximum Annual Fee (Lakh ₹)",1,6,3)
+    naac_plus = cols[3].checkbox("Show only NAAC A++ universities",False)
+    temp = df[df['fee']<=budget*100000]
+    if naac_plus: temp=temp[temp.naac=="A++"]
+    if sel_prof!="All": temp=temp[temp.profile==sel_prof]
+    temp = temp.sort_values("fee" if "Fee" in sel_sort else "pkg", ascending="Lowest" in sel_sort)
+    st.dataframe(temp[["name","profile","fee","naac","city","pkg"]].reset_index(drop=True),use_container_width=True)
+    st.markdown("💡 Need help choosing? Take our [Free 4D Assessment](#) to find your perfect university match!")
+
+def faq_page():
+    st.title("Frequently Asked Questions")
+    faq = [
+        ("What is the 4D Assessment?",
+         "Our 4D Assessment is a free career discovery tool that reveals your natural strengths across four career energies: Creator, Influencer, Catalyst, and Analyst. Each type has unique career paths, skills, and university recommendations perfectly matched to your personality."),
+        ("How do you provide career guidance?",
+         "We combine AI technology with real human mentors to give you personalized advice. We guide you to make the best decision for your future – we never push sales or force you into anything. Your success is our priority!"),
+        ("What are the free skill courses from Alison?",
+         "We're proud members of the Alison global learning community. Based on your career profile, we recommend free, high-quality courses that help you build job-ready skills. No cost, just value!"),
+        ("Is my data safe with you?",
+         "Absolutely! We are NOT selling your data. Your privacy is 100% protected. We use your information only to provide you with personalized career guidance. Your trust matters to us."),
+        ("How do you select which universities to recommend?",
+         "We only feature UGC, NAAC, and AICTE approved universities. All data (fees, placements, ratings) is verified and transparent. You get honest information to make informed decisions."),
+        ("How can I contact you for counseling?",
+         "Easy! Click the floating button on your screen, or email us at distoversity@gmail.com, or WhatsApp: +91-9111111111. We're here to help!")
+    ]
+    for q,a in faq:
+        with st.expander(q):
+            st.write(a)
+
+def about_page():
+    st.markdown("""
+    <div class='about-box'>
+    <h1 style="margin-bottom:6px;">Distoversity – Honest Career Guidance You Can Trust <span class='nav-flag'>🎓</span></h1>
+    <span class='empower-small'>Your Career Success Partner</span>
+    <hr>
+    <p>
+    <b>We guide, we don't sell.</b> Distoversity is India's most trusted career guidance platform. We combine expert counselors with AI technology to help you discover your true potential and find the perfect university match.<br>
+    <br>
+    <b>Our Mission:</b> Built with real counseling experience and powered by data science, our 4D Assessment helps every student discover their unique career DNA. We believe in transparency, privacy, and putting your success first.<br>
+    <br>
+    <span class='alison-tag'>Proud Alison Community Member</span>: We bring world-class free skill courses to Indian students.<br>
+    <br>
+    <b>For educational partners:</b> We work with impact-focused educators and organizations who believe careers change lives. Let's build India's future together!<br>
+    <br>
+    <b>🔒 Privacy Promise:</b> We are NOT selling your data. Your information is 100% private and secure.<br>
+    <br>
+    <b>Contact Us:</b> distoversity@gmail.com | <a href="https://linkedin.com">LinkedIn</a>
+    </p>
+    </div>
+    """,unsafe_allow_html=True)
+
+def nav(p): st.session_state.page=p; st.rerun()
+
+# --- MAIN ROUTER ---
+navbar()
+page_map={"Home":home_page,"Assessment":assessment_page,"Result":result_page,
+          "Universities":universities_page,"FAQ":faq_page,"About":about_page}
+if st.session_state.page=="Result":
+    result_page()
+else:
+    page_map[st.session_state.page]()
+
+st.markdown("""
+<a href="mailto:distoversity@gmail.com?subject=Book%20Career%20Counseling%20Call"
+class="cta-sticky" target="_blank" style="text-decoration:none;">
+<span class='nav-flag'>🎓</span> Book Free Career Counseling Call 🚀
+</a>
+<div class="footer-note">
+Distoversity <span class='empower-small'>Your Career Success Partner <span class='nav-flag'>🎓</span></span>
+<br>
+🔒 <b>We are NOT selling your data</b> – Your privacy is always protected. Alison Community Member | Copyright © 2025 Distoversity.
+</div>
+""",unsafe_allow_html=True)
