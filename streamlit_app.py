@@ -1,133 +1,175 @@
 import streamlit as st
 import pandas as pd
-import time
 
-# --- 1. PAGE CONFIGURATION & SEO ---
+# --- PAGE CONFIG & SEO ---
 st.set_page_config(
-    page_title="Distoversity | Empowering India - AI Career Counseling & University Match",
+    page_title="Distoversity | Empowering India – 4D Assessment, Ethical Career & University Guidance",
     page_icon="🇮🇳",
     layout="wide"
 )
 st.markdown("""
-    <meta name="description" content="Distoversity — Discover your real career path with AI-powered assessment, honest university comparison, upskilling, and science-based guidance. Trusted by Indian students and professionals. Empowering India.">
+    <meta name="description" content="Distoversity – Take the 4D Assessment to discover your four career energies, compare top Indian universities, join Alison's global learning community, and get AI-powered, mentor-led guidance. Empowering India through consultative selling and real impact.">
 """, unsafe_allow_html=True)
 
-# --- 2. MODERN DESIGN SYSTEM, COLOR/FONT FIX ---
+# --- MODERN DESIGN / COLOR / FONT ---
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;900&display=swap');
-html,body,[class*='css']{
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@400;700&display=swap');
+html,body,[class*="css"]{
     font-family:'Inter',sans-serif!important;
-    background:#f8fbff!important;
-    color:#19202c;
+    background:#f4f9fd!important;
+    color:#19315B;
 }
 h1,h2,h3{
-    font-family:'Inter',sans-serif!important;
+    font-family:'Montserrat',sans-serif!important;
+    font-weight:900!important;letter-spacing:-1.1px;
     color:#003366!important;
-    font-weight:900!important;
 }
 .nav-logo{
-    font-family:'Inter',sans-serif!important;
-    font-size:2.25rem;font-weight:900!important;letter-spacing:-2px;
-    color:#003366!important;display:inline;margin-left:5px;margin-right:10px;}
-.nav-flag{font-size:2.1rem;display:inline;margin-left:6px;vertical-align:middle;}
+    font-family:'Montserrat',sans-serif;font-size:2.18rem;font-weight:900!important;
+    color:#003366!important;display:inline;margin-right:7px;letter-spacing:-2px;
+}
+.empower-small{
+    font-family:'Montserrat',sans-serif!important;
+    font-size:1rem;
+    color:#1376d4!important;
+    font-weight:700!important;display:inline-block;margin-top:2px;margin-left:2px;
+}
+.nav-flag{
+    font-size:1.3rem;display:inline;vertical-align:middle;margin-left:3px;
+}
 .stButton>button{
-    background:#1376d4!important;color:#fff!important;font-weight:700;
-    border:none;border-radius:30px;padding:0.6rem 1.65rem;font-size:1.14rem;
-    box-shadow:0 1.5px 7px #1ab6ed18;}
+    background:#1376d4!important;
+    color:#fff!important;
+    font-family:'Montserrat',sans-serif!important;
+    font-weight:800;
+    font-size:1.09rem;
+    border:none;
+    border-radius:32px;
+    padding:0.60rem 1.6rem;
+    box-shadow:0 2px 14px #1ab6ed21;
+}
 .d-card{
-    background:#fff;
-    border:1.1px solid #dae7f9;
-    border-radius:19px;
-    padding:1.38rem 1.2rem 1.15rem;
-    margin-bottom:2rem;
+    background:linear-gradient(95deg,#fff 88%,#e6f3fe 100%);
+    border:1.3px solid #daecfa;
+    border-radius:18px;
+    padding:1.25rem 1.3rem 1.1rem;
+    margin:1.1rem 0;
+    box-shadow:0 3px 11px #98d4fb22;
 }
 .hero-section,.about-box{
-    background:linear-gradient(98deg,#f2f7fc 80%,#fff 100%);
+    background:linear-gradient(97deg,#e7f1fb 85%,#fff 100%);
     border-radius:24px;
-    box-shadow:0 8px 27px -10px #0077b614;
-    margin-bottom:36px;padding:2.2rem 2rem 1.65rem;
-    border:1px solid #e6ecf4;
-}
-label,.question-text{color:#1a304b!important;font-weight:700!important;font-size:1.16rem;}
+    margin-bottom:33px;
+    padding:2.15rem 2.0rem 1.35rem;
+    border:1px solid #dbe5ee;}
+label,.question-text{
+    color:#0d2e42!important;font-weight:700!important;
+    font-family:'Montserrat',sans-serif!important;
+    font-size:1.13rem;}
 .badge{
     background:#e6f3fe;
-    color:#1376d4;
-    padding:7px 20px;font-weight:700;
-    border-radius:15px;font-size:1.05rem;margin-right:5px;box-shadow:0 1px 3px #b1ceec22;
-    display:inline-block;}
+    color:#0077B6;
+    font-family:'Montserrat',sans-serif!important;
+    padding:7px 17px;
+    font-weight:700;border-radius:15px;
+    font-size:0.96rem;margin-right:6px;margin-bottom:4px;}
 .cta-sticky{
-    position:fixed;bottom:22px;right:22px;z-index:9166;
-    background:#1376d4!important;color:white;font-weight:800;
-    font-size:1.15rem;padding:15px 37px;border-radius:45px;box-shadow:0 2px 16px #1376d418;border:none;}
-.footer-note{font-size:1.08rem;text-align:center;margin:2.4rem 0 0;color:#375657!important;}
-hr{border:none;border-top:1.7px solid #e2eaf7;margin:20px 0;}
-ul,ol{font-size:1.10rem;color:#345;}
+    position:fixed;bottom:17px;right:17px;z-index:9188;
+    background:#0077B6!important;
+    color:white;font-family:'Montserrat',sans-serif;
+    font-weight:900;font-size:1.09rem;
+    padding:0.92rem 2.09rem;
+    border-radius:39px;
+    box-shadow:0 3px 18px #1376d41a;
+    border:none;}
+.footer-note{
+    font-size:1.01rem;text-align:center;margin:1.9rem 0 0;color:#476;}
+hr {border:none;border-top:1.6px solid #e2eaf7;margin:21px 0;}
+ul,ol{font-size:1.07rem;color:#26334c;}
+.alison-tag{
+    background:#e7f7e7;color:#38953b;
+    border-radius:9px;
+    font-size:0.94rem;
+    font-weight:700;
+    display:inline-block;
+    padding:3px 9px;
+    margin-bottom:7px;
+    margin-left:2px;
+}
 </style>
 """, unsafe_allow_html=True)
 
-# --- 3. DATA ---
+# --- DATA ---
 UNIS = [
     {"name":"Jain (Online)","type":"Private","city":"Bengaluru","profile":"Creator","fee":210000,"naac":"A++","pkg":"32LPA","alison":"Innovation Management"},
     {"name":"Manipal Online","type":"Private","city":"Jaipur","profile":"Analyst","fee":175000,"naac":"A+","pkg":"18LPA","alison":"Data Science Fundamentals"},
-    {"name":"Amity University Online","type":"Private","city":"Global","profile":"Creator","fee":345000,"naac":"A+","pkg":"15LPA","alison":"Design Thinking: Primer"},
-    {"name":"LPU Online","type":"Private","city":"Global","profile":"Catalyst","fee":160000,"naac":"A++","pkg":"21LPA","alison":"Agile Leadership"},
-    {"name":"Chandigarh University Online","type":"Private","city":"Online","profile":"Influencer","fee":180000,"naac":"A+","pkg":"28LPA","alison":"Social Media Marketing"},
+    {"name":"Amity University Online","type":"Private","city":"Global","profile":"Creator","fee":345000,"naac":"A+","pkg":"15LPA","alison":"Design Thinking (Alison)"},
+    {"name":"LPU Online","type":"Private","city":"Global","profile":"Catalyst","fee":160000,"naac":"A++","pkg":"21LPA","alison":"Agile Leadership (Alison)"},
+    {"name":"Chandigarh University Online","type":"Private","city":"Online","profile":"Influencer","fee":180000,"naac":"A+","pkg":"28LPA","alison":"Social Media Marketing (Alison)"},
     {"name":"NMIMS Global","type":"Private","city":"Online","profile":"Influencer","fee":400000,"naac":"A+","pkg":"45LPA","alison":"Public Speaking"},
     {"name":"DY Patil Online","type":"Private","city":"Pune","profile":"Catalyst","fee":120000,"naac":"A++","pkg":"12LPA","alison":"Project Management"}
 ]
 alison_courses = {
-    "Creator":["Innovation Management","Design Thinking: A Primer"],
-    "Influencer":["Social Media Marketing","Public Speaking & Communication"],
-    "Catalyst":["Agile Leadership","Project Management Essentials"],
-    "Analyst":["Data Science Fundamentals","Advanced Excel Strategies"]
+    "Creator":["Innovation Management", "Design Thinking (Alison)"],
+    "Influencer":["Social Media Marketing (Alison)", "Public Speaking"],
+    "Catalyst":["Agile Leadership (Alison)", "Project Management"],
+    "Analyst":["Data Science Fundamentals (Alison)", "Excel Strategies"]
 }
 
-# --- 4. STATE ---
+# --- STATE ---
 if "page" not in st.session_state: st.session_state.page = "Home"
 if "profile" not in st.session_state: st.session_state.profile = None
 if "scores" not in st.session_state: st.session_state.scores = None
 
-# --- 5. NAVBAR ---
+# --- NAVBAR ---
 def navbar():
-    cols = st.columns([2,1,1.25,1.23,1,1.48])
+    cols = st.columns([2.4,1,1.25,1.23,1,1.46])
     with cols[0]:
-        st.markdown("""<span class='nav-logo'>Distoversity | Empowering India <span class='nav-flag'>🇮🇳</span></span>""",unsafe_allow_html=True)
+        st.markdown("<span class='nav-logo'>Distoversity</span>",unsafe_allow_html=True)
+        st.markdown("<span class='empower-small'>Empowering India <span class='nav-flag'>🇮🇳</span></span>",unsafe_allow_html=True)
     if cols[1].button("Home"): st.session_state.page="Home";st.rerun()
-    if cols[2].button("Assessment"): st.session_state.page="Assessment";st.rerun()
+    if cols[2].button("4D Assessment"): st.session_state.page="Assessment";st.rerun()
     if cols[3].button("Universities"): st.session_state.page="Universities";st.rerun()
     if cols[4].button("FAQ"): st.session_state.page="FAQ";st.rerun()
     if cols[5].button("About"): st.session_state.page="About";st.rerun()
     st.markdown("---")
 
-# --- 6. PAGE ROUTES ---
+# --- PAGE ROUTES ---
 def home_page():
     st.markdown("""
     <div class="hero-section">
         <h1>Engineer Your Career Destiny <span class='nav-flag'>🇮🇳</span></h1>
-        <p style="font-size:1.22rem;">India's smart students and professionals trust Distoversity for AI-powered, ethical career guidance and honest university comparison.<br>
-        <span class="badge">No Sales | Pure Science | 100% Confidential</span></p>
+        <p style="font-size:1.17rem;">Experience India's most ethical consultative career science.<br>
+        <span class="badge">4D Assessment | Mentor + AI Guidance | Trusted University Match</span></p>
         <ul>
-        <li>Take our genius assessment (Creator, Influencer, Catalyst, Analyst profiles)</li>
-        <li>Compare top NAAC/UGC-approved universities—real data, no hidden ads</li>
-        <li>Get free upskilling (Alison) matched to your strengths</li>
-        <li>Book a real, ethical career call—with TFI/Distoversity</li>
+        <li>Take the <b>Distoversity 4D Assessment</b> (Discover your Creator, Influencer, Catalyst, Analyst energies!)</li>
+        <li>Compare NAAC/UGC universities—transparent, unbiased data only</li>
+        <li>Join <span class="alison-tag">Alison Community</span> upskilling courses matched for every energy profile</li>
+        <li>All counseling and advice are consultative, not transactional—mentor + AI, never pushy selling</li>
         </ul>
     </div>
     """,unsafe_allow_html=True)
-    st.button("🚀 Start My Assessment",type="primary",on_click=lambda: nav("Assessment"))
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/150px-India_Flag_300.png",width=120)
+    st.button("✨ Start Your 4D Assessment",type="primary",on_click=lambda: nav("Assessment"))
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/India_Flag_300.png/80px-India_Flag_300.png",width=64)
 
 def assessment_page():
-    st.markdown("<h2 style='text-align:center;'>Start Your Genius Assessment</h2>",unsafe_allow_html=True)
-    st.info("Answer 5 questions—get your best fit, upskilling pathway & top Indian university match!")
+    st.markdown("<h2 style='text-align:center;'>4D Assessment – Discover Your 4 Energies</h2>",unsafe_allow_html=True)
+    st.markdown("""
+    <div style='text-align:center;'>
+      <span class='badge'>AI Supported | Mentor Validated | Career Science for India</span>
+      <br>
+      <span style="font-size:1.07rem; color:#1376d4;"><b>Our original test reveals your 4 energies: Creator, Influencer, Catalyst, Analyst.<br>This is your unique blueprint for success—no random results, only clarity.</b></span>
+    </div>
+    """,unsafe_allow_html=True)
+    st.info("Answer 5 short questions. No right/wrong answers—just your energy flow.")
     with st.form("dist_assess"):
         q1 = st.radio("Q1. Work makes you happiest when?",["Inventing new things","Inspiring/leading people","Finishing/executing big projects","Solving complex puzzles"],index=None)
         q2 = st.radio("Q2. Friends see you as…",["The innovator","The motivator","The finisher","The analyst"],index=None)
         q3 = st.radio("Q3. You get bored by…",["Repeating/routine work","Isolation/lack of people","Waiting/unclear targets","Hype, not facts"],index=None)
         q4 = st.radio("Q4. If given a whole free day, you would…",["Draw 3 startup ideas","Host an event","Clear all pending tasks","Decode new trends in stocks/news"],index=None)
         q5 = st.radio("Q5. Life goal?",["Invent something world-class","Inspire lakhs","Become Operations CEO","Crack million-dollar data puzzle"],index=None)
-        if st.form_submit_button("Reveal Genius →"):
+        if st.form_submit_button("See My 4D Profile →"):
             tally = {"Creator":0,"Influencer":0,"Catalyst":0,"Analyst":0}
             for a in [q1,q2,q3,q4,q5]:
                 if "idea" in a or "Invent" in a or "innovator" in a or "draw" in a: tally["Creator"]+=1
@@ -143,23 +185,24 @@ def result_page():
     prof = st.session_state.get("profile")
     scores = st.session_state.get("scores")
     if not prof:
-        st.warning("Please complete the assessment first!"); return
-    st.markdown(f"<h2 style='color:#1376d4;text-align:center;'>Congratulations! You're a <span style='text-transform:uppercase;'>{prof}</span> Genius.</h2>",unsafe_allow_html=True)
-    st.markdown(f"""<div class="badge" style="margin-bottom:10px;">AI-Verified Profile</div>""",unsafe_allow_html=True)
+        st.warning("Complete your 4D Assessment first!"); return
+    st.markdown(f"<h2 style='color:#1376d4;text-align:center;'>You're a <span style='text-transform:uppercase;'>{prof}</span> Genius.</h2>",unsafe_allow_html=True)
+    st.markdown(f"""<div class="badge" style="margin-bottom:10px;">AI + Mentor Verified | 4D Career DNA</div>""",unsafe_allow_html=True)
     st.markdown("""
-    <div class='d-card' style='margin-bottom:1.6rem;'>
-        <b>Key Strengths & Pitfalls:</b>
+    <div class='d-card' style='margin-bottom:1.2rem;'>
+        <b>Your Growth Story (per Energy):</b>
         <ul>
-        <li>Creator: Visionary, original, high-impact—but must finish what you start.</li>
-        <li>Influencer: Leader, motivator, connector—avoid the 'all talk, no results' trap.</li>
-        <li>Catalyst: Results-getter, executor, ops expert—watch for burnout, stay strategic!</li>
-        <li>Analyst: Detail hawk, data solver, reliable—don't let perfection freeze your action.</li>
+        <li>Creator: Visionary, original, high-impact—but finish what you start.</li>
+        <li>Influencer: Leader, motivator, connector—avoid the all-talk trap.</li>
+        <li>Catalyst: Results-getter, ops expert—keep upskilling, avoid burnout!</li>
+        <li>Analyst: Data solver, reliable—don’t let perfection block action.</li>
         </ul>
     </div>
     """,unsafe_allow_html=True)
-    st.markdown(f"<h4>Skill Launchpad: Alison Upskilling Free Courses</h4>",unsafe_allow_html=True)
+    st.markdown(f"<h4>Recommended Alison Upskilling</h4>",unsafe_allow_html=True)
+    st.markdown("<span class='alison-tag'>Alison Community Member | Free Skill Courses</span>",unsafe_allow_html=True)
     for course in alison_courses[prof]:
-        st.write(f"• {course} ([See Alison](https://alison.com/courses))")
+        st.write(f"• {course} ([See on Alison](https://alison.com/courses))")
     st.markdown("<hr>",unsafe_allow_html=True)
     st.markdown("<b>Top University Matches:</b>",unsafe_allow_html=True)
     matches = [u for u in UNIS if u['profile'] == prof]
@@ -173,7 +216,7 @@ def result_page():
     st.button("Compare All Universities",on_click=lambda: nav("Universities"))
 
 def universities_page():
-    st.markdown("<h2>Compare India's Top Online Universities</h2>",unsafe_allow_html=True)
+    st.markdown("<h2>Compare India's Top Universities</h2>",unsafe_allow_html=True)
     st.caption("Sort/filter by fee, NAAC, placement, profile fit, and city—all data transparent.")
     df = pd.DataFrame(UNIS)
     cols = st.columns(4)
@@ -186,21 +229,23 @@ def universities_page():
     if sel_prof!="All": temp=temp[temp.profile==sel_prof]
     temp = temp.sort_values("fee" if "Fee" in sel_sort else "pkg", ascending="Lowest" in sel_sort)
     st.dataframe(temp[["name","profile","fee","naac","city","pkg"]].reset_index(drop=True),use_container_width=True)
-    st.markdown("Click any university row for personalized advice—or go back to [Assessment](#) for your unique fit!")
+    st.markdown("Click any university row for advice—or return to [4D Assessment](#) for your unique fit.")
 
 def faq_page():
     st.title("Distoversity FAQ")
     faq = [
-        ("What makes Distoversity different?",
-         "Science, empathy, and AI. We never sell your data, push spam, or show only top-paying partners. We care for every aspirant, not 'leads'."),
-        ("Who can use Distoversity?",
-         "Anyone—from 12th graders to working professionals to re-starters. We believe in true second chances!"),
+        ("What is the 4D Assessment?",
+         "Distoversity's 4D Assessment is India's original test for discovering your four career energies (Creator, Influencer, Catalyst, Analyst). Each energy leads to unique careers, skills, and university matches."),
+        ("How is advice given?",
+         "Every match is AI supported, reviewed by real career mentors. We guide, never push sales or random leads."),
+        ("How does Alison help?",
+         "Founder is an Alison global community member. All learners get free, profile-based upskilling links."),
+        ("How is selling consultative?",
+         "We never rush decisions. Our counselors serve as architects, not 'closers'. Every step is science + empathy."),
         ("How do you select universities?",
-         "UGC/AICTE/NAAC only. No fake sponsors. Only transparent info and honest statistics."),
-        ("What's Alison upskilling?",
-         "'Alison' is the world's best free upskilling site. Every profile here gets a custom skill launchpad—free, always."),
-        ("How can I book a call?",
-         "Sticky blue button (right bottom), Email: distoversity@gmail.com, or WhatsApp: +91-9111111111. Rapid response!")
+         "UGC/NAAC/AICTE verified only. Stats and fit are shown with transparent filters."),
+        ("How can I contact you?",
+         "Sticky bottom button, email: distoversity@gmail.com, WhatsApp: +91-9111111111.")
     ]
     for q,a in faq:
         with st.expander(q):
@@ -209,20 +254,25 @@ def faq_page():
 def about_page():
     st.markdown("""
     <div class='about-box'>
-    <h1>Distoversity: Story & Vision <span class='nav-flag'>🇮🇳</span></h1>
+    <h1 style="margin-bottom:6px;">Distoversity – Ethical Career Science <span class='nav-flag'>🇮🇳</span></h1>
+    <span class='empower-small'>Empowering India</span>
+    <hr>
     <p>
-    <b>💡 Founder’s Mission:</b> From assembly lines to founder—my journey is about replacing 'sales' with science. I saw how talent is wasted because schools matched marks—not minds.<br>
-    <b>How we work:</b> We use AI, psychometrics, and live data to match everyone to their unique career flow zone. We only work with the most honest institutions. Distoversity is 100% commission-free.<br>
-    <b>TFI fit:</b> Our platform empowers TFI’s alumni, students, staff to take better decisions, upskill for free, and spread the word. For every career changed, a family is transformed.<br>
-    Email: <b>distoversity@gmail.com</b> &nbsp; | &nbsp; <a href="https://linkedin.com">LinkedIn</a>
+    <b>Consultative selling—not closing leads.</b> Distoversity is India's impact-driven career company. We are counselors + AI, never just bots; we advise, not advertise.<br>
+    <br>
+    <b>Founder’s Insight:</b> From factories, real counseling, and learning with Alison, I built the 4D Assessment for every student—science, privacy, and empathy at the core.<br>
+    <br>
+    <span class='alison-tag'>Alison Community Member</span>: Bringing global skill learning free for Indians.<br>
+    <br>
+    <b>For partners & TFI:</b> We aspire to work with every impact-focused educator, fellow, and org. Careers change lives—let's architect India's future, together.<br>
+    <b>Contact:</b> distoversity@gmail.com | <a href="https://linkedin.com">LinkedIn</a>
     </p>
     </div>
     """,unsafe_allow_html=True)
 
-# --- 7. NAV HELPER ---
 def nav(p): st.session_state.page=p; st.rerun()
 
-# --- 8. MAIN ROUTER ---
+# --- MAIN ROUTER ---
 navbar()
 page_map={"Home":home_page,"Assessment":assessment_page,"Result":result_page,
           "Universities":universities_page,"FAQ":faq_page,"About":about_page}
@@ -231,13 +281,14 @@ if st.session_state.page=="Result":
 else:
     page_map[st.session_state.page]()
 
-# --- 9. STICKY CTA + FOOTER ---
 st.markdown("""
 <a href="mailto:distoversity@gmail.com?subject=Book%20Distoversity%20Counseling"
 class="cta-sticky" target="_blank" style="text-decoration:none;">
-<span class='nav-flag'>🇮🇳</span> Book 1:1 Counseling 🚀
+<span class='nav-flag'>🇮🇳</span> Book Consultative Career Call 🚀
 </a>
 <div class="footer-note">
-<b>EMPOWERING INDIA 🇮🇳</b> | Privacy: Data never shared. Alison Certified | Copyright &copy; 2025 Distoversity.
+Distoversity <span class='empower-small'>Empowering India <span class='nav-flag'>🇮🇳</span></span>
+<br>
+Privacy: Data always private. Alison Community | Copyright © 2025 Distoversity.
 </div>
 """,unsafe_allow_html=True)
