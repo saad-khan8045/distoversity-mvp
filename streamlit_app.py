@@ -3,12 +3,12 @@ import pandas as pd
 
 # --- PAGE CONFIG & SEO ---
 st.set_page_config(
-    page_title="Distoversity | Free Career Assessment & Expert University Counseling - Find Your Perfect Career Path",
+    page_title="Distoversity | Free Career Assessment & Expert University Counseling - Find Your Perfect Career",
     page_icon="🎓",
     layout="wide"
 )
 st.markdown("""
-    <meta name="description" content="Discover your ideal career with Distoversity's free 4D Assessment. Get personalized university recommendations, expert counseling, and skill-building resources. Your data is 100% private - we never sell it!">
+    <meta name="description" content="Discover your ideal career with Distoversity's free 4D Assessment. Get personalized university recommendations, expert counseling, and skill courses. 100% data privacy - we never sell your information!">
 """, unsafe_allow_html=True)
 
 # --- MODERN DESIGN / COLOR / FONT ---
@@ -211,4 +211,5 @@ def result_page():
     for u in matches:
         st.markdown(f"""
         <div class="d-card"><h3>🏆 {u['name']}</h3>
-        <span class="badge">{u['city']}</span> | <span class="badge">NAAC:
+        <span class="badge">{u['city']}</span> | <span class="badge">NAAC: {u['naac']}</span> | <b>Annual Fee:</b> ₹{u['fee']:,}<br>
+        <b>💼 Avg Placement:</b> {u['pkg']} | <b
